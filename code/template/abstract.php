@@ -73,7 +73,7 @@ abstract class TemplateAbstract extends Object implements TemplateInterface
     /**
      * Render a template
      *
-     * @param   string  $sourece The template url or content
+     * @param   string  $source The template url or content
      * @param   array   $data     An associative array of data to be extracted in local template scope
      * @return  string  The rendered template source
      */

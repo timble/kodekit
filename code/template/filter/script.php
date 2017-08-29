@@ -25,10 +25,11 @@ class TemplateFilterScript extends TemplateFilterTag
      * This function will selectively filter all script tags that don't have a type attribute defined or where the
      * type="text/javascript". If the element includes a data-inline attribute the element will not be excluded.
      *
-     * @param string $text  The text to parse
+     * @param string            $text The text to parse
+     * @param TemplateInterface $template
      * @return string
      */
-    protected function _parseTags(&$text)
+    protected function _parseTags(&$text, TemplateInterface $template)
     {
         $tags = '';
 
@@ -49,7 +50,7 @@ class TemplateFilterScript extends TemplateFilterTag
                     $attribs['type'] = 'text/javascript';
                 };
 
-                $tags .= $this->_renderTag($attribs);
+                $tags .= $this->_renderTag($attribs, null, $template);
             }
 
             $text = str_replace($matches[0], '', $text);
@@ -67,7 +68,7 @@ class TemplateFilterScript extends TemplateFilterTag
                     $attribs['type'] = 'text/javascript';
                 };
 
-                $tags .= $this->_renderTag($attribs, $match);
+                $tags .= $this->_renderTag($attribs, $match, $template);
             }
 
             $text = str_replace($matches[0], '', $text);
@@ -79,11 +80,12 @@ class TemplateFilterScript extends TemplateFilterTag
     /**
      * Render the tag
      *
-     * @param   array   $attribs Associative array of attributes
-     * @param   string  $content The tag content
+     * @param   array           $attribs Associative array of attributes
+     * @param   string          $content The tag content
+     * @param TemplateInterface $template
      * @return string
      */
-    protected function _renderTag($attribs = array(), $content = null)
+    protected function _renderTag($attribs = array(), $content = null, TemplateInterface $template)
     {
         $link = isset($attribs['src']) ? $attribs['src'] : false;
         $condition = isset($attribs['condition']) ? $attribs['condition'] : false;

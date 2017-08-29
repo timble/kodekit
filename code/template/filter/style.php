@@ -22,10 +22,11 @@ class TemplateFilterStyle extends TemplateFilterTag
     /**
      * Parse the text for style tags
      *
-     * @param string $text  The text to parse
-     * @return  string
+     * @param string            $text The text to parse
+     * @param TemplateInterface $template
+     * @return string
      */
-    protected function _parseTags(&$text)
+    protected function _parseTags(&$text, TemplateInterface $template)
     {
         $tags = '';
 
@@ -40,7 +41,7 @@ class TemplateFilterStyle extends TemplateFilterTag
                 );
 
                 $attribs = array_merge($this->parseAttributes( $matches[2][$key]), $attribs);
-                $tags .= $this->_renderTag($attribs);
+                $tags .= $this->_renderTag($attribs, null, $template);
             }
 
             $text = str_replace($matches[0], '', $text);
@@ -52,7 +53,7 @@ class TemplateFilterStyle extends TemplateFilterTag
             foreach($matches[2] as $key => $match)
             {
                 $attribs = $this->parseAttributes( $matches[1][$key]);
-                $tags .= $this->_renderTag($attribs, $match);
+                $tags .= $this->_renderTag($attribs, $match, $template);
             }
 
             $text = str_replace($matches[0], '', $text);
@@ -64,11 +65,12 @@ class TemplateFilterStyle extends TemplateFilterTag
     /**
      * Render the tag
      *
-     * @param   array   $attribs Associative array of attributes
-     * @param   string  $content The tag content
+     * @param   array           $attribs Associative array of attributes
+     * @param   string          $content The tag content
+     * @param TemplateInterface $template
      * @return string
      */
-    protected function _renderTag($attribs = array(), $content = null)
+    protected function _renderTag($attribs = array(), $content = null, TemplateInterface $template)
     {
         $link = isset($attribs['src']) ? $attribs['src'] : false;
         $condition = isset($attribs['condition']) ? $attribs['condition'] : false;
