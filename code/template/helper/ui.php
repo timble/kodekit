@@ -158,6 +158,6 @@ class TemplateHelperUi extends TemplateHelperAbstract
 
         // TODO need to attach filter to template
 
-        return '<ktml:template:wrapper>'; // used to make sure the template only wraps once
+        return ''; //'<ktml:template:wrapper>'; // used to make sure the template only wraps once
     }
 }
