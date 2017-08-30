@@ -49,7 +49,7 @@ class ControllerToolbarCommand extends ObjectConfig implements ControllerToolbar
         parent::__construct($config);
 
         $this->append(array(
-            'icon'       => 'icon-32-'.$name,
+            'icon'       => 'icon-'.$name,
             'id'         => $name,
             'label'      => ucfirst($name),
             'disabled'   => false,

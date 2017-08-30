@@ -136,9 +136,7 @@ class TemplateHelperActionbar extends TemplateHelperToolbar
             'attribs' => array()
         ));
 
-        $html = '</div><div '.$this->buildAttributes($config->attribs).'>';
-
-        return $html;
+        return '';
     }
 
     /**

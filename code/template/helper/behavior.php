@@ -714,7 +714,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         $config->append(array(
             'debug'   => \Kodekit::getInstance()->isDebug(),
             'offset'  => 'UTC',
-            'user_offset'    => $this->getObject('user')->getParameter('timezone'),
+            //'user_offset'    => $this->getObject('user')->getParameter('timezone'),
             'server_offset'  => date_default_timezone_get(),
             'offset_seconds' => 0,
             'value'   => gmdate("M d Y H:i:s"),
