@@ -106,9 +106,9 @@ class ModelEntityComposite extends Object implements ModelEntityComposable
         {
             if (!is_array($entity) && !$entity instanceof \Traversable)
             {
-                throw new \InvalidArgumentException(
+                throw new \InvalidArgumentException(sprintf(
                     'Entity must be an array or an object implementing the Traversable interface; received "%s"', gettype($entity)
-                );
+                ));
             }
 
             if($this->_prototypable)
