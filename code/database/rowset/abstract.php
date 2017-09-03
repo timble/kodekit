@@ -210,6 +210,9 @@ abstract class DatabaseRowsetAbstract extends Object implements DatabaseRowsetIn
      */
     public function create(array $properties = array(), $status = null)
     {
+        //Merge the default properties
+        $properties = array_merge($this->getTable()->getDefaults(), $properties);
+
         if($this->_prototypable)
         {
             if(!$this->_prototype instanceof DatabaseRowInterface) {

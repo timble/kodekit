@@ -185,10 +185,6 @@ abstract class DatabaseRowAbstract extends ObjectArray implements DatabaseRowInt
         $this->__modified_properties = array();
         $this->setStatus(NULL);
 
-        if ($this->isConnected()) {
-            $this->_data = $this->getTable()->getDefaults();
-        }
-
         return $this;
     }
 

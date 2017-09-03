@@ -90,7 +90,7 @@ class DatabaseBehaviorIdentifiable extends DatabaseBehaviorAbstract
     {
         if($this->getMixer() instanceof DatabaseRowInterface && $this->_auto_generate && !$this->isNew())
         {
-            if($this->hasProperty('uuid') && empty($this->uuid))
+            if(empty($this->uuid))
             {
                 $hex = $this->getTable()->getColumn('uuid')->type == 'char' ? false : true;
                 $this->uuid = $this->_uuid($hex);
@@ -113,7 +113,7 @@ class DatabaseBehaviorIdentifiable extends DatabaseBehaviorAbstract
     {
         if($this->getMixer() instanceof DatabaseRowInterface)
         {
-            if($this->hasProperty('uuid') && empty($this->uuid))
+            if(empty($this->uuid))
             {
                 $hex = $this->getTable()->getColumn('uuid')->type == 'char' ? false : true;
                 $this->uuid = $this->_uuid($hex);
