@@ -368,7 +368,6 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
         //Remove the user and pass from the view url
         unset($url->user);
         unset($url->pass);
-        unset($url->port);
 
         $this->__url = $url;
         return $this;
