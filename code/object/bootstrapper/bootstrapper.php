@@ -250,7 +250,17 @@ final class ObjectBootstrapper extends Object implements ObjectBootstrapperInter
                             $identifiers[$priority] = array();
                         }
 
-                        $identifiers[$priority] = array_merge_recursive($identifiers[$priority], $array['identifiers']);;
+                        foreach ($array['identifiers'] as $identifier => $config)
+                        {
+                            if (array_key_exists($identifier, $identifiers[$priority]))
+                            {
+                                $existing = new ObjectConfig($identifiers[$priority][$identifier]);
+                                $existing->append($config);
+
+                                $identifiers[$priority][$identifier] = $existing->toArray();
+                            }
+                            else $identifiers[$priority][$identifier] = $config;
+                        }
                     }
                 }
 
