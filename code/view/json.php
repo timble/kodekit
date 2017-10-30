@@ -80,6 +80,7 @@ class ViewJson extends ViewAbstract
             }
         }
 
+        $this->addCommandCallback('before.render', '_fetchData');
         $this->addCommandCallback('before.render', '_convertRelativeLinks');
     }
 
