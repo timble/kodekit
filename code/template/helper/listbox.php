@@ -422,7 +422,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
                 $config['name']  = StringInflector::singularize(strtolower($method));
             }
 
-            return $this->render($config, $arguments[1]);
+            return $this->render($config);
         }
 
         return parent::__call($method, $arguments);
