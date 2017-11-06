@@ -43,10 +43,6 @@ class TemplateHelperActionbar extends TemplateHelperToolbar
             {
                 $name = $command->getName();
 
-                if ($name === 'title') { // TODO: ercan
-                    continue;
-                }
-
                 if(method_exists($this, $name)) {
                     $html .= $this->$name(ObjectConfig::unbox($command));
                 } else {
@@ -92,12 +88,6 @@ class TemplateHelperActionbar extends TemplateHelperToolbar
 
         //Create the id
         $config->attribs['id'] = 'command-'.$config->id;
-
-        // TODO: ercan - remove
-        //Add a disabled class if the command is disabled
-        if($config->disabled) {
-            $config->attribs->class->append(array('nolink'));
-        }
 
         $config->attribs->class->append(array('k-button', 'k-button--default', 'k-button-'.$config->id));
 
