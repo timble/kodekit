@@ -103,9 +103,30 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             static::setLoaded('vuex');
         }
 
-        // TODO: add entity support
         if ($config->entity instanceof ModelEntityInterface)
-        {}
+        {
+            $entity = $config->entity->toArray();
+            $entity = is_numeric(key($entity)) ? current($entity) : $entity;
+            $entity['_isNew'] = $config->entity->isNew();
+            $entity['_name']  = StringInflector::singularize($config->entity->getIdentifier()->name);
+
+            $html .= $this->kodekit($config);
+            $html .= "
+            <ktml:script src=\"assets://js/kodekit.vue.js\" />
+            <script>
+                kQuery(function($) {
+                    var form = $('.k-js-form-controller');
+                    
+                    if (form.length) {
+                        form.data('controller').store = Kodekit.EntityStore.create({
+                            form: form,
+                            entity: ".json_encode($entity)."
+                        });
+                    }
+                });
+            </script>
+";
+        }
 
         return $html;
     }
@@ -465,7 +486,6 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             $config->options->url = $this->getObject('lib:http.url', array('url' => $config->options->url));
         }
 
-        // TODO: check this
         if(!empty($config->name))
         {
             $config->options->url->setQuery(array('fields['.$config->name.']' => $config->value.','.$config->text), true);
