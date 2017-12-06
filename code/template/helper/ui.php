@@ -34,22 +34,7 @@ class TemplateHelperUi extends TemplateHelperAbstract
             'domain'  => $identifier->domain,
             'type'    => $identifier->type,
             'styles' => array(),
-        ))->append(array(
-            'wrapper_class' => array(
-                // Only add k-ui-container for top-level component templates
-                ($config->domain === 'admin' || $config->domain === '') && $config->type === 'com' ? 'k-ui-container' : '',
-                'k-ui-namespace',
-                $identifier->type.'_'.$identifier->package
-            ),
-        ))->append(array(
-            'wrapper' => sprintf('<div class="%s">
-                <!--[if lte IE 8 ]><div class="old-ie"><![endif]-->
-                %%s
-                <!--[if lte IE 8 ]></div><![endif]-->
-                </div>', implode(' ', ObjectConfig::unbox($config->wrapper_class))
-            )
         ));
-
 
         $html = '';
 
@@ -69,10 +54,6 @@ class TemplateHelperUi extends TemplateHelperAbstract
         }
 
         $html .= $this->scripts($config);
-
-        if ($config->wrapper) {
-            $html .= $this->wrapper($config);
-        }
 
         return $html;
     }
@@ -145,19 +126,5 @@ class TemplateHelperUi extends TemplateHelperAbstract
 
 
         return $html;
-    }
-
-
-    public function wrapper($config = array())
-    {
-        $config = new ObjectConfigJson($config);
-
-        /*$filter = $this->getObject('template.filter.factory')->createFilter('wrapper', [
-            'wrapper' => $config->wrapper
-        ]);*/
-
-        // TODO need to attach filter to template
-
-        return ''; //'<ktml:template:wrapper>'; // used to make sure the template only wraps once
     }
 }
