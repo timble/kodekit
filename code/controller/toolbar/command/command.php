@@ -176,7 +176,7 @@ class ControllerToolbarCommand extends ObjectConfig implements ControllerToolbar
      *
      * @return int
      */
-    public function count()
+    public function count($mode = COUNT_NORMAL)
     {
         return count($this->__commands);
     }
