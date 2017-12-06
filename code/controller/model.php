@@ -306,7 +306,7 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
                         $url->query[$key] = $entity->getProperty($key);
                     }
                 }
-                else $url->query[$entity->getIdentityKey()] = $entity->getIdentityValue();
+                else $url->query[$entity->getIdentityKey()] = $entity->getProperty($entity->getIdentityKey());
 
                 $context->response->headers->set('Location', (string) $url);
                 $context->response->setStatus(HttpResponse::CREATED);
