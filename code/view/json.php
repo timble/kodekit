@@ -355,7 +355,7 @@ class ViewJson extends ViewAbstract
             elseif (is_array($value)) {
                 $this->_processLinks($value);
             }
-            elseif (in_array($key, $this->_text_fields)) {
+            elseif (in_array($key, $this->_text_fields, true)) {
                 $array[$key] = $this->_processText($value);
             }
         }
