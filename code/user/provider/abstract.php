@@ -172,7 +172,7 @@ class UserProviderAbstract extends Object implements UserProviderInterface
      */
     public function create($data)
     {
-        $user = $this->getObject('user.default', array('data' => $data));
+        $user = $this->getObject('user.default', array('properties' => $data));
         return $user;
     }
 

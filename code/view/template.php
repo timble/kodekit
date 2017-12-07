@@ -64,7 +64,7 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
             'behaviors'          => array('localizable', 'routable'),
             'layout'             => '',
             'template'           => 'default',
-            'template_filters'   => array('asset'),
+            'template_filters'   => array('asset', 'decorator'),
             'template_functions' => array(
                 'url'      => array($this, 'getUrl'),
                 'title'    => array($this, 'getTitle'),
@@ -82,7 +82,7 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
      * @param ViewContextTemplate  $context A view context object
      * @return string  The output of the view
      */
-    protected function _actionRender(ViewContextTemplate $context)
+    protected function _actionRender(ViewContext $context)
     {
         $data = ObjectConfig::unbox($context->data);
         $path = $this->qualifyLayout($context->layout);
@@ -124,6 +124,8 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
         //Set the layout and view in the parameters.
         $context->parameters->layout = $context->layout;
         $context->parameters->view   = $this->getName();
+
+        $context->parameters->url    = $this->getUrl();
     }
 
     /**
@@ -268,7 +270,7 @@ abstract class ViewTemplate extends ViewAbstract  implements ViewTemplatable
      *
      * @return  ViewContextTemplate
      */
-    public function getContext()
+    public function getContext(ViewContextInterface $context = null)
     {
         $context = new ViewContextTemplate(parent::getContext());
         $context->setLayout($this->getLayout());

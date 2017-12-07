@@ -65,7 +65,7 @@ class ControllerBehaviorPermissible extends ControllerBehaviorAbstract
         $controller = $context->getSubject();
 
         if($controller->getView() instanceof ViewTemplatable) {
-            $controller->getView()->getTemplate()->registerFunction('can', array($this => 'canExecute'));
+            $controller->getView()->getTemplate()->registerFunction('can', array($this, 'canExecute'));
         }
     }
 
@@ -87,6 +87,10 @@ class ControllerBehaviorPermissible extends ControllerBehaviorAbstract
         if($parts[0] == 'before')
         {
             $action = $parts[1];
+
+            if ($action === 'render') {
+                $this->_beforeRender($command);
+            }
 
             if($this->canExecute($action) === false)
             {

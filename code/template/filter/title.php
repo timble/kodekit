@@ -45,10 +45,11 @@ class TemplateFilterTitle extends TemplateFilterTag
     /**
      * Parse the text for script tags
      *
-     * @param string $text  The text to parse
+     * @param string            $text The text to parse
+     * @param TemplateInterface $template
      * @return string
      */
-    protected function _parseTags(&$text)
+    protected function _parseTags(&$text, TemplateInterface $template)
     {
         $tags  = '';
         $title =  '';
@@ -81,7 +82,7 @@ class TemplateFilterTitle extends TemplateFilterTag
             }
 
             $text = str_replace($matches[0], '', $text);
-            $tags .= $this->_renderTag($attribs, $title);
+            $tags .= $this->_renderTag($attribs, $title, $template);
         }
 
         return $tags;
@@ -90,11 +91,12 @@ class TemplateFilterTitle extends TemplateFilterTag
     /**
      * Render the tag
      *
-     * @param   array   $attribs Associative array of attributes
-     * @param   string  $content The tag content
+     * @param   array           $attribs Associative array of attributes
+     * @param   string          $content The tag content
+     * @param TemplateInterface $template
      * @return string
      */
-    protected function _renderTag($attribs = array(), $content = null)
+    protected function _renderTag($attribs = array(), $content = null, TemplateInterface $template)
     {
         unset($attribs['content']);
         unset($attribs['separator']);

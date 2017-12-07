@@ -48,7 +48,7 @@ abstract class TemplateFilterTag extends TemplateFilterAbstract
     public function filter(&$text, TemplateInterface $template)
     {
         //Parse the tags
-        $tags = $this->_parseTags($text);
+        $tags = $this->_parseTags($text, $template);
 
         //Prepend the tags again to the text
         $text = $tags.$text;
@@ -57,17 +57,19 @@ abstract class TemplateFilterTag extends TemplateFilterAbstract
     /**
      * Parse the text for the tags
      *
-     * @param string $text  The text to parse
+     * @param string            $text The text to parse
+     * @param TemplateInterface $template
      * @return string
      */
-    abstract protected function _parseTags(&$text);
+    abstract protected function _parseTags(&$text, TemplateInterface $template);
 
     /**
      * Render the tag
      *
-     * @param   array   $attribs Associative array of attributes
-     * @param   string  $content The element content
+     * @param   array           $attribs Associative array of attributes
+     * @param   string          $content The element content
+     * @param TemplateInterface $template
      * @return string
      */
-    abstract protected function _renderTag($attribs = array(), $content = null);
+    abstract protected function _renderTag($attribs = array(), $content = null, TemplateInterface $template);
 }

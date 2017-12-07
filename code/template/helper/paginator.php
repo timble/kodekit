@@ -75,17 +75,16 @@ class TemplateHelperPaginator extends TemplateHelperSelect
         $config = new ObjectConfigJson($config);
         $config->append(array(
             'limit'     => 0,
-            'attribs'   => array(),
-            'page_rows' => array(10, 20, 50, 100)
+            'attribs' => array('class' => 'k-form-control'),
+            'values'  => array(5, 10, 15, 20, 25, 30, 50, 100)
         ));
 
         $html     = '';
         $selected = 0;
         $options  = array();
-        $values   = ObjectConfig::unbox($config->page_rows);
+        $values   = ObjectConfig::unbox($config->values);
 
-        if ($config->limit && !in_array($config->limit, $values))
-        {
+        if ($config->limit && !in_array($config->limit, $values)) {
             $values[] = $config->limit;
             sort($values);
         }
@@ -119,13 +118,17 @@ class TemplateHelperPaginator extends TemplateHelperSelect
         $config->append(array(
             'url'      => null,
             'total'    => 0,
-            'display'  => 4,
+            'display'  => 2,
             'offset'   => 0,
             'limit'    => 0,
-            'attribs'  => array(),
+            'show_limit' => true,
+            'show_count' => false
+        ))->append(array(
+            'show_pages' => $config->count !== 1
         ));
 
-        $html = '<ul class="pagination">';
+        $html = '<div class="k-pagination">';
+
         if($config->offset) {
             $html .= $this->page($config->pages->prev, $config->url);
         }

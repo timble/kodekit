@@ -148,6 +148,11 @@ abstract class FilesystemLocatorAbstract extends Object implements FilesystemLoc
         }
 
         $path = str_replace(array($scheme.'://', $scheme.':'), '', dirname($url));
+
+        if (strpos($path, $domain.'/') === 0) {
+            $path = substr($path, strlen($domain)+1);
+        }
+
         $parts = explode('/', $path);
 
         $info = array(

@@ -183,10 +183,10 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
      * This function translates a GET request into a read or browse action. If the view name is singular a read action
      * will be executed, if plural a browse action will be executed.
      *
-     * @param   ControllerContextModel $context  A controller context object
+     * @param   ControllerContext $context  A controller context object
      * @return  string|bool The rendered output of the view or FALSE if something went wrong
      */
-    protected function _actionRender(ControllerContextModel $context)
+    protected function _actionRender(ControllerContext $context)
     {
         $result = false;
 
@@ -207,7 +207,7 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
      * @param   ControllerContextModel  $context A controller context object
      * @return  ModelEntityInterface An entity object containing the selected entities
      */
-    protected function _actionBrowse(ControllerContextModel $context)
+    protected function _actionBrowse(ControllerContext $context)
     {
         $entity = $this->getModel()->fetch();
 
@@ -220,11 +220,11 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
     /**
      * Generic read action, fetches a single entity
      *
-     * @param    ControllerContextModel $context A controller context object
+     * @param    ControllerContext $context A controller context object
      * @throws   ControllerExceptionResourceNotFound
      * @return   ModelEntityInterface
      */
-    protected function _actionRead(ControllerContextModel $context)
+    protected function _actionRead(ControllerContext $context)
     {
         if(!$context->result instanceof ModelEntityInterface)
         {
@@ -251,11 +251,11 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
     /**
      * Generic edit action, saves over an existing entity collection
      *
-     * @param   ControllerContextModel $context A controller context object
+     * @param   ControllerContext $context A controller context object
      * @throws  ControllerExceptionResourceNotFound   If the resource could not be found
      * @return  ModelEntityInterface
      */
-    protected function _actionEdit(ControllerContextModel $context)
+    protected function _actionEdit(ControllerContext $context)
     {
         $entities = $context->entity;
 
@@ -282,7 +282,7 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
      * @throws  ControllerExceptionActionFailed If the delete action failed on the data entity
      * @return  ModelEntityInterface
      */
-    protected function _actionAdd(ControllerContextModel $context)
+    protected function _actionAdd(ControllerContext $context)
     {
         $entity = $context->entity;
 
@@ -306,7 +306,7 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
                         $url->query[$key] = $entity->getProperty($key);
                     }
                 }
-                else $url->query[$entity->getIdentityKey()] = $entity->getIdentityValue();
+                else $url->query[$entity->getIdentityKey()] = $entity->getProperty($entity->getIdentityKey());
 
                 $context->response->headers->set('Location', (string) $url);
                 $context->response->setStatus(HttpResponse::CREATED);
@@ -319,12 +319,12 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
     /**
      * Generic delete function, deletes an existing entity collection
      *
-     * @param    ControllerContextModel $context A controller context object
+     * @param    ControllerContext $context A controller context object
      * @throws   ControllerExceptionResourceNotFound
      * @throws   ControllerExceptionActionFailed
      * @return   ModelEntityInterface An entity object containing the deleted entities
      */
-    protected function _actionDelete(ControllerContextModel $context)
+    protected function _actionDelete(ControllerContext $context)
     {
         $entities = $context->entity;
 
@@ -353,7 +353,7 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
      * @param ControllerContextModel  $context A controller context object
      * @return void
      */
-    protected function _fetchEntity(ControllerContextModel $context)
+    protected function _fetchEntity(ControllerContext $context)
     {
         if(!$context->result instanceof ModelEntityInterface)
         {

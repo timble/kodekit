@@ -50,7 +50,7 @@ class TemplateHelperSelect extends TemplateHelperAbstract implements TemplateHel
         }
 
         if($config->disabled) {
-            $option->attribs['class'] = array('disabled');
+            $option->attribs['class'] = array('k-is-disabled', 'disabled');
         }
 
         return $option;
@@ -314,19 +314,24 @@ class TemplateHelperSelect extends TemplateHelperAbstract implements TemplateHel
 
         $html  = array();
 
+        $html[] = '<div class="k-optionlist k-optionlist--boolean">';
+        $html[] = '<div class="k-optionlist__content">';
+
         $extra = $config->selected ? 'checked="checked"' : '';
         $text  = $config->translate ? $translator->translate( $config->true ) : $config->true;
 
-        $html[] = '<label for="'.$name.'1" class="btn">';
         $html[] = '<input type="radio" name="'.$name.'" id="'.$name.'1" value="1" '.$extra.' '.$attribs.' />';
-        $html[] = $text.'</label>';
+        $html[] = '<label for="'.$name.'1"><span>'.$text.'</span></label>';
 
         $extra = !$config->selected ? 'checked="checked"' : '';
         $text  = $config->translate ? $translator->translate( $config->false ) : $config->false;
 
-        $html[] = '<label for="'.$name.'0" class="btn">';
         $html[] = '<input type="radio" name="'.$name.'" id="'.$name.'0" value="0" '.$extra.' '.$attribs.' />';
-        $html[] = $text.'</label>';
+        $html[] = '<label for="'.$name.'0"><span>'.$text.'</span></label>';
+
+        $html[] = '<div class="k-optionlist__focus"></div>';
+        $html[] = '</div>';
+        $html[] = '</div>';
 
         return implode(PHP_EOL, $html);
     }
