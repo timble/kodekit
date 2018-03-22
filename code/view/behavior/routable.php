@@ -108,11 +108,12 @@ class ViewBehaviorRoutable extends ViewBehaviorAbstract
             $fqr = true;
         }
 
-        //Add the host and the schema to qualify relative url
+        //Add host, schema and port to qualify relative url
         if ($fqr)
         {
             $route->scheme = $this->getUrl()->scheme;
             $route->host   = $this->getUrl()->host;
+            $route->port   = $this->getUrl()->port;
         }
 
         return $route;
