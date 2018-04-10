@@ -487,7 +487,7 @@ abstract class DatabaseRowsetAbstract extends Object implements DatabaseRowsetIn
     public function setStatus($status)
     {
         if($row = $this->getIterator()->current()) {
-            $row->setStatusMessage($status);
+            $row->setStatus($status);
         }
 
         return $this;
