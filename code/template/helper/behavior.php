@@ -247,6 +247,30 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             static::setLoaded('modal');
         }
 
+        if(!static::isLoaded('modal-select2-fix'))
+        {
+            $html .= "<script>
+
+                // WORKAROUND FOR ISSUE: #873
+
+                kQuery(function($)
+                {
+                    $.magnificPopup.instance._onFocusIn = function(e)
+                    {
+                        // Do nothing if target element is select2 input
+                        if( $(e.target).hasClass('select2-search__field') ) {
+                            return true;
+                        }
+            
+                        // Else call parent method
+                        $.magnificPopup.proto._onFocusIn.call(this,e);
+                    };
+                });
+            </script>";
+
+            static::setLoaded('modal-select2-fix');
+        }
+
         $options   = (string)$config->options;
         $signature = md5('modal-'.$config->selector.$config->options_callback.$options);
 
