@@ -18,6 +18,13 @@ namespace Kodekit\Library;
 class ObjectConfigIni extends ObjectConfigFormat
 {
     /**
+     * The format
+     *
+     * @var string
+     */
+    protected static $_media_type = 'text/plain';
+
+    /**
      * Read from a string and create an array
      *
      * @param  string $string

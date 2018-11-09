@@ -18,6 +18,13 @@ namespace Kodekit\Library;
 class ObjectConfigPhp extends ObjectConfigFormat
 {
     /**
+     * The format
+     *
+     * @var string
+     */
+    protected static $_format = 'application/x-php';
+
+    /**
      * Read from a string and create an array
      *
      * @param  string   $string
