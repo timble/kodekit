@@ -60,13 +60,6 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
     private $__parameters;
 
     /**
-     * The mimetype
-     *
-     * @var string
-     */
-    private $__mimetype;
-
-    /**
      * Constructor
      *
      * @param   ObjectConfig $config Configuration options
@@ -84,7 +77,6 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
         $this->setUrl($config->url);
         $this->setTitle($config->title);
         $this->setContent($config->content);
-        $this->setMimetype($config->mimetype);
 
         $this->setModel($config->model);
 
@@ -107,7 +99,6 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
             'parameters'       => array(),
             'model'      => 'lib:model.empty',
             'content'    => '',
-            'mimetype'   => 'application/octet-stream ',
             'url'        =>  $this->getObject('lib:http.url'),
             'title'      => ucfirst($this->getName()),
             'behaviors'  => array('lib:behavior.eventable')
@@ -160,7 +151,13 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
      */
     protected function _actionRender(ViewContext $context)
     {
-        return trim($context->content);
+        $content = $context->content;
+
+        if(is_string($content)) {
+            $content = trim($content);
+        }
+
+        return $content;
     }
 
     /**
@@ -281,11 +278,19 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
     /**
      * Get the contents
      *
-     * @param  string $content The contents of the view
+     * @param  object|string $content The contents of the view
+     * @throws \UnexpectedValueException If the content is not a string are cannot be casted to a string.
      * @return ViewAbstract
      */
     public function setContent($content)
     {
+        if (!is_null($content) && !is_string($content) && !is_callable(array($content, '__toString')))
+        {
+            throw new \UnexpectedValueException(
+                'The view content must be a string or object implementing __toString(), "'.gettype($content).'" given.'
+            );
+        }
+
         $this->__content = $content;
         return $this;
     }
@@ -408,27 +413,6 @@ abstract class ViewAbstract extends Object implements ViewInterface, CommandCall
     public function getFormat()
     {
         return $this->getIdentifier()->name;
-    }
-
-    /**
-     * Get the mimetype
-     *
-     * @return  string The mimetype of the view
-     */
-    public function getMimetype()
-    {
-        return $this->__mimetype;
-    }
-    
-    /**
-     * Set the mimetype
-     *
-     * @return ViewAbstract
-     */
-    public function setMimetype($mimetype)
-    {
-        $this->__mimetype = $mimetype;
-        return $this;
     }
 
     /**

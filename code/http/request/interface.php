@@ -120,9 +120,9 @@ interface HttpRequestInterface extends HttpMessageInterface
     public function isAjax();
 
     /**
-     * Is the request a flash request
+     * Is the request cacheable
      *
      * @return boolean
      */
-    public function isFlash();
+    public function isCacheable();
 }

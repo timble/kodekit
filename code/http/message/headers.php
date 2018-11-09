@@ -144,18 +144,6 @@ class HttpMessageHeaders extends ObjectArray
     }
 
     /**
-     * Returns true if the given HTTP header contains the given value.
-     *
-     * @param string $key   The HTTP header name
-     * @param string $value The HTTP value
-     * @return Boolean true if the value is contained in the header, false otherwise
-     */
-    public function contains($key, $value)
-    {
-        return in_array($value, $this->get($key, null, false));
-    }
-
-    /**
      * Removes a header nu name
      *
      * @param string $key The HTTP header name
@@ -191,29 +179,36 @@ class HttpMessageHeaders extends ObjectArray
 
         ksort($headers);
 
-        foreach ($headers as $name => $attributes)
+        foreach ($headers as $name => $values)
         {
-            $name   = implode('-', array_map('ucfirst', explode('-', $name)));
-            $values = array();
-            $params = array();
+            $value   = '';
+            $name    = implode('-', array_map('ucfirst', explode('-', $name)));
+            $results = array();
 
-            /*
-            * Attributes which have a numeric key are considered header values,
-            * attributes who have a none numeric key are considered header parameters.
-            */
-            foreach ($attributes as $key => $value)
+            foreach ($values as $key => $value)
             {
-                if(is_numeric($key)) {
-                    $values[] = $value;
-                } else {
-                    $params[] = $key.'='.$value;
+                if(!is_numeric($key))
+                {
+                    //Parameters
+                    if(is_array($value))
+                    {
+                        $modifiers = array();
+                        foreach($value as $k => $v) {
+                            $modifiers[] = $k.'='.$v;
+                        }
+
+                        $results[] = $key.';'.implode($modifiers, ',');
+                    }
+                    else $results[] = $key.'='.$value;
                 }
+                else $results[] = $value;
             }
 
-            $value = !empty($values) ? ': '.implode($values, ', ') : '';
-            $param = !empty($params) ? '; '.implode($params, '; ') : '';
+            $value = implode($results, ', ');
 
-            $content .= sprintf("%s%s%s\r\n", $name, $value, $param);
+            if ($value) {
+                $content .= sprintf("%s %s\r\n", $name.':', $value);
+            }
         }
 
         return $content;

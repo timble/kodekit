@@ -29,7 +29,6 @@ class ViewRss extends ViewTemplate
     {
         $config->append(array(
             'behaviors' => array('localizable', 'routable'),
-            'mimetype'  => 'application/rss+xml',
             'data'      => array(
                 'update_period'    => 'hourly',
                 'update_frequency' => 1
