@@ -149,23 +149,6 @@ class DispatcherResponseTransportStream extends DispatcherResponseTransportHttp
     }
 
     /**
-     * Generate an etag from a file stream
-     *
-     * This functions returns a md5 hash of same format as Apache does. Eg "%ino-%size-%mtime" using the file info.
-     * @link http://stackoverflow.com/questions/44937/how-do-you-make-an-etag-that-matches-apache
-     *
-     * @param DispatcherResponseInterface $response
-     * @return string
-     */
-    public function getFileEtag(DispatcherResponseInterface $response)
-    {
-        $info = $response->getStream()->getInfo();
-        $etag = sprintf('"%x-%x-%s"', $info['ino'], $info['size'],base_convert(str_pad($info['mtime'],16,"0"),10,16));
-
-        return $etag;
-    }
-
-    /**
      * Sends content for the current web response.
      *
      * We flush(stream) the data to the output buffer based on the chunk size and range information provided in the
@@ -178,28 +161,6 @@ class DispatcherResponseTransportStream extends DispatcherResponseTransportHttp
     {
         if ($response->isSuccess() && $response->isStreamable())
         {
-            //For a certain unmentionable browser
-            if(ini_get('zlib.output_compression')) {
-                @ini_set('zlib.output_compression', 'Off');
-            }
-
-            //Fix for IE7/8
-            if(function_exists('apache_setenv')) {
-                @apache_setenv('no-gzip', '1');
-            }
-
-            //Remove PHP time limit
-            if(!ini_get('safe_mode')) {
-                @set_time_limit(0);
-            }
-
-            //Make sure the output buffers are cleared
-            $level = ob_get_level();
-            while($level > 0) {
-                ob_end_clean();
-                $level--;
-            }
-
             $stream  = $response->getStream();
 
             $offset = $this->getOffset($response);
@@ -235,13 +196,24 @@ class DispatcherResponseTransportStream extends DispatcherResponseTransportHttp
             //Explicitly set the Accept Ranges header to bytes to inform client we accept range requests
             $response->headers->set('Accept-Ranges', 'bytes');
 
-            //Set a file etag
-            $response->headers->set('etag', $this->getFileEtag($response));
-
             if($request->isStreaming())
             {
                 if($response->isSuccess())
                 {
+                    if(ini_get('zlib.output_compression')) {
+                        @ini_set('zlib.output_compression', 'Off');
+                    }
+
+                    //Fix for IE7/8
+                    if(function_exists('apache_setenv')) {
+                        @apache_setenv('no-gzip', '1');
+                    }
+
+                    //Remove PHP time limit
+                    if(!ini_get('safe_mode')) {
+                        @set_time_limit(0);
+                    }
+
                     //Default Content-Type Header
                     if(!$response->headers->has('Content-Type')) {
                         $response->headers->set('Content-Type', 'application/octet-stream');

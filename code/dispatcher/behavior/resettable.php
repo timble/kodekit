@@ -32,7 +32,7 @@ class DispatcherBehaviorResettable extends DispatcherBehaviorAbstract
         $mixer   = $this->getMixer();
         $request = $mixer->getRequest();
 
-        if(!$request->isSafe() && !$request->isAjax() && $request->getFormat() == 'html') {
+        if(!$request->isSafe() && !$request->isAjax() && $request->getContentType() == 'application/x-www-form-urlencoded') {
             return true;
         }
 
@@ -52,8 +52,8 @@ class DispatcherBehaviorResettable extends DispatcherBehaviorAbstract
         $response = $context->response;
         $request  = $context->request;
 
-        if($response->isSuccess()) {
-            $response->setRedirect($request->getReferrer());
+        if($response->isSuccess() && $referrer = $request->getReferrer()) {
+            $response->setRedirect($referrer);
         }
     }
 }

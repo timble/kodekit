@@ -146,7 +146,7 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
                 'request' 	 => $this->getRequest(),
                 'user'       => $this->getUser(),
                 'response'   => $this->getResponse(),
-                'dispatched' => true
+                'dispatched' => $this
             );
 
             $this->_controller = $this->getObject($this->_controller, $config);
@@ -273,6 +273,20 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
         //Execute the component and cast the context
         $controller->execute($action, $controller->getContext($context));
 
+        //Set the result in the response
+        if($context->result && !$context->response->isRedirect())
+        {
+            $result = $context->result;
+
+            if ($result instanceof ObjectConfigFormat) {
+                $context->response->setContentType($result->getMediaType());
+            }
+
+            if (is_string($result) || (is_object($result) && method_exists($result, '__toString'))) {
+                $context->response->setContent($result);
+            }
+        }
+
         //Send the response
         return $this->send($context);
     }
@@ -345,6 +359,21 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
      */
     protected function _actionSend(DispatcherContext $context)
     {
-        $context->response->send();
+        //Send the response
+        $context->response->send(false);
+
+        //Terminate the response
+        $this->terminate($context);
+    }
+
+    /**
+     * Flush the output buffer and terminate request
+     *
+     * @param DispatcherContextInterface $context
+     * @return void
+     */
+    public function _actionTerminate(DispatcherContextInterface $context)
+    {
+        $context->response->terminate();
     }
 }
