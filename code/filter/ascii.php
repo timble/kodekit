@@ -38,11 +38,13 @@ class FilterAscii extends FilterAbstract implements FilterTraversable
      */
     public function sanitize($value)
     {
-        $string = htmlentities(utf8_decode($value), ENT_SUBSTITUTE);
-        $string = preg_replace(
-            array('/&szlig;/','/&(..)lig;/', '/&([aouAOU])uml;/','/&(.)[^;]*;/'),
-            array('ss',"$1","$1".'e',"$1"),
-            $string);
+        // Then convert anything outside the ISO-8859-1 range to nearest ASCII
+        $string = \Transliterator::create('Any-Latin; [^a-ÿ] Latin-ASCII; NFD; [:Nonspacing Mark:] Remove; NFC; [:Punctuation:] Remove;')
+            ->transliterate($value);
+
+        if ($string === false) {
+            throw new \UnexpectedValueException('Cannot transliterate string to ASCII');
+        }
 
         return $string;
     }
