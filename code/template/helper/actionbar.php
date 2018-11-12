@@ -105,9 +105,15 @@ class TemplateHelperActionbar extends TemplateHelperToolbar
             $config->attribs['href'] = $config->href;
         }
 
-        $html  = '<a '.$this->buildAttributes($config->attribs).'>';
+        $attribs = clone $config->attribs;
+        $attribs->class = implode(" ", ObjectConfig::unbox($attribs->class));
+
+        $html = '<a '.$this->buildAttributes($attribs).'>';
+
         $html .= '<span class="'.$config->icon.'" aria-hidden="true"></span> ';
-        $html .= ucfirst($translator->translate($config->label));
+        $html .= '<span class="k-button__text">';
+        $html .= $translator->translate($config->label);
+        $html .= '</span>';
         $html .= '</a>';
 
         return $html;
