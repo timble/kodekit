@@ -52,7 +52,7 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
             $headers = explode("\r\n", trim((string) $response->getHeaders()));
 
             foreach ($headers as $header) {
-                header($header);
+                header($header, false);
             }
         }
         else throw new \RuntimeException(sprintf('Headers already send (output started at %s:%s', $file, $line));
