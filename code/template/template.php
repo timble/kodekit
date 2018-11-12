@@ -20,7 +20,7 @@ class Template extends TemplateAbstract
     /**
      * The template parameters
      *
-     * @var array
+     * @var ObjectConfigInterface
      */
     private $__parameters;
 

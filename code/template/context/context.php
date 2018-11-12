@@ -38,7 +38,7 @@ class TemplateContext extends Command implements TemplateContextInterface
      * Set the view data
      *
      * @param array $data
-     * @return ViewContext
+     * @return ObjectConfigInterface
      */
     public function setData($data)
     {
@@ -59,7 +59,7 @@ class TemplateContext extends Command implements TemplateContextInterface
      * Set the template source
      *
      * @param string $source
-     * @return TemplateContext
+     * @return ObjectConfigInterface
      */
     public function setSource($source)
     {
@@ -79,8 +79,8 @@ class TemplateContext extends Command implements TemplateContextInterface
     /**
      * Set the view parameters
      *
-     * @param array $parameters
-     * @return ViewContextTemplate
+     * @param array|ObjectConfigInterface $parameters
+     * @return ObjectConfigInterface
      */
     public function setParameters($parameters)
     {
