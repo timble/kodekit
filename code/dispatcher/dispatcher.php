@@ -174,7 +174,7 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
         $controller = $this->getController();
 
         if($controller instanceof ControllerViewable) {
-            $result =  $this->execute('get', $controller->getContext($context));
+            $result =  $this->execute('get', $context);
         } else {
             throw new DispatcherExceptionMethodNotAllowed('Method HEAD not allowed');
         }
@@ -232,7 +232,7 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
             if ($context->response->isSuccess())
             {
                 if(!is_string($result) && !(is_object($result) && method_exists($result, '__toString'))) {
-                    $result = $controller->execute('render', $context);
+                    $result = $controller->execute('render', $controller->getContext($context));
                 }
             }
         }
@@ -291,7 +291,7 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
             if ($context->response->isSuccess())
             {
                 if(!is_string($result) && !(is_object($result) && method_exists($result, '__toString'))) {
-                    $result = $controller->execute('render', $context);
+                    $result = $controller->execute('render', $controller->getContext($context));
                 }
             }
         }
