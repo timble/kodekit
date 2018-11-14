@@ -495,7 +495,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 'value'         => $config->value,
                 'text'          => $config->text,
                 'selected'      => $config->selected,
-                'url'           => $config->url,
+                'url'           => $config->ajax_url,
                 'multiple'      => false
             )
         ))->append(array(
@@ -507,7 +507,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         $html ='';
 
         if (!$config->options->url instanceof HttpUrl) {
-            $config->options->url = $this->getObject('lib:http.url', array('url' => $config->options->url));
+            $config->options->url = $this->getObject('lib:http.url', ['url' => $config->options->url]);
         }
 
         if(!empty($config->name))
@@ -557,10 +557,10 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                                 var results = [],
                                     more = (page * 10) < data.meta.total; // whether or not there are more results available
             
-                                kQuery.each(data.entities, function(i, item) {
+                                kQuery.each(data.data, function(i, item) {
                                     // Change format to what select2 expects
-                                    item.id   = item[options.value];
-                                    item.text = item[options.text];
+                                    item.id   = item.attributes[options.value];
+                                    item.text = item.attributes[options.text];
             
                                     results.push(item);
                                 });
