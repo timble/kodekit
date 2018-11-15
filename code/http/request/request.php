@@ -244,6 +244,18 @@ class HttpRequest extends HttpMessage implements HttpRequestInterface
     }
 
     /**
+     * Is the request a submitted HTTP form?
+     *
+     * @return boolean
+     */
+    public function isFormSubmit()
+    {
+        $form_submit = in_array($this->getContentType(), ['application/x-www-form-urlencoded', 'multipart/form-data']);
+
+        return ($form_submit && !$this->isSafe() && !$this->isAjax());
+    }
+
+    /**
      * Is this a safe request?
      *
      * @link http://tools.ietf.org/html/rfc2616#section-9.1.1

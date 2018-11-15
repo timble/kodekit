@@ -29,14 +29,7 @@ class DispatcherBehaviorResettable extends DispatcherBehaviorAbstract
      */
     public function isSupported()
     {
-        $mixer   = $this->getMixer();
-        $request = $mixer->getRequest();
-
-        if(!$request->isSafe() && !$request->isAjax() && $request->getContentType() == 'application/x-www-form-urlencoded') {
-            return true;
-        }
-
-        return false;
+        return $this->getMixer()->getRequest()->isFormSubmit();
     }
 
     /**
