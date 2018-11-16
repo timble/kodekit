@@ -29,7 +29,6 @@ class UserSessionHandlerDatabase extends UserSessionHandlerAbstract
      *
      * @param ObjectConfig $config An optional ObjectConfig object with configuration options
      * @throws \InvalidArgumentException
-     * @return UserSessionHandlerDatabase
      */
     public function __construct(ObjectConfig $config)
     {

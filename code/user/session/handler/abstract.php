@@ -31,7 +31,6 @@ abstract class UserSessionHandlerAbstract extends Object implements UserSessionH
      *
      * @param ObjectConfig|null $config  An optional ObjectConfig object with configuration options
      * @throws \RuntimeException If the session handler is not available
-     * @return UserSessionHandlerAbstract
      */
     public function __construct(ObjectConfig $config)
     {

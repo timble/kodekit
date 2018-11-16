@@ -24,7 +24,6 @@ class UserSessionHandlerFile extends UserSessionHandlerAbstract
      * Constructor
      *
      * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
-     * @return UserSessionHandlerFile
      */
     public function __construct(ObjectConfig $config)
     {

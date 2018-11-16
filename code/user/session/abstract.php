@@ -187,7 +187,7 @@ class UserSessionAbstract extends Object implements UserSessionInterface
      * automatically during session start.
      *
      * @param integer $lifetime The session lifetime in seconds
-     * @return UserSessionContainerMetadata
+     * @return $this
      */
     public function setLifetime($lifetime)
     {
@@ -231,7 +231,7 @@ class UserSessionAbstract extends Object implements UserSessionInterface
      *
      * @param  string $name
      * @throws \LogicException    When changing the name of an active session
-     * @return UserSession
+     * @return $this
      */
     public function setName($name)
     {
@@ -263,7 +263,7 @@ class UserSessionAbstract extends Object implements UserSessionInterface
      *
      * @param string $session_id
      * @throws \LogicException    When changing the id of an active session
-     * @return UserSession
+     * @return $this
      */
     public function setId($session_id)
     {
@@ -282,7 +282,7 @@ class UserSessionAbstract extends Object implements UserSessionInterface
      * namespace prevents session conflicts when the session is shared with other applications.
      *
      * @param string $namespace The session namespace
-     * @return UserSession
+     * @return $this
      */
     public function setNamespace($namespace)
     {
@@ -311,7 +311,7 @@ class UserSessionAbstract extends Object implements UserSessionInterface
      * @param mixed $handler An object that implements UserSessionHandlerInterface, ObjectIdentifier object
      *                       or valid identifier string
      * @param array $config An optional associative array of configuration settings
-     * @return UserSession
+     * @return $this
      */
     public function setHandler($handler, $config = array())
     {
@@ -445,7 +445,7 @@ class UserSessionAbstract extends Object implements UserSessionInterface
      *
      * @see  session_start()
      * @throws \RuntimeException If something goes wrong starting the session.
-     * @return UserSession
+     * @return $this
      */
     public function start()
     {
@@ -484,7 +484,7 @@ class UserSessionAbstract extends Object implements UserSessionInterface
      * This function will load the data from $_SESSION in the various registered containers, based on the container
      * namespace.
      *
-     * @return UserSession
+     * @return $this
      */
     public function refresh()
     {
@@ -516,7 +516,7 @@ class UserSessionAbstract extends Object implements UserSessionInterface
      * variables are done.
      *
      * @see  session_write_close()
-     * @return UserSession
+     * @return $this
      */
     public function close()
     {
@@ -532,7 +532,7 @@ class UserSessionAbstract extends Object implements UserSessionInterface
      * Clear all session data in memory.
      *
      * @see session_unset()
-     * @return UserSession
+     * @return $this
      */
     public function clear()
     {
@@ -556,7 +556,7 @@ class UserSessionAbstract extends Object implements UserSessionInterface
      * session cookie.
      *
      * @see session_destroy()
-     * @return UserSession
+     * @return $this
      */
     public function destroy()
     {
@@ -596,7 +596,7 @@ class UserSessionAbstract extends Object implements UserSessionInterface
      *                          and is not a Unix timestamp.
      * @see  session_regenerate_id()
      * @throws \RuntimeException If an error occurs while forking this storage
-     * @return UserSession
+     * @return $this
      */
     public function fork($destroy = true, $lifetime = null)
     {
@@ -631,7 +631,7 @@ class UserSessionAbstract extends Object implements UserSessionInterface
      *
      * @param   mixed   $identifier Attribute identifier, eg foo.bar
      * @param   mixed   $value      Attribute value
-     * @return User
+     * @return UserSessionContainerInterface
      */
     public function set($identifier, $value)
     {
@@ -653,7 +653,7 @@ class UserSessionAbstract extends Object implements UserSessionInterface
      * Removes an session attribute
      *
      * @param string $identifier Attribute identifier, eg foo.bar
-     * @return UserSession
+     * @return $this
      */
     public function remove($identifier)
     {
