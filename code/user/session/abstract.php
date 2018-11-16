@@ -143,10 +143,6 @@ class UserSessionAbstract extends Object implements UserSessionInterface
                 'use_only_cookies'  => 1,
                 'cookie_httponly'   => 1,
                 'use_trans_sid'     => 0,
-                'entropy_file'      => '/dev/urandom',
-                'entropy_length'    => 128,
-                'hash_function'     => 'sha256',
-                'hash_bits_per_character' => 5,
             ),
         ));
 
