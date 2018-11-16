@@ -138,7 +138,7 @@ class UserSessionHandlerDatabase extends UserSessionHandlerAbstract
      * @param   integer  $maxlifetime  The maximum age of a session
      * @return  boolean  True on success, false otherwise
      */
-    public function gc($maxlifetime)
+    public function gc($maxlifetime = null)
     {
         $result = false;
 
