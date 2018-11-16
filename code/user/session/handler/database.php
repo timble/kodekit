@@ -77,7 +77,14 @@ class UserSessionHandlerDatabase extends UserSessionHandlerAbstract
             }
         }
 
-        return $result;
+        /*
+         * It turns out that session_start() doesn't like the read method of a custom session handler
+         * returning false or null if there's no session in existence.
+         *
+         * See: https://stackoverflow.com/a/48245947
+         * See: http://php.net/manual/en/function.session-start.php#120589
+         */
+        return $result !== null ? $result : '';
     }
 
     /**
