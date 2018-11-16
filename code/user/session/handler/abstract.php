@@ -31,7 +31,6 @@ abstract class UserSessionHandlerAbstract extends Object implements UserSessionH
      *
      * @param ObjectConfig|null $config  An optional ObjectConfig object with configuration options
      * @throws \RuntimeException If the session handler is not available
-     * @return UserSessionHandlerAbstract
      */
     public function __construct(ObjectConfig $config)
     {
@@ -116,7 +115,14 @@ abstract class UserSessionHandlerAbstract extends Object implements UserSessionH
      */
     public function read($session_id)
     {
-        return;
+        /*
+         * It turns out that session_start() doesn't like the read method of a custom session handler
+         * returning false or null if there's no session in existence.
+         *
+         * See: https://stackoverflow.com/a/48245947
+         * See: http://php.net/manual/en/function.session-start.php#120589
+         */
+        return '';
     }
 
     /**
