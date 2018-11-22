@@ -96,22 +96,24 @@ class ObjectConfig implements ObjectConfigInterface
     }
 
     /**
-     * Remove a configuration option  by name
+     * Remove a configuration option by name(s)
      *
-     * @param   string $name The configuration option name.
+     * @param   string|array $names The configuration option name or a list of option names.
      * @return  ObjectConfig
      */
-    public function remove( $name )
+    public function remove($names)
     {
-        $key = false;
-        if(!isset($this->__options[$name])) {
-            $key = array_search($name, $this->__options, true);
-        } else {
-            $key = $name;
-        }
+        foreach((array) $names as $name)
+        {
+            if(!isset($this->__options[$name])) {
+                $key = array_search($name, $this->__options, true);
+            } else {
+                $key = $name;
+            }
 
-        if($key !== false) {
-            unset($this->__options[$key]);
+            if($key !== false) {
+                unset($this->__options[$key]);
+            }
         }
 
         return $this;
