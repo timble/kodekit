@@ -64,7 +64,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!static::isLoaded('kodekit'))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="assets://js/kodekit.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'koowa.js" />';
 
             static::setLoaded('kodekit');
         }
@@ -91,14 +91,15 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('vue'))
         {
-            $html .= '<ktml:script src="assets://js/vue.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'vue.js" />';
 
             static::setLoaded('vue');
         }
 
         if ($config->vuex && !static::isLoaded('vuex'))
         {
-            $html .= '<ktml:script src="assets://js/vuex.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/polyfill.promise.js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'vuex.js" />';
 
             static::setLoaded('vuex');
         }
@@ -112,13 +113,13 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
             $html .= $this->kodekit($config);
             $html .= "
-            <ktml:script src=\"assets://js/kodekit.vue.js\" />
+            <ktml:script src=\"assets://js/koowa.vue.js\" />
             <script>
                 kQuery(function($) {
                     var form = $('.k-js-form-controller');
                     
                     if (form.length) {
-                        form.data('controller').store = Kodekit.EntityStore.create({
+                        form.data('controller').store = Koowa.EntityStore.create({
                             form: form,
                             entity: ".json_encode($entity)."
                         });
@@ -148,9 +149,34 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('modernizr'))
         {
-            $html = '<ktml:script src="assets://js/modernizr.'.($config->debug ? '' : 'min.').'js" />';
+            $html = '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'modernizr.js" />';
 
             static::setLoaded('modernizr');
+        }
+
+        return $html;
+    }
+
+    /**
+     * Loads KUI initialize
+     *
+     * @param array|ObjectConfig $config
+     * @return string
+     */
+    public function kodekitui($config = array())
+    {
+        $config = new ObjectConfigJson($config);
+        $config->append(array(
+            'debug' => \Kodekit::getInstance()->isDebug()
+        ));
+
+        $html = '';
+
+        if (!static::isLoaded('kodekitui'))
+        {
+            $html = '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'kui-initialize.js" />';
+
+            static::setLoaded('kodekitui');
         }
 
         return $html;
@@ -177,7 +203,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('jquery'))
         {
-            $html .= '<ktml:script src="assets://js/jquery.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'jquery.js" />';
 
             static::setLoaded('jquery');
         }
@@ -205,7 +231,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if ($config->javascript && !static::isLoaded('bootstrap-javascript'))
         {
             $html .= $this->jquery($config);
-            $html .= '<ktml:script src="assets://js/bootstrap.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'bootstrap.js" />';
 
             static::setLoaded('bootstrap-javascript');
         }
@@ -242,7 +268,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if(!static::isLoaded('modal'))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="assets://js/jquery.magnific-popup.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'jquery.magnific-popup.js" />';
 
             static::setLoaded('modal');
         }
@@ -387,7 +413,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if(!static::isLoaded('validator'))
         {
             $html .= $this->kodekit();
-            $html .= '<ktml:script src="assets://js/jquery.validate.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'jquery.validate.js" />';
 
             static::setLoaded('validator');
         }
@@ -403,7 +429,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
             $html .= "<script>
             kQuery(function($){
-                $('$config->selector').on('kodekit:validate', function(event){
+                $('$config->selector').on('koowa:validate', function(event){
                     if(!$(this).valid() || $(this).validate().pendingRequest !== 0) {
                         event.preventDefault();
                     }
@@ -444,7 +470,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!static::isLoaded('select2'))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="assets://js/kodekit.select2.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'koowa.select2.js" />';
 
             static::setLoaded('select2');
         }
@@ -531,11 +557,11 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
             if (!static::isLoaded('kodekit-select2-autocomplete')) {
                 $html .= '<script>
-                if(!Kodekit) {
-                    var Kodekit = {};
+                if(!Koowa) {
+                    var Koowa = {};
                 }
                 
-                Kodekit.getSelect2Options = function(options) {
+                Koowa.getSelect2Options = function(options) {
                     var defaults = {
                         width: "resolve",
                         minimumInputLength: 2,
@@ -582,7 +608,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
             $html .= '<script>
             kQuery(function($){
-                $("'.$config->element.'").select2(Kodekit.getSelect2Options('.$options.'));
+                $("'.$config->element.'").select2(Koowa.getSelect2Options('.$options.'));
             });</script>';
 
             static::setLoaded($signature);
@@ -625,7 +651,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!static::isLoaded('tree'))
         {
             $html .= $this->kodekit();
-            $html .= '<ktml:script src="assets://js/kodekit.tree.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'koowa.tree.js" />';
 
             static::setLoaded('tree');
         }
@@ -679,7 +705,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
             $html .= '<script>
             kQuery(function($){
-                new Kodekit.Tree('.json_encode($config->element).', '.$options.');
+                new Koowa.Tree('.json_encode($config->element).', '.$options.');
             });</script>';
 
             static::setLoaded($signature);
@@ -709,7 +735,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         // Load Bootstrap with JS plugins.
         if(!static::isLoaded('tooltip'))
         {
-            $html .= '<ktml:script src="assets://js/tooltip.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'tooltip.js" />';
 
             static::setLoaded('tooltip');
         }
@@ -846,7 +872,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 {
                     $html .= "<script>
                         kQuery(function($){
-                            $('.k-js-form-controller').on('kodekit:submit', function() {
+                            $('.k-js-form-controller').on('koowa:submit', function() {
                                 var element = kQuery('#".$config->id."'),
                                     picker  = element.data('kdatepicker'),
                                     offset  = $config->offset_seconds;
@@ -892,7 +918,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('calendar'))
         {
-            $html .= '<ktml:script src="assets://js/kodekit.datepicker.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'koowa.datepicker.js" />';
 
             $locale = array(
                 'days'  =>  array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
@@ -956,23 +982,23 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         {
             $html = sprintf("
             <script>
-            if(!Kodekit) {
-                var Kodekit = {};
+            if(!Koowa) {
+                var Koowa = {};
             }
 
-            if (!Kodekit.Date) {
-                Kodekit.Date = {};
+            if (!Koowa.Date) {
+                Koowa.Date = {};
             }
 
-            Kodekit.Date.local_month_names = %s;
-            Kodekit.Date.getMonthName = function(month, short) {
+            Koowa.Date.local_month_names = %s;
+            Koowa.Date.getMonthName = function(month, short) {
                 month = parseInt(month, 10);
 
                 if (month < 1 || month > 12) {
                     throw 'Month index should be between 1 and 12';
                 }
 
-                return Kodekit.Date.local_month_names[month][short ? 'short' : 'long'];
+                return Koowa.Date.local_month_names[month][short ? 'short' : 'long'];
             };
             </script>
             ", json_encode($months));
