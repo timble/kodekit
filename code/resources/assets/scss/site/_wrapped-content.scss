@@ -1,0 +1,7 @@
+// wrapped content
+.koowa_wrapped_content {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  @include wrap_words;
+}
