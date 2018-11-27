@@ -49,6 +49,7 @@ class ViewCsv extends ViewAbstract
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
+            'behaviors'   => array('routable'),
             'disposition' => 'inline',
             'quote'       => '"',
             'separator'   => ',',
