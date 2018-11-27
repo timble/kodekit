@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Template\Helper
  */
-class TemplateHelperUi extends TemplateHelperAbstract
+class TemplateHelperUi extends TemplateHelperAbstract implements TemplateHelperParameterizable
 {
     /**
      * Loads the common UI libraries
@@ -145,7 +145,6 @@ class TemplateHelperUi extends TemplateHelperAbstract
             TemplateHelperBehavior::setLoaded('k-js-enabled');
         }
 
-
         return $html;
     }
 
@@ -153,10 +152,6 @@ class TemplateHelperUi extends TemplateHelperAbstract
     {
         $config = new ObjectConfigJson($config);
 
-        // TODO: use decorator from template
-        /*$this->getTemplate()->addFilter('wrapper');
-        $this->getTemplate()->getFilter('wrapper')->setWrapper($config->wrapper);*/
-
-        //return '<ktml:template:wrapper>'; // used to make sure the template only wraps once
+        return '<ktml:wrapper template="'.htmlentities($config->wrapper).'">';
     }
 }

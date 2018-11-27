@@ -20,37 +20,21 @@ namespace Kodekit\Library;
 class TemplateFilterWrapper extends TemplateFilterAbstract
 {
     /**
-     * An sprintf parameter with %s in it for the template content
-     *
-     * @type string
-     */
-    protected $_wrapper;
-
-    /**
-     * @param ObjectConfig $config
-     */
-    public function __construct(ObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        $this->setWrapper($config->wrapper);
-    }
-
-    /**
      * @param ObjectConfig $config
      */
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'priority'  => self::PRIORITY_LOWEST,
-            'wrapper' => null
+            'priority'  => self::PRIORITY_LOW,
         ));
 
         parent::_initialize($config);
     }
 
     /**
-     * Checks if the text has <ktml:template:wrapper> to make sure it only runs once
+     * Checks if the text has <ktml:wrapper template="string with %s placeholder for template contents">
+     *
+     * If it does, wraps the whole output using the passed template
      *
      * @param $text
      * @param TemplateInterface $template A template object.
@@ -58,26 +42,22 @@ class TemplateFilterWrapper extends TemplateFilterAbstract
      */
     public function filter(&$text, TemplateInterface $template)
     {
-        if ($this->getWrapper() && strpos($text, '<ktml:template:wrapper>') !== false)
+        if (strpos($text, '<ktml:wrapper') !== false)
         {
-            $text = sprintf($this->getWrapper(), $text);
-            $text = str_replace('<ktml:template:wrapper>', '', $text);
+            if(preg_match_all('#<ktml:wrapper\s+template="([^"]+)"\s*>#siU', $text, $matches, PREG_SET_ORDER))
+            {
+                foreach ($matches as $match)
+                {
+                    $wrapper_template = html_entity_decode($match[1]);
+
+                    if ($wrapper_template) {
+                        $text = sprintf($wrapper_template, $text);
+                        $text = str_replace($matches[0], '', $text);
+
+                        return;
+                    }
+                }
+            }
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getWrapper()
-    {
-        return $this->_wrapper;
-    }
-
-    /**
-     * @param $wrapper
-     */
-    public function setWrapper($wrapper)
-    {
-        $this->_wrapper = $wrapper;
     }
 }
