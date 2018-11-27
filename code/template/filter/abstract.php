@@ -33,7 +33,6 @@ abstract class TemplateFilterAbstract extends Object implements TemplateFilterIn
     {
         parent::__construct($config);
 
-        $this->__template = $config->template;
         $this->_priority = $config->priority;
     }
 
