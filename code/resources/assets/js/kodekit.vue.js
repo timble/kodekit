@@ -6,9 +6,9 @@
  * @link		https://github.com/joomlatools/joomlatools-framework for the canonical source repository
  */
 
-if(!Koowa) {
+if(!Kodekit) {
     /** @namespace */
-    var Koowa = {};
+    var Kodekit = typeof Koowa !== 'undefined' ?  Koowa : {};
 }
 
 (function($) {
@@ -27,9 +27,9 @@ if(!Koowa) {
         };
     };
 
-    Koowa.EntityStore = {};
+    Kodekit.EntityStore = {};
 
-    Koowa.EntityStore.createFormBinding = function(store, property, element) {
+    Kodekit.EntityStore.createFormBinding = function(store, property, element) {
         store.watch(function(state) {
             return state.entity[property];
         }, function(newVal, oldVal) {
@@ -46,7 +46,7 @@ if(!Koowa) {
         });
     };
 
-    Koowa.EntityStore.create = function(options) {
+    Kodekit.EntityStore.create = function(options) {
         var store = new Vuex.Store({
             state: {
                 entity: {}
@@ -83,7 +83,7 @@ if(!Koowa) {
 
             if (options.bindings) {
                 $.each(options.bindings, function(i, property) {
-                    Koowa.EntityStore.createFormBinding(store, property, form);
+                    Kodekit.EntityStore.createFormBinding(store, property, form);
                 });
             }
         }

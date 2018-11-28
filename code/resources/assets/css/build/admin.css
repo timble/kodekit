@@ -2229,6 +2229,7 @@ body.k-is-resizing {
      ========================================================================== */
   /**
    * 1. Faking a border for when items are not stretching
+   * 2. Hide horizontal scrollbar
    */
   /**
    * Scopebar items
@@ -8264,6 +8265,8 @@ html:not([dir="rtl"]) .k-input-group__button:first-child > .k-button-group:not(:
       flex: 0 0 auto;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
+  overflow: hidden;
+  /* 2 */
 }
 
 .k-ui-namespace .k-scopebar:before, .k-ui-namespace .k-scopebar:after {
@@ -9650,10 +9653,16 @@ html:not([dir="rtl"]) .k-input-group__button:first-child > .k-button-group:not(:
 }
 
 .k-ui-namespace .k-table-container th {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  z-index: 1;
+  /* autoprefixer: off */
+}
+
+@supports (position: sticky) and (not (position: -webkit-sticky)) {
+  .k-ui-namespace .k-table-container th {
+    /* autoprefixer: off */
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
 }
 
 .k-ui-namespace .k-table-container th {
@@ -9910,7 +9919,11 @@ html:not([dir="rtl"]) .k-input-group__button:first-child > .k-button-group:not(:
   border-bottom-color: #ededed;
 }
 
-@supports ((position: -webkit-sticky) or (position: sticky)) {
+.k-ui-namespace .k-table-container thead ~ tbody .k-table__sub-header th {
+  /* autoprefixer: off */
+}
+
+@supports (position: sticky) and (not (position: -webkit-sticky)) {
   .k-ui-namespace .k-table-container thead ~ tbody .k-table__sub-header th {
     top: 40px;
   }

@@ -10,13 +10,13 @@
 function toggle_trace() {
 
     // Get all links
-    var dumpees = document.getElementsByClassName('koowa-toggle');
+    var dumpees = document.getElementsByClassName('k-debug-toggle');
 
     // Iterate through them
     for( var i = 0; i < dumpees.length; i++ ) {
         var next = dumpees[i].nextSibling;
-        apollo.addClass(dumpees[i], 'koowa-collapsed');
-        apollo.addClass(next, 'koowa-collapsed');
+        apollo.addClass(dumpees[i], 'k-debug-collapsed');
+        apollo.addClass(next, 'k-debug-collapsed');
 
         dumpees[i].onclick = function() {
             useItem(this);
@@ -26,12 +26,12 @@ function toggle_trace() {
     // The fuction for the link
     function useItem(el){
         var next = el.nextSibling;
-        if ( apollo.hasClass(next, 'koowa-collapsed') ) {
-            apollo.removeClass(el, 'koowa-collapsed');
-            apollo.removeClass(next, 'koowa-collapsed');
+        if ( apollo.hasClass(next, 'k-debug-collapsed') ) {
+            apollo.removeClass(el, 'k-debug-collapsed');
+            apollo.removeClass(next, 'k-debug-collapsed');
         } else {
-            apollo.addClass(el, 'koowa-collapsed');
-            apollo.addClass(next, 'koowa-collapsed');
+            apollo.addClass(el, 'k-debug-collapsed');
+            apollo.addClass(next, 'k-debug-collapsed');
         }
     }
 }

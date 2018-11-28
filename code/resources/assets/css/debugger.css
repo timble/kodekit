@@ -114,20 +114,20 @@
  Orginal Style from http://tracy.nette.org (c) 2004 David Grudl <http://davidgrudl.com>
 */
 /* toggle */
-.koowa-collapsed {
+.k-debug-collapsed {
   display: none; }
 
-.koowa-toggle {
+.k-debug-toggle {
   cursor: pointer;
   border-bottom: 1px dotted #bbb; }
-  .koowa-toggle:after {
+  .k-debug-toggle:after {
     content: " ▼";
     font-size: 10px;
     color: #888; }
 
-.koowa-toggle.koowa-collapsed {
+.k-debug-toggle.k-debug-collapsed {
   display: inline; }
-  .koowa-toggle.koowa-collapsed:after {
+  .k-debug-toggle.k-debug-collapsed:after {
     content: " ►"; }
 
 /* dump */
@@ -147,29 +147,29 @@
         border-left: 1px solid rgba(0, 0, 0, 0.1);
         margin-left: .5ex; }
 
-.koowa-dump-array,
-.koowa-dump-object {
+.k-debug-dump-array,
+.k-debug-dump-object {
   color: #dc322f; }
 
-.koowa-dump-string {
+.k-debug-dump-string {
   color: #268bd2; }
 
-.koowa-dump-number {
+.k-debug-dump-number {
   color: #859900; }
 
-.koowa-dump-null,
-.koowa-dump-bool {
+.k-debug-dump-null,
+.k-debug-dump-bool {
   color: #b58900; }
 
-.koowa-dump-visibility,
-.koowa-dump-hash {
+.k-debug-dump-visibility,
+.k-debug-dump-hash {
   font-size: 85%;
   color: #657b83; }
 
-.koowa-dump-indent {
+.k-debug-dump-indent {
   display: none; }
 
-.koowa-dump-key:before {
+.k-debug-dump-key:before {
   display: block;
   content: " ";
   width: 100%;

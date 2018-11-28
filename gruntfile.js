@@ -8,6 +8,17 @@ module.exports = function(grunt) {
 
     const sass = require('node-sass');
 
+    grunt.registerMultiTask("appendKodekit", "...", function() {
+        grunt.file
+            .expand(this.data)
+            .forEach(function(file) {
+                let contents = grunt.file.read(file);
+                contents += "\nif(typeof Kodekit === 'undefined') { var Kodekit = Koowa; }\n";
+
+                grunt.file.write(file, contents);
+            });
+    });
+
     // grunt config
     grunt.initConfig({
 
@@ -22,6 +33,15 @@ module.exports = function(grunt) {
             updateCanIUse: {
                 command: 'npm update caniuse-db'
             }
+        },
+
+        appendKodekit: {
+            files: [
+                '<%= kodekitAssetspath %>/js/build/admin.js',
+                '<%= kodekitAssetspath %>/js/min/admin.js',
+                '<%= kodekitAssetspath %>/js/build/kodekit.js',
+                '<%= kodekitAssetspath %>/js/min/kodekit.js'
+            ]
         },
 
 
@@ -54,7 +74,10 @@ module.exports = function(grunt) {
                         expand: true,
                         cwd: '<%= KUIPath %>/js',
                         src: ['*.js', '!*.min.js'],
-                        dest: '<%= kodekitAssetspath %>/js/build/'
+                        dest: '<%= kodekitAssetspath %>/js/build/',
+                        rename: function(dest, src) {
+                            return dest + src.replace(/koowa\./, "kodekit.");
+                        }
                     },
                     {
                         expand: true,
@@ -62,7 +85,7 @@ module.exports = function(grunt) {
                         src: ['*.min.js'],
                         dest: '<%= kodekitAssetspath %>/js/min/',
                         rename: function(dest, src) {
-                            return dest + src.replace(/\.min/, "");
+                            return dest + src.replace(/koowa\./, "kodekit.").replace(/\.min/, "");
                         }
                     }
                 ]

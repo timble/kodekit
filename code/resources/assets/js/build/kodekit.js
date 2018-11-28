@@ -1419,15 +1419,15 @@ Koowa.Controller = Koowa.Class.extend({
         return this;
     },
     on: function(type, fn){
-        return this.form.on('koowa:'+type, fn);
+        return this.form.on('k:'+type, fn);
     },
 
     off: function(type, fn){
-        return this.form.off('koowa:'+type, fn);
+        return this.form.off('k:'+type, fn);
     },
 
     trigger: function(type, args){
-        var event = $.Event('koowa:'+type);
+        var event = $.Event('k:'+type);
         this.form.trigger(event, args);
         return !event.isDefaultPrevented();
     },

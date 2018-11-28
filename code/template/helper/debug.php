@@ -407,7 +407,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
      */
     protected function _dumpNull($var, ObjectConfig $config, $level = 0)
     {
-        return '<span class="koowa-dump-null">NULL</span>'."\n";
+        return '<span class="k-debug-dump-null">NULL</span>'."\n";
     }
 
     /**
@@ -420,7 +420,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
      */
     protected function _dumpBoolean($var, ObjectConfig $config, $level = 0)
     {
-        return '<span class="koowa-dump-bool">bool</span> '.($var ? 'TRUE' : 'FALSE');
+        return '<span class="k-debug-dump-bool">bool</span> '.($var ? 'TRUE' : 'FALSE');
     }
 
     /**
@@ -433,7 +433,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
      */
     protected function _dumpInteger($var, ObjectConfig $config, $level = 0)
     {
-        return '<span class="koowa-dump-integer">'.$var.'</span>';
+        return '<span class="k-debug-dump-integer">'.$var.'</span>';
     }
 
     /**
@@ -448,7 +448,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
     {
         $var = is_finite($var) ? ($tmp = json_encode($var)) . (strpos($tmp, '.') === FALSE ? '.0' : '') : var_export($var, TRUE);
 
-        return '<span class="koowa-dump-float">'.$var.'</span>';
+        return '<span class="k-debug-dump-float">'.$var.'</span>';
     }
 
     /**
@@ -467,7 +467,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
             $str = StringEscaper::html($var);
         }
 
-        return '<span class="koowa-dump-string">string</span><span>('.strlen($var).')</span> "'.$str.'"';
+        return '<span class="k-debug-dump-string">string</span><span>('.strlen($var).')</span> "'.$str.'"';
     }
 
     /**
@@ -486,7 +486,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
             $marker = uniqid("\x00", TRUE);
         }
 
-        $result = '<span class="koowa-dump-array">array</span> (';
+        $result = '<span class="k-debug-dump-array">array</span> (';
 
         if (!empty($var))
         {
@@ -497,8 +497,8 @@ class TemplateHelperDebug extends TemplateHelperBehavior
                     // @todo count($var) is running _actionCount on model objects
                     $collapsed = false;//$level ? count($var) >= 7 : false;
 
-                    $result .= '<span class="koowa-toggle' . ($collapsed ? ' koowa-collapsed' : '') . '">'  . count($var) . ')</span>';
-                    $result .= '<div' . ($collapsed ? ' class="koowa-collapsed"' : '') . '>';
+                    $result .= '<span class="k-debug-toggle' . ($collapsed ? ' k-debug-collapsed' : '') . '">'  . count($var) . ')</span>';
+                    $result .= '<div' . ($collapsed ? ' class="k-debug-collapsed"' : '') . '>';
 
                     $var[$marker] = true;
 
@@ -506,8 +506,8 @@ class TemplateHelperDebug extends TemplateHelperBehavior
                     {
                         if ($key !== $marker)
                         {
-                            $result .= '<span class="koowa-dump-indent">   ' . str_repeat('|  ', $level) . '</span>';
-                            $result .= '<span class="koowa-dump-key">' . (preg_match('#^\w+\z#', $key) ? $key : StringEscaper::html($key)) . '</span> => ';
+                            $result .= '<span class="k-debug-dump-indent">   ' . str_repeat('|  ', $level) . '</span>';
+                            $result .= '<span class="k-debug-dump-key">' . (preg_match('#^\w+\z#', $key) ? $key : StringEscaper::html($key)) . '</span> => ';
                             $result .= $this->_dumpVar($value, $config, $level + 1);
                         }
                     }
@@ -578,13 +578,13 @@ class TemplateHelperDebug extends TemplateHelperBehavior
         }
 
         $result = '';
-        $result .= '<span class="koowa-dump-object">' . get_class($var) . '</span>';
+        $result .= '<span class="k-debug-dump-object">' . get_class($var) . '</span>';
 
         if($var instanceof ObjectInterface) {
-            $result .= '<span class="koowa-dump-identifier">(' . $var->getIdentifier() . ')</span>';
+            $result .= '<span class="k-debug-dump-identifier">(' . $var->getIdentifier() . ')</span>';
         }
 
-        $result .= '<span class="koowa-dump-hash">#' . substr(md5(spl_object_hash($var)), 0, 4) . '</span>';
+        $result .= '<span class="k-debug-dump-hash">#' . substr(md5(spl_object_hash($var)), 0, 4) . '</span>';
 
 
         static $list = array();
@@ -598,8 +598,8 @@ class TemplateHelperDebug extends TemplateHelperBehavior
                     // @todo count($var) is running _actionCount on model objects
                     $collapsed = false;//$level ? count($var) >= 7 : false;
 
-                    $result  = '<span class="koowa-toggle' . ($collapsed ? ' koowa-collapsed' : '') . '">' . $result . '</span>';
-                    $result .= '<div' . ($collapsed ? ' class="koowa-collapsed"' : '') . '>';
+                    $result  = '<span class="k-debug-toggle' . ($collapsed ? ' k-debug-collapsed' : '') . '">' . $result . '</span>';
+                    $result .= '<div' . ($collapsed ? ' class="k-debug-collapsed"' : '') . '>';
 
                     $list[] = $var;
 
@@ -608,12 +608,12 @@ class TemplateHelperDebug extends TemplateHelperBehavior
                         $vis = '';
                         if ($key[0] === "\x00")
                         {
-                            $vis = ' <span class="koowa-dump-visibility">' . ($key[1] === '*' ? 'protected' : 'private') . '</span>';
+                            $vis = ' <span class="k-debug-dump-visibility">' . ($key[1] === '*' ? 'protected' : 'private') . '</span>';
                             $key = substr($key, strrpos($key, "\x00") + 1);
                         }
 
-                        $result .= '<span class="koowa-dump-indent">   ' . str_repeat('|  ', $level) . '</span>';
-                        $result .= '<span class="koowa-dump-key">' . (preg_match('#^\w+\z#', $key) ? $key : StringEscaper::html($key)) . '</span> '.$vis.' => ';
+                        $result .= '<span class="k-debug-dump-indent">   ' . str_repeat('|  ', $level) . '</span>';
+                        $result .= '<span class="k-debug-dump-key">' . (preg_match('#^\w+\z#', $key) ? $key : StringEscaper::html($key)) . '</span> '.$vis.' => ';
                         $result .= $this->_dumpVar($value, $config, $level + 1);
                     }
 
@@ -641,17 +641,17 @@ class TemplateHelperDebug extends TemplateHelperBehavior
     {
         $type = get_resource_type($var);
 
-        $result = '<span class="koowa-dump-resource">' . StringEscaper::html($type) . ' resource</span>';
+        $result = '<span class="k-debug-dump-resource">' . StringEscaper::html($type) . ' resource</span>';
 
         if (isset($config->resources[$type]))
         {
-            $result  = '<span class="koowa-toggle koowa-collapsed">'.$result.'</span>';
-            $result .= '<div class="koowa-collapsed">';
+            $result  = '<span class="k-debug-toggle k-debug-collapsed">'.$result.'</span>';
+            $result .= '<div class="k-debug-collapsed">';
 
             foreach (call_user_func($config->resources[$type], $var) as $key => $value)
             {
-                $result .= '<span class="koowa-dump-indent">   ' . str_repeat('|  ', $level) . '</span>';
-                $result .= '<span class="koowa-dump-key">' . StringEscaper::html($key) . "</span> => " . $this->_dumpVar($value, $config, $level + 1);
+                $result .= '<span class="k-debug-dump-indent">   ' . str_repeat('|  ', $level) . '</span>';
+                $result .= '<span class="k-debug-dump-key">' . StringEscaper::html($key) . "</span> => " . $this->_dumpVar($value, $config, $level + 1);
             }
 
             $result .= '</div>';
@@ -674,7 +674,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
      */
     protected function _dumpIdentifier($var, ObjectConfig $config, $level = 0)
     {
-        return '<span class="koowa-dump-identifier">'.$var.'</span>'."\n";
+        return '<span class="k-debug-dump-identifier">'.$var.'</span>'."\n";
     }
 
     /**
