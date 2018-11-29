@@ -472,6 +472,11 @@ class ModelState extends ObjectArray implements ModelStateInterface
      */
     protected function _sanitize($state)
     {
+        //Treat empty string as null
+        if ($state->value === '') {
+            $state->value = null;
+        }
+
         //Only filter if we have a value
         if(!empty($state->value))
         {
