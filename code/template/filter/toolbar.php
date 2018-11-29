@@ -146,7 +146,7 @@ class TemplateFilterToolbar extends TemplateFilterAbstract
                 {
                     $config->toolbar = $toolbar; //set the toolbar in the config
                     
-                    $html = $helper->render($config, $template);
+                    $html = $helper->render($config);
                 }
 
                 //Remove placeholder
