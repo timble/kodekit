@@ -31,37 +31,41 @@ class TemplateHelperPaginator extends TemplateHelperSelect
         $config->append(array(
             'url'        => null,
             'total'      => 0,
-            'display'    => 4,
+            'display'    => 2,
             'offset'     => 0,
             'limit'      => 0,
             'attribs'    => array(),
             'show_limit' => true,
-            'show_count' => true,
-            'page_rows'  => array(10, 20, 50, 100)
+            'show_count' => false,
         ))->append(array(
             'show_pages' => $config->count !== 1
         ));
 
-        $translator = $this->getObject('translator');
+        $html = '<div class="k-pagination">';
 
-        // Do not show pagination when $config->limit is lower then $config->total
-        if($config->total > $config->limit)
-        {
-            $html = '';
-            if($config->show_limit) {
-                $html .= '<div class="pagination__limit">'.$translator->translate('Display NUM').' '.$this->limit($config).'</div>';
-            }
-
-            if($config->show_pages) {
-                $html .=  $this->pages($config);
-            }
-
-            if($config->show_count) {
-                $html .= '<div class="pagination__count"> '.$translator->translate('Page').' '.$config->current.' '.$translator->translate('of').' '.$config->count.'</div>';
-            }
-            return $html;
+        if($config->show_limit) {
+            $html .= '<div class="k-pagination__limit">'.$this->limit($config).'</div>';
         }
-        return false;
+
+        if($config->show_pages) {
+            $html .= '<ul class="k-pagination__pages">';
+            $html .=  $this->pages($config);
+            $html .= '</ul>';
+        }
+
+        if($config->show_count)
+        {
+            $current = '<strong class="page-current">'.$config->current.'</strong>';
+            $total   = '<strong class="page-total">'.$config->count.'</strong>';
+
+            $html .= '<div class="k-pagination-pages">';
+            $html .= sprintf($this->getObject('translator')->translate('Page %s of %s'), $current, $total);
+            $html .= '</div>';
+        }
+
+        $html .= '</div>';
+
+        return $html;
     }
 
     /**
@@ -127,20 +131,27 @@ class TemplateHelperPaginator extends TemplateHelperSelect
             'show_pages' => $config->count !== 1
         ));
 
-        $html = '<div class="k-pagination">';
+        $pages = $config->pages;
 
-        if($config->offset) {
-            $html .= $this->page($config->pages->prev, $config->url);
+        $html = '';
+
+        $html .= $pages->previous->active ? '<li>'.$this->page($pages->previous, $config->url).'</li>' : '';
+
+        $previous = null;
+        foreach ($pages->offsets as $page)
+        {
+            if ($previous && $page->page - $previous->page > 1) {
+                $html .= '<li class="k-is-disabled"><span>&hellip;</span></li>';
+            }
+
+            $html .= '<li class="'.($page->active && !$page->current ? '' : 'k-is-active').'">';
+            $html .= $this->page($page, $config->url);
+            $html .= '</li>';
+
+            $previous = $page;
         }
 
-        foreach($config->pages->offsets as $offset) {
-            $html .= $this->page($offset, $config->url);
-        }
-
-        if($config->total > ($config->offset + $config->limit)) {
-            $html .= $this->page($config->pages->next, $config->url);
-        }
-        $html .= '</ul>';
+        $html  .= $pages->next->active ? '<li>'.$this->page($pages->next, $config->url).'</li>' : '';
 
         return $html;
     }
@@ -168,11 +179,17 @@ class TemplateHelperPaginator extends TemplateHelperSelect
         $url->query['limit']  = $page->limit;
         $url->query['offset'] = $page->offset;
 
-        $rel   = !empty($page->rel) ? 'rel="'.$page->rel.'"' : '';
+        $link_attribs = [];
 
-        $html = '<li '.$this->buildAttributes($page->attribs).'>';
-        $html .= '<a href="'.$url.'" '.$rel.'>'.$this->getObject('translator')->translate($page->title).'</a>';
-        $html .= '</li>';
+        if (!empty($page->rel)) {
+            $link_attribs['rel'] = $page->rel;
+        }
+
+        if ($page->active && !$page->current) {
+            $link_attribs['href'] = (string)$url;
+        }
+
+        $html = '<a '.$this->buildAttributes($link_attribs).'>'.$this->getObject('translator')->translate($page->title).'</a>';
 
         return $html;
     }

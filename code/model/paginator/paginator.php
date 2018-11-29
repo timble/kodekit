@@ -41,7 +41,7 @@ class ModelPaginator extends ObjectConfig implements ModelPaginatorInterface
         //Only calculate the limit and offset if we have a total
         if($this->total)
         {
-            $this->limit  = (int) max($this->limit, 1);
+            $this->limit  = (int) max($this->limit, 0);
             $this->offset = (int) max($this->offset, 0);
 
             if($this->limit > $this->total) {
@@ -67,7 +67,8 @@ class ModelPaginator extends ObjectConfig implements ModelPaginatorInterface
     /**
      * Implements lazy loading of the pages config property.
      *
-     * @param string
+     * @param string  $name
+     * @param mixed   $default
      * @return mixed
      */
     public function get($name, $default = null)
@@ -82,7 +83,7 @@ class ModelPaginator extends ObjectConfig implements ModelPaginatorInterface
     /**
      * Get a list of pages
      *
-     * @return  array   Returns and array of pages information
+     * @return  ObjectConfig   Returns and array of pages information
      */
     protected function _pages()
     {
@@ -91,33 +92,33 @@ class ModelPaginator extends ObjectConfig implements ModelPaginatorInterface
 
         // First
         $offset = 0;
-        $class  = $offset == $this->offset ? 'pagination__first disabled' : 'pagination__first';
-        $pages->first = array('title' => 'First', 'page' => 1, 'offset' => $offset, 'limit' => $this->limit, 'attribs' => array('class' => $class));
+        $active  = $offset != $this->offset;
+        $pages->first = array('title' => 'First', 'page' => 1, 'offset' => $offset, 'limit' => $this->limit, 'current' => false, 'active' => $active);
 
         // Previous
         $offset = max(0, ($this->current - 2) * $this->limit);
-        $class  = $offset == $this->offset ? 'pagination__previous disabled' : 'pagination__previous';
-        $pages->prev = array('title' => 'Previous', 'page' => $this->current - 1, 'offset' => $offset, 'limit' => $this->limit, 'rel' => 'prev', 'attribs' => array('class' => $class));
+        $active  = $offset != $this->offset;
+        $pages->previous = array('title' => '&laquo;', 'page' => $this->current - 1, 'offset' => $offset, 'limit' => $this->limit, 'rel' => 'prev', 'current' => false, 'active' => $active);
 
         // Pages
         $offsets = array();
         foreach($this->_offsets() as $page => $offset)
         {
-            $class = $offset == $this->offset ? 'pagination__offset active' : 'pagination__offset';
-            $offsets[] = array('title' => $page, 'page' => $page, 'offset' => $offset, 'limit' => $this->limit, 'attribs' => array('class' => $class));
+            $current = $offset == $this->offset;
+            $offsets[] = array('title' => $page, 'page' => $page, 'offset' => $offset, 'limit' => $this->limit, 'current' => $current, 'active' => !$current);
         }
 
         $pages->offsets = $offsets;
 
         // Next
         $offset = min(($this->count-1) * $this->limit, ($this->current) * $this->limit);
-        $class  = $offset == $this->offset ? 'pagination__next disabled' : 'pagination__next';
-        $pages->next = array('title' => 'Next', 'page' => $this->current + 1, 'offset' => $offset, 'limit' => $this->limit, 'rel' => 'next', 'attribs' => array('class' => $class));
+        $active  = $offset != $this->offset;
+        $pages->next = array('title' => '&raquo;', 'page' => $this->current + 1, 'offset' => $offset, 'limit' => $this->limit, 'rel' => 'next', 'current' => false, 'active' => $active);
 
         // Last
         $offset = ($this->count - 1) * $this->limit;
-        $class  = $offset == $this->offset ? 'pagination__last disabled' : 'pagination__last';
-        $pages->last = array('title' => 'Last', 'page' => $this->count, 'offset' => $offset, 'limit' => $this->limit, 'attribs' => array('class' => $class));
+        $active  = $offset != $this->offset;
+        $pages->last = array('title' => 'Last', 'page' => $this->count, 'offset' => $offset, 'limit' => $this->limit, 'current' => false, 'active' => $active);
 
         return $pages;
     }
