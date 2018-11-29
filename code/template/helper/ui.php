@@ -65,6 +65,7 @@ class TemplateHelperUi extends TemplateHelperAbstract implements TemplateHelperP
             }
 
             $config->styles->debug = $config->debug;
+            $config->styles->decorator = $config->decorator;
 
             $html .= $this->styles($config->styles);
         }
