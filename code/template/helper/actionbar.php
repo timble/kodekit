@@ -91,7 +91,7 @@ class TemplateHelperActionbar extends TemplateHelperToolbar
 
         $config->attribs->class->append(array('k-button', 'k-button--default', 'k-button-'.$config->id));
 
-        if ($config->id === 'new' || $config->id === 'apply') {
+        if ($config->id === 'new' || $config->id === 'save') {
             $config->attribs->class->append(array('k-button--success'));
         }
 

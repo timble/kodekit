@@ -43,12 +43,12 @@ class ControllerToolbarActionbar extends ControllerToolbarAbstract
     {
         $controller = $this->getController();
 
-        if($controller->isEditable() && $controller->canApply()) {
-            $this->addCommand('apply');
-        }
-
         if($controller->isEditable() && $controller->canSave()) {
             $this->addCommand('save');
+        }
+
+        if($controller->isEditable() && $controller->canApply()) {
+            $this->addCommand('apply');
         }
 
         if($controller->isEditable() && $controller->canCancel()) {
@@ -118,7 +118,7 @@ class ControllerToolbarActionbar extends ControllerToolbarAbstract
      */
     protected function _commandSave(ControllerToolbarCommand $command)
     {
-        $command->icon = 'k-icon-check k-icon--success';
+        $command->icon = 'k-icon-check';
 
         $command->append([
             'data' => [
