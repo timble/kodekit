@@ -800,13 +800,10 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             'id'      => 'datepicker-'.$config->name,
             'options_callback' => null,
             'options' => array(
-                'todayBtn' => 'linked',
-                'todayHighlight' => true,
+                'todayBtn' => false,
+                'clearBtn' => false,
                 'language' => 'en-GB',
-                'autoclose' => true, //Same as singleClick in previous js plugin,
-                'keyboardNavigation' => false, //To allow editing timestamps,
-                //'orientation' => 'auto left', //popover arrow set to point at the datepicker icon,
-                //'parentEl' => false //this feature breaks if a parent el is position: relative;
+                'autoclose' => true,
             )
         ));
 
@@ -894,7 +891,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 $config->format
             );
 
-            $html .= '<div class="k-input-group k-js-datepicker     date     " data-date-format="'.$format.'" id="'.$config->id.'">';
+            $html .= '<div class="k-input-group date" data-date-format="'.$format.'" id="'.$config->id.'">';
             $html .= '<input class="k-form-control" type="text" name="'.$config->name.'" value="'.$value.'"  '.$attribs.' />';
             $html .= '<span class="k-input-group__button input-group-btn">';
             $html .= '<button type="button" class="k-button k-button--default     btn     ">';
@@ -916,16 +913,20 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     {
         $html = '';
 
-        if (!static::isLoaded('calendar'))
-        {
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'kodekit.datepicker.js" />';
+        if (!static::isLoaded('calendar')) {
+            $html .= '<ktml:script src="assets://js/' . ($config->debug ? 'build/' : 'min/') . 'kodekit.datepicker.js" />';
 
+            static::setLoaded('calendar');
+        }
+
+        if (!static::isLoaded('calendar-locale'))
+        {
             $locale = array(
-                'days'  =>  array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
-                'daysShort' => array('Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun'),
-                'daysMin' => array('Su','Mo','Tu','We','Th','Fr','Sa','Su'),
-                'months' => array('January','February','March','April','May','June','July','August','September','October','November','December'),
-                'monthsShort' => array('January_short','February_short','March_short','April_short','May_short','June_short','July_short','August_short','September_short','October_short','November_short','December_short')
+                'days'        => ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                'daysShort'   => ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                'daysMin'     => ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+                'months'      => ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                'monthsShort' => ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
             );
 
             $translator = $this->getObject('translator');
@@ -943,11 +944,10 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             }(kQuery));
             </script>';
 
-            static::setLoaded('calendar');
+            static::setLoaded('calendar-locale');
         }
 
         return $html;
-
     }
 
     /**
