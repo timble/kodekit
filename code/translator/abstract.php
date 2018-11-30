@@ -58,8 +58,8 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
         $this->__catalogue = $config->catalogue;
         $this->__loaded   = array();
 
-        $this->setLanguage($config->language);
         $this->setLanguageFallback($config->language_fallback);
+        $this->setLanguage($config->language);
     }
 
     /**
