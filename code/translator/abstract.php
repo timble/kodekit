@@ -254,8 +254,11 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
             //Clear the catalogue
             $this->getCatalogue()->clear();
 
+            //Clear loaded files
+            $this->__loaded = [];
+
             //Load the library translations
-            $this->load(dirname(dirname(__FILE__)).'/resources/language');
+            $this->load(dirname(__DIR__).'/resources/language');
         }
 
         return $this;
