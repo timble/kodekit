@@ -59,6 +59,7 @@ final class ObjectConfigFactory extends Object implements ObjectSingleton
                 'ini'  => __NAMESPACE__.'\ObjectConfigIni',
                 'json' => __NAMESPACE__.'\ObjectConfigJson',
                 'xml'  => __NAMESPACE__.'\ObjectConfigXml',
+                'yml'  => __NAMESPACE__.'\ObjectConfigYaml',
                 'yaml' => __NAMESPACE__.'\ObjectConfigYaml'
             )
         ));
