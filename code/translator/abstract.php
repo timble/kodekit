@@ -186,7 +186,7 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
         {
             $translations = array();
 
-            if($file = $this->find($url))
+            foreach ($this->find($url) as $file)
             {
                 try {
                     $loaded = $this->getObject('object.config.factory')->fromFile($file)->toArray();
@@ -217,15 +217,22 @@ abstract class TranslatorAbstract extends Object implements TranslatorInterface,
         $fallback = $this->getLanguageFallback();
         $locator  = $this->getObject('translator.locator.factory')->createLocator($path);
 
-        //Find translation based on the language
-        $result = $locator->locate($path .'/' .$language);
+        $results = [];
 
-        //If no translations found, try using the fallback language
-        if(empty($result) && $fallback && $fallback != $language) {
-            $result = $locator->locate($path .'/'.$language);
+        // Try to load the fallback translations first
+        if ($fallback && $fallback != $language)
+        {
+            if ($result = $locator->locate($path .'/'.$fallback.'/'.$fallback.'.*')) {
+                $results[] = $result;
+            }
         }
 
-        return $result;
+        // Find translations based on the language
+        if ($result = $locator->locate($path .'/'.$language.'/'.$language.'.*')) {
+            $results[] = $result;
+        }
+
+        return $results;
     }
 
     /**
