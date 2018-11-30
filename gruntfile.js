@@ -185,6 +185,6 @@ module.exports = function(grunt) {
     });
 
     // The dev task will be used during development
-    grunt.registerTask('default', ['shell', 'copy', 'watch']);
+    grunt.registerTask('default', ['shell', 'copy', 'appendKodekit', 'watch']);
 
 };

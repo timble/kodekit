@@ -1609,3 +1609,4 @@ Koowa.Controller.Form = Koowa.Controller.extend({
 
 window.jQuery = globalCacheForjQueryReplacement;
 globalCacheForjQueryReplacement = undefined;
+if(typeof Kodekit === 'undefined') { var Kodekit = Koowa; }
