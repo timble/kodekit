@@ -35,7 +35,7 @@ class TranslatorLocatorComponent extends FilesystemLocatorComponent
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'path_templates' => array('resources/language/<File>.<Format>')
+            'path_templates' => array('resources/language/<File>/<File>.<Format>')
         ));
 
         parent::_initialize($config);
