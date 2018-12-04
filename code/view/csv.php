@@ -49,13 +49,11 @@ class ViewCsv extends ViewAbstract
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'version'     => '1.0',
+            'behaviors'   => array('routable'),
             'disposition' => 'inline',
             'quote'       => '"',
             'separator'   => ',',
             'eol'         => "\n"
-        ))->append(array(
-            'mimetype'    => 'text/csv; version='.$config->version,
         ));
 
         parent::_initialize($config);

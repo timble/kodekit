@@ -86,21 +86,57 @@ abstract class DispatcherResponseAbstract extends ControllerResponse implements 
      *
      * Iterate through the response transport handlers. If a handler returns TRUE the chain will be stopped.
      *
+     * @param  bool $terminate Whether to terminate the request by flushing it or not, defaults to TRUE
      * @return boolean  Returns true if the response has been send, otherwise FALSE
      */
-    public function send()
+    public function send($terminate = true)
     {
         foreach($this->_queue as $transport)
         {
             if($transport instanceof DispatcherResponseTransportInterface)
             {
-                if($transport->send($this) == true) {
+                if($transport->send($this) == true)
+                {
+                    if($terminate) {
+                        $this->terminate();
+                    }
+
                     return true;
                 }
             }
         }
 
         return false;
+    }
+
+    /**
+     * Flush the output buffer and terminate request
+     *
+     * @return void
+     */
+    public function terminate()
+    {
+        //Cleanup and flush output to client
+        if (!function_exists('fastcgi_finish_request'))
+        {
+            if (PHP_SAPI !== 'cli')
+            {
+                for ($i = 0; $i < ob_get_level(); $i++) {
+                    ob_end_flush();
+                }
+
+                flush();
+            }
+        }
+        else fastcgi_finish_request();
+
+        //Set the exit status based on the status code.
+        $status = 0;
+        if(!$this->isSuccess()) {
+            $status = (int) $this->getStatusCode();
+        }
+
+        exit($status);
     }
 
     /**
@@ -119,7 +155,7 @@ abstract class DispatcherResponseAbstract extends ControllerResponse implements 
         if($this->__stream instanceof FilesystemStreamInterface)
         {
             $this->__stream->truncate(0);
-            $this->__stream->write($content);
+            $this->__stream->write((string) $content);
         }
 
         return parent::setContent($content, $type);

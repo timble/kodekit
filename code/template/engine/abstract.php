@@ -20,7 +20,7 @@ abstract class TemplateEngineAbstract extends TemplateAbstract implements Templa
     /**
      * The engine file types
      *
-     * @var string
+     * @var array
      */
     protected static $_file_types = array();
 
@@ -351,7 +351,7 @@ abstract class TemplateEngineAbstract extends TemplateAbstract implements Templa
     {
         $this->_cache        = (bool) $cache;
         $this->_cache_path   = $path;
-        $this->_caceh_reload = $reload;
+        $this->_cache_reload = $reload;
 
         return $this;
     }

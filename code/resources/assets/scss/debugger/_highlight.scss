@@ -1,6 +1,10 @@
-/*
-Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmail.com>
-*/
+/* ==========================================================================
+   Solarized
+   ========================================================================== */
+
+/**
+ * Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmail.com>
+ */
 
 .hljs {
   display: block;
@@ -20,7 +24,9 @@ Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmai
   color: $base01;
 }
 
+
 /* Solarized Green */
+
 .hljs-keyword,
 .hljs-winutils,
 .method,
@@ -32,7 +38,9 @@ Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmai
   color: $green;
 }
 
+
 /* Solarized Cyan */
+
 .hljs-number,
 .hljs-command,
 .hljs-string,
@@ -46,7 +54,9 @@ Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmai
   color: $cyan;
 }
 
+
 /* Solarized Blue */
+
 .hljs-title,
 .hljs-localvars,
 .hljs-chunk,
@@ -59,7 +69,9 @@ Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmai
   color: $blue;
 }
 
+
 /* Solarized Yellow */
+
 .hljs-attribute,
 .hljs-variable,
 .lisp .hljs-body,
@@ -72,7 +84,9 @@ Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmai
   color: $green;
 }
 
+
 /* Solarized Orange */
+
 .hljs-preprocessor,
 .hljs-preprocessor .hljs-keyword,
 .hljs-pragma,
@@ -90,13 +104,17 @@ Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmai
   color: $orange;
 }
 
+
 /* Solarized Red */
+
 .hljs-deletion,
 .hljs-important {
   color: $red;
 }
 
+
 /* Solarized Violet */
+
 .hljs-link_label {
   color: $violet;
 }

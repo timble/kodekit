@@ -223,7 +223,7 @@ class TemplateEngineFactory extends Object implements ObjectSingleton
             foreach($types as $type)
             {
                 if($this->isRegistered($type)) {
-                    $this->__engines[$type] = $identifier;
+                    unset($this->__engines[$type]);
                 }
             }
         }

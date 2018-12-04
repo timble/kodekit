@@ -18,6 +18,13 @@ namespace Kodekit\Library;
 class ObjectConfigYaml extends ObjectConfigFormat
 {
     /**
+     * The format
+     *
+     * @var string
+     */
+    protected static $_format = 'application/x-yaml';
+
+    /**
      * YAML encoder callback
      *
      * @var callable

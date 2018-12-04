@@ -124,6 +124,20 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
         }
         else $this->execute(strtolower($context->request->getMethod()), $context);
 
+        //Set the result in the response
+        if($context->result && !$context->response->isRedirect())
+        {
+            $result = $context->result;
+
+            if ($result instanceof ObjectConfigFormat) {
+                $context->response->setContentType($result->getMediaType());
+            }
+
+            if (is_string($result) || (is_object($result) && method_exists($result, '__toString'))) {
+                $context->response->setContent($result);
+            }
+        }
+
         //Send the response
         return $this->send($context);
     }
@@ -160,7 +174,7 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
         $controller = $this->getController();
 
         if($controller instanceof ControllerViewable) {
-            $result =  $this->execute('get', $controller->getContext($context));
+            $result =  $this->execute('get', $context);
         } else {
             throw new DispatcherExceptionMethodNotAllowed('Method HEAD not allowed');
         }
@@ -196,7 +210,7 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
             {
                 $action = strtolower($context->request->data->get('_action', 'alnum'));
 
-                if(in_array($action, array('browse', 'read', 'render'))) {
+                if(in_array($action, array('browse', 'read', 'render', 'delete'))) {
                     throw new DispatcherExceptionMethodNotAllowed('Action: '.$action.' not allowed');
                 }
             }
@@ -211,7 +225,16 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
                 throw new ControllerExceptionRequestInvalid('Action not found');
             }
 
+            //Execute the controller action
             $result = $controller->execute($action, $controller->getContext($context));
+
+            //Return the new representation of the resource
+            if ($context->response->isSuccess())
+            {
+                if(!is_string($result) && !(is_object($result) && method_exists($result, '__toString'))) {
+                    $result = $controller->execute('render', $controller->getContext($context));
+                }
+            }
         }
         else throw new DispatcherExceptionMethodNotAllowed('Method POST not allowed');
 
@@ -261,7 +284,16 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
                 throw new ControllerExceptionRequestInvalid('Resource not found');
             }
 
+            //Execute the controller action
             $result = $controller->execute($action, $controller->getContext($context));
+
+            //Return the new representation of the resource
+            if ($context->response->isSuccess())
+            {
+                if(!is_string($result) && !(is_object($result) && method_exists($result, '__toString'))) {
+                    $result = $controller->execute('render', $controller->getContext($context));
+                }
+            }
         }
         else throw new DispatcherExceptionMethodNotAllowed('Method PUT not allowed');
 
@@ -323,10 +355,7 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
     /**
      * Send the response to the client
      *
-     * - Set the affected entities in the payload for none-SAFE requests that return a successful response. Make an
-     * exception for 204 No Content responses which should not return a response body.
-     *
-     * - Add an Allow header to the response if the status code is 405 METHOD NOT ALLOWED.
+     * Add an Allow header to the response if the status code is 405 METHOD NOT ALLOWED.
      *
      * @param DispatcherContext $context   A dispatcher context object
      * @return mixed
@@ -336,29 +365,13 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
         $request  = $this->getRequest();
         $response = $this->getResponse();
 
-        if (!$request->isSafe())
+        //Add an Allow header to the response
+        if($response->getStatusCode() === HttpResponse::METHOD_NOT_ALLOWED)
         {
-            if ($response->isSuccess())
-            {
-                //Render the controller and set the result in the response body
-                if($response->getStatusCode() !== HttpResponse::NO_CONTENT)
-                {
-                    $controller = $this->getController();
-                    $context->result = $controller->execute('render', $controller->getContext($context));
-                }
+            try {
+                $this->_actionOptions($context);
             }
-            else
-            {
-                //Add an Allow header to the response
-                if($response->getStatusCode() === HttpResponse::METHOD_NOT_ALLOWED)
-                {
-                    try {
-                        $this->_actionOptions($context);
-                    } catch (Exception $e) {
-                        //do nothing
-                    }
-                }
-            }
+            catch (Exception $e) {}
         }
 
         return parent::_actionSend($context);

@@ -18,6 +18,13 @@ namespace Kodekit\Library;
 abstract class ObjectConfigFormat extends ObjectConfig implements ObjectConfigSerializable
 {
     /**
+     * The format
+     *
+     * @var string
+     */
+    protected static $_media_type;
+
+    /**
      * Read from a file and create a config object
      *
      * @param  string   $filename
@@ -83,5 +90,15 @@ abstract class ObjectConfigFormat extends ObjectConfig implements ObjectConfigSe
         }
 
         return $result;
+    }
+
+    /**
+     * Return the media type
+     *
+     * @return string
+     */
+    public function getMediaType()
+    {
+        return static::$_media_type;
     }
 }

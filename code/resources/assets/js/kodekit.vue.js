@@ -8,7 +8,7 @@
 
 if(!Kodekit) {
     /** @namespace */
-    var Kodekit = {};
+    var Kodekit = typeof Koowa !== 'undefined' ?  Koowa : {};
 }
 
 (function($) {

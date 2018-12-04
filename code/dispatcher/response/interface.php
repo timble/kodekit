@@ -20,9 +20,17 @@ interface DispatcherResponseInterface extends ControllerResponseInterface
     /**
      * Send the response
      *
+     * @param bool $terminate Whether to terminate the request by flushing it or not, defaults to TRUE
      * @return boolean  Returns true if the response has been send, otherwise FALSE
      */
-    public function send();
+    public function send($terminate = true);
+
+    /**
+     * Flush the output buffer and terminate request
+     *
+     * @return void
+     */
+    public function terminate();
 
     /**
      * Sets the response content using a stream

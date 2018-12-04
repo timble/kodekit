@@ -120,6 +120,9 @@ abstract class EventPublisherAbstract extends Object implements EventPublisherIn
                 else $event = new Event($event, $attributes, $target);
             }
 
+            //Instantiate the subscribers
+            $this->getObject('event.subscriber.factory')->subscribeEvent($event->getName(), $this);
+
             //Notify the listeners
             $listeners = $this->getListeners($event->getName());
 

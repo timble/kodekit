@@ -82,7 +82,7 @@ abstract class UserSessionHandlerAbstract extends Object implements UserSessionH
             array($this, 'gc')
         );
 
-        $this->_registered = $this;
+        static::$_registered = $this;
     }
 
     /**
@@ -166,7 +166,7 @@ abstract class UserSessionHandlerAbstract extends Object implements UserSessionH
      */
     public function isRegistered()
     {
-        if (self::$_registered === $this) {
+        if (static::$_registered === $this) {
             return true;
         }
 

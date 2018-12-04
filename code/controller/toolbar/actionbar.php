@@ -43,12 +43,12 @@ class ControllerToolbarActionbar extends ControllerToolbarAbstract
     {
         $controller = $this->getController();
 
-        if($controller->isEditable() && $controller->canApply()) {
-            $this->addCommand('apply');
-        }
-
         if($controller->isEditable() && $controller->canSave()) {
             $this->addCommand('save');
+        }
+
+        if($controller->isEditable() && $controller->canApply()) {
+            $this->addCommand('apply');
         }
 
         if($controller->isEditable() && $controller->canCancel()) {
@@ -94,18 +94,89 @@ class ControllerToolbarActionbar extends ControllerToolbarAbstract
     /**
      * Delete toolbar command
      *
-     * @param   ControllerToolbarCommand $command  A ControllerToolbarCommand object
+     * @param   ControllerToolbarCommand $command  A KControllerToolbarCommand object
      * @return  void
      */
     protected function _commandDelete(ControllerToolbarCommand $command)
     {
         $translator = $this->getObject('translator');
-        $command->append(array(
-            'data' => array(
+        $command->append([
+            'data' => [
                 'action' => 'delete',
                 'prompt' => $translator->translate('Deleted items will be lost forever. Would you like to continue?')
-            )
-        ));
+            ]
+        ]);
+
+        $command->icon = 'k-icon-trash';
+    }
+
+    /**
+     * Edit toolbar command
+     *
+     * @param   ControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @return  void
+     */
+    protected function _commandSave(ControllerToolbarCommand $command)
+    {
+        $command->icon = 'k-icon-check';
+
+        $command->append([
+            'data' => [
+                'action' => 'save',
+            ]
+        ]);
+    }
+
+    /**
+     * Edit toolbar command
+     *
+     * @param   ControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @return  void
+     */
+    protected function _commandApply(ControllerToolbarCommand $command)
+    {
+        $command->icon = 'k-icon-pencil';
+
+        $command->append([
+            'data' => [
+                'action' => 'apply',
+            ]
+        ]);
+    }
+
+    /**
+     * Disable Toolbar Command
+     *
+     * @param   ControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @return  void
+     */
+    protected function _commandSave2new(ControllerToolbarCommand $command)
+    {
+        $command->icon = 'k-icon-plus k-icon--success';
+
+        $command->append([
+            'data' => [
+                'action' => 'save2new',
+            ]
+        ]);
+    }
+
+    /**
+     * Cancel Toolbar Command
+     *
+     * @param   ControllerToolbarCommand $command  A KControllerToolbarCommand object
+     * @return  void
+     */
+    protected function _commandCancel(ControllerToolbarCommand $command)
+    {
+        $command->icon = 'k-icon-x k-icon--error';
+
+        $command->append([
+            'data' => [
+                'action' => 'cancel',
+                'novalidate' => 'novalidate',
+            ]
+        ]);
     }
 
     /**

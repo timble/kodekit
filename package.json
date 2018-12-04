@@ -1,0 +1,29 @@
+{
+  "name": "kodekit",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timble/kodekit.git"
+  },
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/timble/kodekit/issues"
+  },
+  "homepage": "https://github.com/timble/kodekit#readme",
+  "devDependencies": {
+    "bootstrap-sass": "3.3.7",
+    "grunt": "1.0.0",
+    "grunt-autoprefixer": "2.2.0",
+    "grunt-contrib-copy": "1.0.0",
+    "grunt-contrib-watch": "1.1.0",
+    "grunt-sass": "3.0.0",
+    "grunt-shell": "1.3.1",
+    "jit-grunt": "0.10.0",
+    "node-sass": "4.9.3",
+    "time-grunt": "1.4.0",
+    "vue": "2.3.3",
+    "vuex": "2.3.1"
+  }
+}

@@ -68,14 +68,12 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
      */
     public function sendContent(DispatcherResponseInterface $response)
     {
-        //Make sure the output buffers are cleared
-        $level = ob_get_level();
-        while($level > 0) {
-            ob_end_clean();
-            $level--;
-        };
+        //Make sure we do not have body content for 204, 205 and 305 status codes
+        $codes = array(HttpResponse::NO_CONTENT, HttpResponse::NOT_MODIFIED, HttpResponse::RESET_CONTENT);
+        if (!in_array($response->getStatusCode(), $codes)) {
+            echo $response->getStream()->toString();
+        }
 
-        echo $response->getStream()->toString();
         return $this;
     }
 
@@ -95,12 +93,6 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
     public function send(DispatcherResponseInterface $response)
     {
         $request = $response->getRequest();
-
-        //Make sure we do not have body content for 204, 205 and 305 status codes
-        $codes = array(HttpResponse::NO_CONTENT, HttpResponse::NOT_MODIFIED, HttpResponse::RESET_CONTENT);
-        if (in_array($response->getStatusCode(), $codes)) {
-            $response->setContent(null);
-        }
 
         //Remove location header if we are not redirecting and the status code is not 201
         if(!$response->isRedirect() && $response->getStatusCode() !== HttpResponse::CREATED)
@@ -124,58 +116,64 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
         //Add file related information if we are serving a file
         if($response->isDownloadable())
         {
+            //Make sure the output buffers are cleared
+            $level = ob_get_level();
+            while($level > 0) {
+                ob_end_clean();
+                $level--;
+            }
+
             //Last-Modified header
             if($time = $response->getStream()->getTime(FilesystemStreamInterface::TIME_MODIFIED)) {
                 $response->setLastModified($time);
             };
 
-            //Allow to define a custom filename
-            if ($response->headers->has('X-Content-Disposition-Filename'))
-            {
-                $filename = $response->headers->get('X-Content-Disposition-Filename');
-                $response->headers->remove('X-Content-Disposition-Filename');
-            }
-            else
-            {
-                //basename does not work if the string starts with a UTF character
-                $filename   = ltrim(basename(' '.strtr($response->getStream()->getPath(), array('/' => '/ '))));
-            }
-
-            //Android cuts file names after #
             $user_agent = $response->getRequest()->getAgent();
-            if (stripos($user_agent, 'Android')) {
-                $filename = str_replace('#', '_', $filename);
-            }
 
-            $disposition = array('filename' => '"'.$filename.'"');
-
-            //IE7 and 8 accepts percent encoded file names as the filename value
-            //Other browsers (except Safari) use filename* header starting with UTF-8''
-            $encoded_name = rawurlencode($filename);
-
-            if($encoded_name !== $filename)
+            if (!$response->headers->has('Content-Disposition'))
             {
-                if (preg_match('/(?i)MSIE [4-8]/i', $user_agent)) {
-                    $disposition['filename'] = '"'.$encoded_name.'"';
-                } elseif (!stripos($user_agent, 'AppleWebkit')) {
-                    $disposition['filename*'] = 'UTF-8\'\''.$encoded_name;
+                if ($response->headers->has('X-Content-Disposition-Filename'))
+                {
+                    $filename = $response->headers->get('X-Content-Disposition-Filename');
+                    $response->headers->remove('X-Content-Disposition-Filename');
                 }
-            }
+                else
+                {
+                    // basename does not work if the string starts with a UTF character
+                    $filename   = ltrim(basename(' '.strtr($response->getStream()->getPath(), array('/' => '/ '))));
+                }
 
-            //Disposition header
-            $response->headers->set('Content-Disposition', array_merge(array('inline'), $disposition));
+                // Android cuts file names after #
+                if (stripos($user_agent, 'Android')) {
+                    $filename = str_replace('#', '_', $filename);
+                }
+
+                $directives = array('filename' => '"'.$filename.'"');
+
+                // IE7 and 8 accepts percent encoded file names as the filename value
+                // Other browsers (except Safari) use filename* header starting with UTF-8''
+                $encoded_name = rawurlencode($filename);
+
+                if($encoded_name !== $filename)
+                {
+                    if (preg_match('/(?i)MSIE [4-8]/i', $user_agent)) {
+                        $directives['filename'] = '"'.$encoded_name.'"';
+                    }
+                    elseif (!stripos($user_agent, 'AppleWebkit')) {
+                        $directives['filename*'] = 'UTF-8\'\''.$encoded_name;
+                    }
+                }
+
+                $disposition = $response->isAttachable() ? 'attachment' : 'inline';
+
+                //Disposition header
+                $response->headers->set('Content-Disposition', [$disposition => $directives]);
+            }
 
             //Force a download by the browser by setting the disposition to 'attachment'.
-            if($response->isAttachable())
-            {
+            if($response->isAttachable()) {
                 $response->setContentType('application/octet-stream');
-                $response->headers->set('Content-Disposition', array_merge(array('attachment'), $disposition));
             }
-        }
-
-        //Add Last-Modified header if not present
-        if(!$response->headers->has('Last-Modified')) {
-            $response->setLastModified(new \DateTime('now'));
         }
 
         //Add Content-Length if not present
@@ -188,11 +186,20 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
             $response->headers->remove('Content-Length');
         }
 
+        //Set Content-Type if not present
+        if(!$response->headers->has('Content-Type')) {
+            $response->setContentType($request->getFormat(true));
+        }
+
+        //set cache-control header to most conservative value.
+        $cache_control = (array) $response->headers->get('Cache-Control', null, false);
+        if (empty($cache_control) || !$request->isCacheable()) {
+            $response->headers->set('Cache-Control', array('private', 'no-cache', 'no-store'));
+        }
+
         //Modifies the response so that it conforms to the rules defined for a 304 status code.
         if($response->getStatusCode() == HttpResponse::NOT_MODIFIED)
         {
-            $response->setContent(null);
-
             $headers = array(
                 'Allow',
                 'Content-Encoding',
@@ -217,18 +224,6 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
             //@link : http://greenbytes.de/tech/tc/httpauth/
             if (!$response->headers->has('WWW-Authenticate')) {
                 $response->headers->set('WWW-Authenticate', 'unknown');
-            }
-        }
-
-        //Calculates or modifies the cache-control header to a sensible, conservative value.
-        $cache_control = (array) $response->headers->get('Cache-Control', null, false);
-
-        if (empty($cache_control))
-        {
-            if(!$response->isCacheable()) {
-                $response->headers->set('Cache-Control', 'no-cache');
-            } else {
-                $response->headers->set('Cache-Control', array('private', 'must-revalidate'));
             }
         }
 

@@ -1,9 +1,30 @@
-@import "debugger/variables";
-@import "debugger/highlight";
-@import "dumper";
+/**
+ * Debugger
+ * ========
+ * A flat colored debugger
+ */
 
-// Mixins
-@mixin transition($content) {
+
+/**
+ * Global tools
+ * ------------
+ * 1. Variables
+ * 2. Code highlighter styling
+ * 3. The dumper styles
+ */
+
+@import "debugger/variables"; // 1
+@import "debugger/highlight"; // 2
+@import "dumper"; // 3
+
+
+/**
+ * Mixins
+ * ------
+ * 1. Transition mixin
+ */
+
+@mixin transition($content) { // 1
   -webkit-transition: $content;
   -moz-transition: $content;
   -ms-transition: $content;
@@ -11,7 +32,13 @@
   transition: $content;
 }
 
-// Box sizing border-box all elements for this page
+
+/**
+ * Box-sizing
+ * ------
+ * Box sizing border-box all elements for this page
+ */
+
 body * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;

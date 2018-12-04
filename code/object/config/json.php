@@ -18,6 +18,13 @@ namespace Kodekit\Library;
 class ObjectConfigJson extends ObjectConfigFormat
 {
     /**
+     * The format
+     *
+     * @var string
+     */
+    protected static $_media_type = 'application/json';
+
+    /**
      * Read from a string and create an array
      *
      * @param  string   $string
@@ -50,10 +57,17 @@ class ObjectConfigJson extends ObjectConfigFormat
     public function toString()
     {
         $data = $this->toArray();
-        $data = json_encode($data);
 
-        if (json_last_error() > 0) {
-            throw new \DomainException(sprintf('Cannot encode data to JSON string - %s', json_last_error_msg()));
+        // Root should be JSON object, not array
+        if (count($data) === 0) {
+            $data = new \ArrayObject();
+        }
+
+        // Encode <, >, ', &, and " for RFC4627-compliant JSON, which may also be embedded into HTML.
+        $data = json_encode($data, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+
+        if($data === false) {
+            throw new \DomainException('Cannot encode data to JSON string');
         }
 
         return $data;

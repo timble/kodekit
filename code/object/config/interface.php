@@ -57,10 +57,10 @@ interface ObjectConfigInterface extends \IteratorAggregate, \ArrayAccess, \Count
     /**
      * Remove a configuration option by name
      *
-     * @param   string $name The configuration option name.
+     * @param   string|array $names The configuration option name or a list of option names.
      * @return  ObjectConfigInterface
      */
-    public function remove( $name );
+    public function remove($names);
 
     /**
      * Checks if a value exists

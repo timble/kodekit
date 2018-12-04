@@ -252,6 +252,15 @@ interface DispatcherRequestInterface extends ControllerRequestInterface
     public function getRanges();
 
     /**
+     * Gets the etags
+     *
+     * @link https://tools.ietf.org/html/rfc7232#page-14
+     *
+     * @return array The entity tags
+     */
+    public function getETags();
+
+    /**
      * Checks whether the request is secure or not.
      *
      * This method can read the client scheme from the "X-Forwarded-Proto" header when the request is proxied and the

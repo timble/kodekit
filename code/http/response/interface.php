@@ -51,7 +51,7 @@ interface HttpResponseInterface extends HttpMessageInterface
      * @link http://tools.ietf.org/html/rfc2616#section-14.17
      *
      * @param string $type Content type
-     * @return HttpResponse
+     * @return HttpResponseInterface
      */
     public function setContentType($type);
 
@@ -80,7 +80,7 @@ interface HttpResponseInterface extends HttpMessageInterface
      * @see http://tools.ietf.org/html/rfc2616#section-14.18
      *
      * @param  \DateTime $date A \DateTime instance
-     * @return HttpResponse
+     * @return HttpResponseInterface
      */
     public function setDate(\DateTime $date);
 
@@ -106,27 +106,6 @@ interface HttpResponseInterface extends HttpMessageInterface
     public function setLastModified(\DateTime $date = null);
 
     /**
-     * Returns the value of the Expires header as a \DateTime instance.
-     *
-     * @link http://tools.ietf.org/html/rfc2616#section-14.21
-     *
-     * @return \DateTime A \DateTime instance
-     */
-    public function getExpires();
-
-    /**
-     * Sets the Expires HTTP header with a \DateTime instance.
-     *
-     * If passed a null value, it removes the header.
-     *
-     * @link http://tools.ietf.org/html/rfc2616#section-14.21
-     *
-     * @param  \DateTime $date A \DateTime instance
-     * @return HttpResponse
-     */
-    public function setExpires(\DateTime $date = null);
-
-    /**
      * Returns the literal value of the ETag HTTP header.
      *
      * @link http://tools.ietf.org/html/rfc2616#section-14.19
@@ -142,7 +121,7 @@ interface HttpResponseInterface extends HttpMessageInterface
      *
      * @param string  $etag The ETag unique identifier
      * @param Boolean $weak Whether you want a weak ETag or not
-     * @return HttpResponse
+     * @return HttpResponseInterface
      */
     public function setEtag($etag = null, $weak = false);
 
@@ -156,12 +135,34 @@ interface HttpResponseInterface extends HttpMessageInterface
     public function getAge();
 
     /**
-     * Sets the number of seconds after the time specified in the response's Date header when the the response
-     * should no longer be considered fresh.
+     * Set the age of the response.
      *
-     * Uses the expires header to calculate the maximum age. It returns null when no max age can be established.
+     * @link http://tools.ietf.org/html/rfc2616#section-14.6
+     * @param integer $age The age of the response in seconds
+     * @return HttpResponseInterface
+     */
+    public function setAge($age);
+
+    /**
+     * Set the max age
      *
-     * @return integer|null Number of seconds
+     * This directive specifies the maximum time in seconds that the fetched response is allowed to be reused from
+     * the time of the request. For example, "max-age=60" indicates that the response can be cached and reused for
+     * the next 60 seconds.
+     *
+     * @link https://tools.ietf.org/html/rfc2616#section-14.9.3
+     * @param integer $max_age The max age of the response in seconds
+     * @return HttpResponse
+     */
+    public function setMaxAge($max_age);
+
+    /**
+     * Get the max age
+     *
+     * It returns 0 when no max age can be established.
+     *
+     * @link https://tools.ietf.org/html/rfc2616#section-14.9.3
+     * @return integer Number of seconds
      */
     public function getMaxAge();
 

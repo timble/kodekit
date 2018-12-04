@@ -64,7 +64,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!static::isLoaded('kodekit'))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="assets://js/kodekit.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'kodekit.js" />';
 
             static::setLoaded('kodekit');
         }
@@ -91,14 +91,15 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('vue'))
         {
-            $html .= '<ktml:script src="assets://js/vue.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'vue.js" />';
 
             static::setLoaded('vue');
         }
 
         if ($config->vuex && !static::isLoaded('vuex'))
         {
-            $html .= '<ktml:script src="assets://js/vuex.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/polyfill.promise.js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'vuex.js" />';
 
             static::setLoaded('vuex');
         }
@@ -148,9 +149,34 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('modernizr'))
         {
-            $html = '<ktml:script src="assets://js/modernizr.'.($config->debug ? '' : 'min.').'js" />';
+            $html = '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'modernizr.js" />';
 
             static::setLoaded('modernizr');
+        }
+
+        return $html;
+    }
+
+    /**
+     * Loads KUI initialize
+     *
+     * @param array|ObjectConfig $config
+     * @return string
+     */
+    public function kodekitui($config = array())
+    {
+        $config = new ObjectConfigJson($config);
+        $config->append(array(
+            'debug' => \Kodekit::getInstance()->isDebug()
+        ));
+
+        $html = '';
+
+        if (!static::isLoaded('kodekitui'))
+        {
+            $html = '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'kui-initialize.js" />';
+
+            static::setLoaded('kodekitui');
         }
 
         return $html;
@@ -177,7 +203,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('jquery'))
         {
-            $html .= '<ktml:script src="assets://js/jquery.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'jquery.js" />';
 
             static::setLoaded('jquery');
         }
@@ -205,7 +231,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if ($config->javascript && !static::isLoaded('bootstrap-javascript'))
         {
             $html .= $this->jquery($config);
-            $html .= '<ktml:script src="assets://js/bootstrap.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'bootstrap.js" />';
 
             static::setLoaded('bootstrap-javascript');
         }
@@ -242,7 +268,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if(!static::isLoaded('modal'))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="assets://js/jquery.magnific-popup.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'jquery.magnific-popup.js" />';
 
             static::setLoaded('modal');
         }
@@ -387,7 +413,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if(!static::isLoaded('validator'))
         {
             $html .= $this->kodekit();
-            $html .= '<ktml:script src="assets://js/jquery.validate.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'jquery.validate.js" />';
 
             static::setLoaded('validator');
         }
@@ -403,7 +429,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
             $html .= "<script>
             kQuery(function($){
-                $('$config->selector').on('kodekit:validate', function(event){
+                $('$config->selector').on('k:validate', function(event){
                     if(!$(this).valid() || $(this).validate().pendingRequest !== 0) {
                         event.preventDefault();
                     }
@@ -444,7 +470,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!static::isLoaded('select2'))
         {
             $html .= $this->jquery();
-            $html .= '<ktml:script src="assets://js/kodekit.select2.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'kodekit.select2.js" />';
 
             static::setLoaded('select2');
         }
@@ -495,7 +521,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 'value'         => $config->value,
                 'text'          => $config->text,
                 'selected'      => $config->selected,
-                'url'           => $config->url,
+                'url'           => $config->ajax_url,
                 'multiple'      => false
             )
         ))->append(array(
@@ -507,7 +533,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         $html ='';
 
         if (!$config->options->url instanceof HttpUrl) {
-            $config->options->url = $this->getObject('lib:http.url', array('url' => $config->options->url));
+            $config->options->url = $this->getObject('lib:http.url', ['url' => $config->options->url]);
         }
 
         if(!empty($config->name))
@@ -532,7 +558,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             if (!static::isLoaded('kodekit-select2-autocomplete')) {
                 $html .= '<script>
                 if(!Kodekit) {
-                    var Kodekit = {};
+                    var Kodekit = typeof Koowa !== "undefined" ?  Koowa : {};
                 }
                 
                 Kodekit.getSelect2Options = function(options) {
@@ -557,10 +583,10 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                                 var results = [],
                                     more = (page * 10) < data.meta.total; // whether or not there are more results available
             
-                                kQuery.each(data.entities, function(i, item) {
+                                kQuery.each(data.data, function(i, item) {
                                     // Change format to what select2 expects
-                                    item.id   = item[options.value];
-                                    item.text = item[options.text];
+                                    item.id   = item.attributes[options.value];
+                                    item.text = item.attributes[options.text];
             
                                     results.push(item);
                                 });
@@ -625,7 +651,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!static::isLoaded('tree'))
         {
             $html .= $this->kodekit();
-            $html .= '<ktml:script src="assets://js/kodekit.tree.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'kodekit.tree.js" />';
 
             static::setLoaded('tree');
         }
@@ -709,7 +735,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         // Load Bootstrap with JS plugins.
         if(!static::isLoaded('tooltip'))
         {
-            $html .= '<ktml:script src="assets://js/tooltip.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'tooltip.js" />';
 
             static::setLoaded('tooltip');
         }
@@ -757,8 +783,8 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         $config = new ObjectConfigJson($config);
         $config->append(array(
             'debug'   => \Kodekit::getInstance()->isDebug(),
-            'offset'  => 'UTC',
-            //'user_offset'    => $this->getObject('user')->getParameter('timezone'),
+            'offset'  => 'USER_UTC',
+            'user_offset'    => $this->getObject('user')->getTimezone(),
             'server_offset'  => date_default_timezone_get(),
             'offset_seconds' => 0,
             'value'   => gmdate("M d Y H:i:s"),
@@ -774,17 +800,14 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             'id'      => 'datepicker-'.$config->name,
             'options_callback' => null,
             'options' => array(
-                'todayBtn' => 'linked',
-                'todayHighlight' => true,
+                'todayBtn' => false,
+                'clearBtn' => false,
                 'language' => 'en-GB',
-                'autoclose' => true, //Same as singleClick in previous js plugin,
-                'keyboardNavigation' => false, //To allow editing timestamps,
-                //'orientation' => 'auto left', //popover arrow set to point at the datepicker icon,
-                //'parentEl' => false //this feature breaks if a parent el is position: relative;
+                'autoclose' => true,
             )
         ));
 
-        if ($config->offset)
+        if ($config->offset && !$config->offset_seconds)
         {
             if (strtoupper($config->offset) === 'SERVER_UTC') {
                 $config->offset = $config->server_offset;
@@ -805,7 +828,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
             $date = new \DateTime($config->value, new \DateTimeZone('UTC'));
 
-            $config->value = strftime($config->format, ((int)$date->format('U')) + $config->offset_seconds);
+            $config->value = gmstrftime($config->format, ((int)$date->format('U')) + $config->offset_seconds);
         } else {
             $config->value = '';
         }
@@ -846,7 +869,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 {
                     $html .= "<script>
                         kQuery(function($){
-                            $('.k-js-form-controller').on('kodekit:submit', function() {
+                            $('.k-js-form-controller').on('k:submit', function() {
                                 var element = kQuery('#".$config->id."'),
                                     picker  = element.data('kdatepicker'),
                                     offset  = $config->offset_seconds;
@@ -868,7 +891,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 $config->format
             );
 
-            $html .= '<div class="k-input-group k-js-datepicker     date     " data-date-format="'.$format.'" id="'.$config->id.'">';
+            $html .= '<div class="k-input-group date" data-date-format="'.$format.'" id="'.$config->id.'">';
             $html .= '<input class="k-form-control" type="text" name="'.$config->name.'" value="'.$value.'"  '.$attribs.' />';
             $html .= '<span class="k-input-group__button input-group-btn">';
             $html .= '<button type="button" class="k-button k-button--default     btn     ">';
@@ -890,16 +913,20 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     {
         $html = '';
 
-        if (!static::isLoaded('calendar'))
-        {
-            $html .= '<ktml:script src="assets://js/kodekit.datepicker.'.($config->debug ? '' : 'min.').'js" />';
+        if (!static::isLoaded('calendar')) {
+            $html .= '<ktml:script src="assets://js/' . ($config->debug ? 'build/' : 'min/') . 'kodekit.datepicker.js" />';
 
+            static::setLoaded('calendar');
+        }
+
+        if (!static::isLoaded('calendar-locale'))
+        {
             $locale = array(
-                'days'  =>  array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
-                'daysShort' => array('Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun'),
-                'daysMin' => array('Su','Mo','Tu','We','Th','Fr','Sa','Su'),
-                'months' => array('January','February','March','April','May','June','July','August','September','October','November','December'),
-                'monthsShort' => array('January_short','February_short','March_short','April_short','May_short','June_short','July_short','August_short','September_short','October_short','November_short','December_short')
+                'days'        => ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                'daysShort'   => ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                'daysMin'     => ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+                'months'      => ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                'monthsShort' => ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
             );
 
             $translator = $this->getObject('translator');
@@ -917,11 +944,10 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             }(kQuery));
             </script>';
 
-            static::setLoaded('calendar');
+            static::setLoaded('calendar-locale');
         }
 
         return $html;
-
     }
 
     /**
@@ -957,7 +983,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             $html = sprintf("
             <script>
             if(!Kodekit) {
-                var Kodekit = {};
+                var Kodekit = typeof Koowa !== 'undefined' ?  Koowa : {};
             }
 
             if (!Kodekit.Date) {

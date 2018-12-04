@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Template\Helper
  */
-class TemplateHelperUi extends TemplateHelperAbstract
+class TemplateHelperUi extends TemplateHelperAbstract implements TemplateHelperParameterizable
 {
     /**
      * Loads the common UI libraries
@@ -34,6 +34,22 @@ class TemplateHelperUi extends TemplateHelperAbstract
             'domain'  => $identifier->domain,
             'type'    => $identifier->type,
             'styles' => array(),
+        ))->append(array(
+            'k_ui_container' => ($config->domain === 'admin' || $config->domain === '') && $config->type === 'com'
+        ))->append(array(
+            'wrapper_class' => array(
+                // Only add k-ui-container for top-level component templates
+                ($config->k_ui_container ? 'k-ui-container'.($config->debug ? '' : ' k-no-css-errors') : ''),
+                'k-ui-namespace',
+                $identifier->type.'_'.$identifier->package
+            ),
+        ))->append(array(
+            'wrapper' => sprintf('<div class="%s">
+                <!--[if lte IE 8 ]><div class="old-ie"><![endif]-->
+                %%s
+                <!--[if lte IE 8 ]></div><![endif]-->
+                </div>', implode(' ', ObjectConfig::unbox($config->wrapper_class))
+            )
         ));
 
         $html = '';
@@ -49,11 +65,16 @@ class TemplateHelperUi extends TemplateHelperAbstract
             }
 
             $config->styles->debug = $config->debug;
+            $config->styles->decorator = $config->decorator;
 
             $html .= $this->styles($config->styles);
         }
 
         $html .= $this->scripts($config);
+
+        if ($config->wrapper) {
+            $html .= $this->wrapper($config);
+        }
 
         return $html;
     }
@@ -68,8 +89,8 @@ class TemplateHelperUi extends TemplateHelperAbstract
             'package' => $identifier->package,
             'domain'  => $identifier->domain
         ))->append(array(
-            //'folder' => 'com_'.$config->package,
-            'file'   => ($identifier->type === 'mod' ? 'module' : $config->domain) ?: 'admin'
+            'folder' => $config->package,
+            'file'   => $config->domain ?: 'admin'
         ));
 
         $html = '';
@@ -98,13 +119,14 @@ class TemplateHelperUi extends TemplateHelperAbstract
         $html = '';
 
         $html .= $this->createHelper('behavior')->modernizr($config);
+        $html .= $this->createHelper('behavior')->kodekitui($config);
 
         if (($config->domain === 'admin' || $config->domain === '')  && !TemplateHelperBehavior::isLoaded('admin.js')) {
             // Make sure jQuery is always loaded right before admin.js, helps when wrapping components
             TemplateHelperBehavior::setLoaded('jquery', false);
 
             $html .= $this->createHelper('behavior')->jquery($config);
-            $html .= '<ktml:script src="assets://js/admin.'.($config->debug ? '' : 'min.').'js" />';
+            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'admin.js" />';
 
             TemplateHelperBehavior::setLoaded('admin.js');
             TemplateHelperBehavior::setLoaded('modal');
@@ -124,7 +146,13 @@ class TemplateHelperUi extends TemplateHelperAbstract
             TemplateHelperBehavior::setLoaded('k-js-enabled');
         }
 
-
         return $html;
+    }
+
+    public function wrapper($config = array())
+    {
+        $config = new ObjectConfigJson($config);
+
+        return '<ktml:wrapper template="'.htmlentities($config->wrapper).'">';
     }
 }

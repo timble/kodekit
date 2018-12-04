@@ -18,6 +18,13 @@ namespace Kodekit\Library;
 class ObjectConfigXml extends ObjectConfigFormat
 {
     /**
+     * The format
+     *
+     * @var string
+     */
+    protected static $_format = 'application/xml';
+
+    /**
      * Read from a string and create an array
      *
      * @param  string   $string

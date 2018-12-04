@@ -5,11 +5,11 @@
 */
 
 /* toggle */
-.koowa-collapsed {
+.k-debug-collapsed {
   display: none;
 }
 
-.koowa-toggle {
+.k-debug-toggle {
   cursor: pointer;
   border-bottom: 1px dotted #bbb;
 
@@ -20,7 +20,7 @@
   }
 }
 
-.koowa-toggle.koowa-collapsed {
+.k-debug-toggle.k-debug-collapsed {
   display: inline;
 
   &:after {
@@ -52,36 +52,36 @@
   }
 }
 
-.koowa-dump-array,
-.koowa-dump-object {
+.k-debug-dump-array,
+.k-debug-dump-object {
   color: $red;
 }
 
-.koowa-dump-string {
+.k-debug-dump-string {
   color: $blue;
 }
 
-.koowa-dump-number {
+.k-debug-dump-number {
   color: $green;
 }
 
-.koowa-dump-null,
-.koowa-dump-bool {
+.k-debug-dump-null,
+.k-debug-dump-bool {
   color: $yellow;
 }
 
-.koowa-dump-visibility,
-.koowa-dump-hash {
+.k-debug-dump-visibility,
+.k-debug-dump-hash {
   font-size: 85%;
   color: $base00;
 }
 
-.koowa-dump-indent {
+.k-debug-dump-indent {
   display: none;
 }
 
 // New lines for the dumps
-.koowa-dump-key {
+.k-debug-dump-key {
   &:before {
     display: block;
     content: " ";

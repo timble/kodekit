@@ -50,7 +50,7 @@ abstract class ControllerAbstract extends Object implements ControllerInterface,
     /**
      * Has the controller been dispatched
      *
-     * @var boolean
+     * @var boolean|DispatcherInterface
      */
     protected $_dispatched;
 

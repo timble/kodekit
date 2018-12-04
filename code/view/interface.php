@@ -98,14 +98,15 @@ interface ViewInterface
     /**
      * Get the content
      *
-     * @return  string The content of the view
+     * @return  object|string The content of the view
      */
     public function getContent();
 
     /**
      * Get the content
      *
-     * @param  string $content The content of the view
+     * @param  object|string $content The content of the view
+     * @throws \UnexpectedValueException If the content is not a string are cannot be casted to a string.
      * @return ViewInterface
      */
     public function setContent($content);
@@ -155,13 +156,6 @@ interface ViewInterface
      * @return  string The format of the view
      */
     public function getFormat();
-
-    /**
-     * Get the mimetype
-     *
-     * @return  string The mimetype of the view
-     */
-    public function getMimetype();
 
     /**
      * Returns the views output

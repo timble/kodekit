@@ -28,7 +28,6 @@ class ViewHtml extends ViewTemplate
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'mimetype'          => 'text/html',
             'template_filters'  => array('form', 'include'),
         ));
 

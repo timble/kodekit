@@ -253,7 +253,7 @@ abstract class ModelAbstract extends Object implements ModelInterface, CommandCa
         $identifier = $this->getIdentifier()->toArray();
         $identifier['path'] = array('model', 'entity');
 
-        if(!is_numeric(key($data))) {
+        if($data && !is_numeric(key($data))) {
             $identifier['name'] = StringInflector::singularize($identifier['name']);
         } else {
             $identifier['name'] = StringInflector::pluralize($identifier['name']);

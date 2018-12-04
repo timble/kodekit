@@ -21,14 +21,14 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Event\Subscriber
  */
-abstract class EventSubscriberAbstract extends Object implements EventSubscriberInterface
+abstract class EventSubscriberAbstract extends Object implements EventSubscriberInterface, ObjectMultiton
 {
     /**
-     * List of event listeners
+     * List of subscribed listeners
      *
      * @var array
      */
-    private $__listeners;
+    private $__publishers;
 
     /**
      * Attach one or more listeners
@@ -42,23 +42,21 @@ abstract class EventSubscriberAbstract extends Object implements EventSubscriber
      */
     public function subscribe(EventPublisherInterface $publisher, $priority = Event::PRIORITY_NORMAL)
     {
-        $handle = $publisher->getHandle();
+        $handle    = $publisher->getHandle();
+        $listeners = [];
 
-        if(!$this->isSubscribed($publisher));
+        if(!$this->isSubscribed($publisher))
         {
-            //Get all the public methods
-            $reflection = new \ReflectionClass($this);
-            foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method)
+            $listeners = $this->getEventListeners();
+
+            foreach ($listeners as $listener)
             {
-                if(substr($method->name, 0, 2) == 'on')
-                {
-                    $publisher->addListener($method->name, array($this, $method->name), $priority);
-                    $this->__listeners[$handle][] = $method->name;
-                }
+                $publisher->addListener($listener, array($this, $listener), $priority);
+                $this->__publishers[$handle][] = $listener;
             }
         }
 
-        return $this->__listeners;
+        return $listeners;
     }
 
     /**
@@ -71,12 +69,12 @@ abstract class EventSubscriberAbstract extends Object implements EventSubscriber
     {
         $handle = $publisher->getHandle();
 
-        if($this->isSubscribed($publisher));
+        if($this->isSubscribed($publisher))
         {
-            foreach ($this->__listeners[$handle] as $index => $listener)
+            foreach ($this->__publishers[$handle] as $index => $listener)
             {
                 $publisher->removeListener($listener, array($this, $listener));
-                unset($this->__listeners[$handle][$index]);
+                unset($this->__publishers[$handle][$index]);
             }
         }
     }
@@ -90,6 +88,26 @@ abstract class EventSubscriberAbstract extends Object implements EventSubscriber
     public function isSubscribed(EventPublisherInterface $publisher)
     {
         $handle = $publisher->getHandle();
-        return isset($this->__listeners[$handle]);
+        return isset($this->__publishers[$handle]);
+    }
+
+    /**
+     * Get the event listeners
+     *
+     * @return array
+     */
+    public static function getEventListeners()
+    {
+        $listeners = array();
+
+        $reflection = new \ReflectionClass(get_called_class());
+        foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method)
+        {
+            if(substr($method->name, 0, 2) == 'on') {
+                $listeners[] = $method->name;
+            }
+        }
+
+        return $listeners;
     }
 }

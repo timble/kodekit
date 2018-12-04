@@ -91,10 +91,10 @@ class FilterSlug extends FilterAbstract implements FilterTraversable
      * Replace all accented UTF-8 characters by unaccented ASCII-7 "equivalents",
      * replace whitespaces by hyphens and lowercase the result.
      *
-     * @param   scalar  $value Value to be sanitized
-     * @return	scalar
+     * @param   mixed  $value Value to be sanitized
+     * @return	mixed
      */
-    protected function _sanitize($value)
+    public function sanitize($value)
     {
         //remove any quotation and replace with whitespace
         $value = preg_replace('/\"/', '', $value);

@@ -180,8 +180,11 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
     /**
      * Get action
      *
-     * This function translates a GET request into a read or browse action. If the view name is singular a read action
+     * This function translates the the request into a read or browse action. If the view name is singular a read action
      * will be executed, if plural a browse action will be executed.
+     *
+     * If the controller returns a string or a object that can be casted to a string the result will be returned, if not
+     * the view will be asked to render the result.
      *
      * @param   ControllerContext $context  A controller context object
      * @return  string|bool The rendered output of the view or FALSE if something went wrong
@@ -194,8 +197,11 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
         $action = $this->getView()->isCollection() ? 'browse' : 'read';
 
         //Execute the action
-        if($this->execute($action, $context) !== false) {
-            $result = parent::_actionRender($context);
+        if($result = $this->execute($action, $context) !== false)
+        {
+            if(!is_string($result) && !(is_object($result) && method_exists($result, '__toString'))) {
+                $result = parent::_actionRender($context);
+            }
         }
 
         return $result;

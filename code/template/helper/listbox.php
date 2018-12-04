@@ -343,7 +343,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
             'filter'     => array('sort' => $config->label),
         ));
 
-        if (!$config->url)
+        if (!$config->ajax_url)
         {
             $identifier = $config->model->getIdentifier();
             $parts      = array(
@@ -356,7 +356,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
                 $parts = array_merge($parts, ObjectConfig::unbox($config->filter));
             }
 
-            $config->url = $this->getObject('lib:dispatcher.router.route')->setQuery($parts);
+            $config->ajax_url = $this->getObject('lib:dispatcher.router.route')->setQuery($parts);
         }
 
         $html = '';

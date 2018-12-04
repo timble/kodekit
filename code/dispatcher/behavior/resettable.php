@@ -29,14 +29,7 @@ class DispatcherBehaviorResettable extends DispatcherBehaviorAbstract
      */
     public function isSupported()
     {
-        $mixer   = $this->getMixer();
-        $request = $mixer->getRequest();
-
-        if(!$request->isSafe() && !$request->isAjax() && $request->getFormat() == 'html') {
-            return true;
-        }
-
-        return false;
+        return $this->getMixer()->getRequest()->isFormSubmit();
     }
 
     /**
@@ -52,8 +45,8 @@ class DispatcherBehaviorResettable extends DispatcherBehaviorAbstract
         $response = $context->response;
         $request  = $context->request;
 
-        if($response->isSuccess()) {
-            $response->setRedirect($request->getReferrer());
+        if($response->isSuccess() && $referrer = $request->getReferrer()) {
+            $response->setRedirect($referrer);
         }
     }
 }
