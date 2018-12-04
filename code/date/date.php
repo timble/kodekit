@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Date
  */
-class Date extends Object implements DateInterface
+class Date extends ObjectAbstract implements DateInterface
 {
     /**
      * The date object

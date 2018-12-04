@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Kodekit\Library\Template\Engine
  */
-class TemplateEngineFactory extends Object implements ObjectSingleton
+class TemplateEngineFactory extends ObjectAbstract implements ObjectSingleton
 {
     /**
      * Registered engines

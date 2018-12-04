@@ -16,7 +16,7 @@ namespace Kodekit\Library;
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Kodekit\Library\Translator
  */
-abstract class TranslatorAbstract extends Object implements TranslatorInterface, ObjectInstantiable
+abstract class TranslatorAbstract extends ObjectAbstract implements TranslatorInterface, ObjectInstantiable
 {
     /**
      * Language

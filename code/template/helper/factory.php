@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Template\Helper
  */
-class TemplateHelperFactory extends Object implements ObjectSingleton
+class TemplateHelperFactory extends ObjectAbstract implements ObjectSingleton
 {
     /**
      * Get a template helper

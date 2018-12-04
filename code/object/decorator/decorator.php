@@ -12,8 +12,8 @@ namespace Kodekit\Library;
 /**
  * Object Decorator
  *
- * The object decorator implements the same interface as Object and can only be used to decorate objects extending from
- * Object. To decorate an object that does not extend from Object use ObjectDecoratorAbstract instead.
+ * The object decorator implements the same interface as ObjectAbstract and can only be used to decorate objects extending from
+ * ObjectAbstract. To decorate an object that does not extend from ObjectAbstract use ObjectDecoratorAbstract instead.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Object\Decorator
@@ -81,12 +81,12 @@ abstract class ObjectDecorator extends ObjectDecoratorAbstract implements Object
      *
      * @param   ObjectInterface $delegate The object to decorate
      * @return  ObjectDecorator
-     * @throws  \InvalidArgumentException If the delegate does not extend from Object
+     * @throws  \InvalidArgumentException If the delegate does not extend from ObjectInterface
      */
     public function setDelegate($delegate)
     {
         if (!$delegate instanceof ObjectInterface) {
-            throw new \InvalidArgumentException('Delegate needs to extend from Object');
+            throw new \InvalidArgumentException('Delegate needs to implement ObjectInterface');
         }
 
         return parent::setDelegate($delegate);

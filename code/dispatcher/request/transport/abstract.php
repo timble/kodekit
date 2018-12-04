@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Kodekit\Library\Dispatcher\Request\Transport
  */
-abstract class DispatcherRequestTransportAbstract extends Object implements DispatcherRequestTransportInterface
+abstract class DispatcherRequestTransportAbstract extends ObjectAbstract implements DispatcherRequestTransportInterface
 {
     /**
      * The filter priority

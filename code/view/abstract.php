@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\View
  */
-abstract class ViewAbstract extends Object implements ViewInterface, CommandCallbackDelegate
+abstract class ViewAbstract extends ObjectAbstract implements ViewInterface, CommandCallbackDelegate
 {
     /**
      * Model identifier (com://APP/COMPONENT.model.NAME)

@@ -17,7 +17,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Controller
  */
-abstract class ControllerAbstract extends Object implements ControllerInterface, CommandCallbackDelegate
+abstract class ControllerAbstract extends ObjectAbstract implements ControllerInterface, CommandCallbackDelegate
 {
     /**
      * The actions

@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Filesystem\Stream
  */
-final class FilesystemStreamFactory extends Object implements ObjectSingleton
+final class FilesystemStreamFactory extends ObjectAbstract implements ObjectSingleton
 {
     /**
      * Registered stream

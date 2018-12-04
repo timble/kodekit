@@ -17,7 +17,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Manifest
  */
-class Manifest extends Object implements ManifestInterface
+class Manifest extends ObjectAbstract implements ManifestInterface
 {
     /**
      * The manifest object

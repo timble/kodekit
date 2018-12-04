@@ -16,7 +16,7 @@ namespace Kodekit\Library;
  * @package Kodekit\Library\User\Session\Handler
  * @link    http://www.php.net/manual/en/function.session-set-save-handler.php
  */
-abstract class UserSessionHandlerAbstract extends Object implements UserSessionHandlerInterface
+abstract class UserSessionHandlerAbstract extends ObjectAbstract implements UserSessionHandlerInterface
 {
     /**
      * The handler that was registered

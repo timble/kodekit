@@ -100,7 +100,7 @@ final class ObjectManager implements ObjectInterface, ObjectManagerInterface, Ob
             //Instantiate the identifier
             $instance = $this->_instantiate($identifier, $config);
 
-            //Mixins's are early mixed in Object::_construct()
+            //Mixins's are early mixed in ObjectAbstract::_construct()
             //$instance = $this->_mixin($identifier, $instance);
 
             //Decorate the object

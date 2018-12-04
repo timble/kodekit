@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Filter
  */
-class FilterFactory extends Object implements ObjectSingleton
+class FilterFactory extends ObjectAbstract implements ObjectSingleton
 {
     /**
      * Factory method for FilterChain classes.

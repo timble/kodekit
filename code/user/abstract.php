@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\User
  */
-abstract class UserAbstract extends Object implements UserInterface
+abstract class UserAbstract extends ObjectAbstract implements UserInterface
 {
     /**
      * The user properties

@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Kodekit\Library\Dispatcher\Authenticator
  */
-abstract class DispatcherAuthenticatorAbstract extends Object implements DispatcherAuthenticatorInterface
+abstract class DispatcherAuthenticatorAbstract extends ObjectAbstract implements DispatcherAuthenticatorInterface
 {
     /**
      * The authentication scheme

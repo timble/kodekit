@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Database\Rowset
  */
-abstract class DatabaseRowsetAbstract extends Object implements DatabaseRowsetInterface
+abstract class DatabaseRowsetAbstract extends ObjectAbstract implements DatabaseRowsetInterface
 {
     /**
      * The rowset

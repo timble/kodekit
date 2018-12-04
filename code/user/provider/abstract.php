@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\User\Provider
  */
-class UserProviderAbstract extends Object implements UserProviderInterface
+class UserProviderAbstract extends ObjectAbstract implements UserProviderInterface
 {
     /**
      * The list of users

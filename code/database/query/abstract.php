@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Database\Query
  */
-abstract class DatabaseQueryAbstract extends Object implements DatabaseQueryInterface
+abstract class DatabaseQueryAbstract extends ObjectAbstract implements DatabaseQueryInterface
 {
     /**
      * Query parameters to bind

@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Template\Helper
  */
-abstract class TemplateHelperAbstract extends Object implements TemplateHelperInterface
+abstract class TemplateHelperAbstract extends ObjectAbstract implements TemplateHelperInterface
 {
     /**
      * Build a string with xml style attributes from  an array of key/value pairs

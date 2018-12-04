@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Object\Bootstrapper
  */
-final class ObjectBootstrapper extends Object implements ObjectBootstrapperInterface, ObjectSingleton
+final class ObjectBootstrapper extends ObjectAbstract implements ObjectBootstrapperInterface, ObjectSingleton
 {
     /**
      * List of bootstrapped directories

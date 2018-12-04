@@ -74,7 +74,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Http\Url
  */
-class HttpUrl extends Object implements HttpUrlInterface
+class HttpUrl extends ObjectAbstract implements HttpUrlInterface
 {
     /**
      * The scheme [http|https|ftp|mailto|...]

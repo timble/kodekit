@@ -19,7 +19,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Filter
  */
-abstract class FilterAbstract extends Object implements FilterInterface, ObjectInstantiable
+abstract class FilterAbstract extends ObjectAbstract implements FilterInterface, ObjectInstantiable
 {
     /**
      * The filter errors

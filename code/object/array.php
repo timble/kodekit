@@ -18,7 +18,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Object
  */
-class ObjectArray extends Object implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countable
+class ObjectArray extends ObjectAbstract implements \IteratorAggregate, \ArrayAccess, \Serializable, \Countable
 {
     /**
      * The data for each key in the array (key => value).

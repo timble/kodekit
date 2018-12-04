@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Dispatcher\Response\Transport
  */
-abstract class DispatcherResponseTransportAbstract extends Object implements DispatcherResponseTransportInterface
+abstract class DispatcherResponseTransportAbstract extends ObjectAbstract implements DispatcherResponseTransportInterface
 {
     /**
      * The filter priority

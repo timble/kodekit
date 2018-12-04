@@ -17,7 +17,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Dispatcher\Router
  */
-class DispatcherRouter extends Object implements DispatcherRouterInterface, ObjectMultiton
+class DispatcherRouter extends ObjectAbstract implements DispatcherRouterInterface, ObjectMultiton
 {
     /**
      * Function to convert a route to an internal URI

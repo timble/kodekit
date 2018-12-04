@@ -15,7 +15,7 @@ namespace Kodekit\Library;
   * @author  Johan Janssens <https://github.com/johanjanssens>
   * @package Kodekit\Library\Template
   */
-abstract class TemplateAbstract extends Object implements TemplateInterface
+abstract class TemplateAbstract extends ObjectAbstract implements TemplateInterface
 {
     /**
      * List of template functions
