@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Exception\Handler
  */
-class ExceptionHandlerAbstract extends Object implements ExceptionHandlerInterface
+class ExceptionHandlerAbstract extends ObjectAbstract implements ExceptionHandlerInterface
 {
     /**
      * The exception callbacks

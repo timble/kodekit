@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Filesystem\Stream
  */
-abstract class FilesystemStreamAbstract extends Object implements FilesystemStreamInterface
+abstract class FilesystemStreamAbstract extends ObjectAbstract implements FilesystemStreamInterface
 {
     /**
      * The stream name

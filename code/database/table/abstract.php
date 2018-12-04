@@ -17,7 +17,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Database\Table
  */
-abstract class DatabaseTableAbstract extends Object implements DatabaseTableInterface, ObjectMultiton
+abstract class DatabaseTableAbstract extends ObjectAbstract implements DatabaseTableInterface, ObjectMultiton
 {
     /**
      * Real name of the table in the db schema

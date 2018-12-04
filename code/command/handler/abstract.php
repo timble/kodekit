@@ -18,7 +18,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Kodekit\Library\Command\Handler
  */
-abstract class CommandHandlerAbstract extends Object implements CommandHandlerInterface
+abstract class CommandHandlerAbstract extends ObjectAbstract implements CommandHandlerInterface
 {
     /**
      * The command priority

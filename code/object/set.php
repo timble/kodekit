@@ -23,7 +23,7 @@ namespace Kodekit\Library;
  * @package Kodekit\Library\Object
  * @see     http://www.php.net/manual/en/class.splobjectstorage.php
  */
-class ObjectSet extends Object implements \IteratorAggregate, \ArrayAccess, \Countable, \Serializable
+class ObjectSet extends ObjectAbstract implements \IteratorAggregate, \ArrayAccess, \Countable, \Serializable
 {
     /**
      * The objects

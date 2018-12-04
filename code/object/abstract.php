@@ -17,7 +17,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Object
  */
-class Object implements ObjectInterface, ObjectMixable, ObjectHandlable, ObjectDecoratable
+abstract class ObjectAbstract implements ObjectInterface, ObjectMixable, ObjectHandlable, ObjectDecoratable
 {
     /**
      * Class methods

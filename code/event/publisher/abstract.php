@@ -17,7 +17,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Event\Publisher
  */
-abstract class EventPublisherAbstract extends Object implements EventPublisherInterface
+abstract class EventPublisherAbstract extends ObjectAbstract implements EventPublisherInterface
 {
     /**
      * List of event listeners

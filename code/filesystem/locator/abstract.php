@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Kodekit\Library\Filesystem\Locator
  */
-abstract class FilesystemLocatorAbstract extends Object implements FilesystemLocatorInterface, ObjectMultiton
+abstract class FilesystemLocatorAbstract extends ObjectAbstract implements FilesystemLocatorInterface, ObjectMultiton
 {
     /**
      * The stream name

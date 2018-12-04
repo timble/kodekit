@@ -26,7 +26,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Http\Token
  */
-class HttpToken extends Object implements HttpTokenInterface
+class HttpToken extends ObjectAbstract implements HttpTokenInterface
 {
     /**
      * The algorithm constants

@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Model\Entity
  */
-class ModelEntityComposite extends Object implements ModelEntityComposable
+class ModelEntityComposite extends ObjectAbstract implements ModelEntityComposable
 {
     /**
      * The entity set

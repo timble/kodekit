@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Ercan Ozkaya <https://github.com/ercanozkaya>
  * @package Kodekit\Library\Filesystem\Mimetype
  */
-abstract class FilesystemMimetypeAbstract extends Object implements FilesystemMimetypeInterface
+abstract class FilesystemMimetypeAbstract extends ObjectAbstract implements FilesystemMimetypeInterface
 {
     /**
      * Check if the resolver is supported

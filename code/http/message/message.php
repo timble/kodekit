@@ -17,7 +17,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Http\Message
  */
-abstract class HttpMessage extends Object implements HttpMessageInterface
+abstract class HttpMessage extends ObjectAbstract implements HttpMessageInterface
 {
     /**
      * The message headers

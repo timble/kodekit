@@ -28,7 +28,7 @@ namespace Kodekit\Library;
  * @package Kodekit\Library\Object
  * @see     http://www.php.net/manual/en/class.splpriorityqueue.php
  */
-class ObjectQueue extends Object implements \Iterator, \Countable
+class ObjectQueue extends ObjectAbstract implements \Iterator, \Countable
 {
     /**
      * Object list

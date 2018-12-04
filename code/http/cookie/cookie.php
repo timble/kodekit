@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Http\Cookie
  */
-class HttpCookie extends Object implements HttpCookieInterface
+class HttpCookie extends ObjectAbstract implements HttpCookieInterface
 {
     /**
      * The name of the cookie

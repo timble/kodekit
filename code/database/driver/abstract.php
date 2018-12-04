@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Database\Driver
  */
-abstract class DatabaseDriverAbstract extends Object implements DatabaseDriverInterface, ObjectMultiton
+abstract class DatabaseDriverAbstract extends ObjectAbstract implements DatabaseDriverInterface, ObjectMultiton
 {
     /**
      * Active state of the connection

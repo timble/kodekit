@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Kodekit\Library\Filesystem\Locator
  */
-class FilesystemLocatorFactory extends Object implements ObjectMultiton
+class FilesystemLocatorFactory extends ObjectAbstract implements ObjectMultiton
 {
     /**
      * Registered locators

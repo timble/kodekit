@@ -18,7 +18,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Command\Chain
  */
-class CommandChain extends Object implements CommandChainInterface
+class CommandChain extends ObjectAbstract implements CommandChainInterface
 {
     /**
      * The chain stack

@@ -21,7 +21,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Event\Subscriber
  */
-abstract class EventSubscriberAbstract extends Object implements EventSubscriberInterface, ObjectMultiton
+abstract class EventSubscriberAbstract extends ObjectAbstract implements EventSubscriberInterface, ObjectMultiton
 {
     /**
      * List of subscribed listeners

@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Model
  */
-abstract class ModelAbstract extends Object implements ModelInterface, CommandCallbackDelegate
+abstract class ModelAbstract extends ObjectAbstract implements ModelInterface, CommandCallbackDelegate
 {
     /**
      * A state object

@@ -21,7 +21,7 @@ namespace Kodekit\Library;
   * @author  Johan Janssens <https://github.com/johanjanssens>
   * @package Kodekit\Library\Object
   */
-class ObjectStack extends Object implements \Iterator, \Countable, \Serializable
+class ObjectStack extends ObjectAbstract implements \Iterator, \Countable, \Serializable
 {
     /**
      * The object container

@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Event\Subscriber
  */
-class EventSubscriberFactory extends Object implements ObjectSingleton
+class EventSubscriberFactory extends ObjectAbstract implements ObjectSingleton
 {
     /**
      * List of event subscribers

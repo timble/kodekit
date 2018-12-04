@@ -17,7 +17,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\User\Session
  */
-class UserSessionAbstract extends Object implements UserSessionInterface
+class UserSessionAbstract extends ObjectAbstract implements UserSessionInterface
 {
     /**
      * The session handler

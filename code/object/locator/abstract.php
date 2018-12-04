@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Object\Locator
  */
-abstract class ObjectLocatorAbstract extends Object implements ObjectLocatorInterface
+abstract class ObjectLocatorAbstract extends ObjectAbstract implements ObjectLocatorInterface
 {
     /**
      * The locator type

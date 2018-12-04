@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Object\Config
  */
-final class ObjectConfigFactory extends Object implements ObjectSingleton
+final class ObjectConfigFactory extends ObjectAbstract implements ObjectSingleton
 {
     /**
      * Config object prototypes

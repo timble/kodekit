@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Template\Filter
  */
-abstract class TemplateFilterAbstract extends Object implements TemplateFilterInterface
+abstract class TemplateFilterAbstract extends ObjectAbstract implements TemplateFilterInterface
 {
     /**
      * The filter priority

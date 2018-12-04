@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Filter
  */
-class FilterChain extends Object implements FilterInterface
+class FilterChain extends ObjectAbstract implements FilterInterface
 {
     /**
      * The filter queue
