@@ -45,9 +45,10 @@ class ViewBehaviorRoutable extends ViewBehaviorAbstract
      *
      * @param   string|array $route  The query string or array used to create the route
      * @param   boolean      $fqr    If TRUE create a fully qualified route. Defaults to TRUE.
+     * @param   boolean      $escape If TRUE escapes the route for xml compliance. Defaults to TRUE for ViewTemplate.
      * @return  DispatcherRouterRoute The route
      */
-    public function getRoute($route = '', $fqr = null)
+    public function getRoute($route = '', $fqr = null, $escape = null)
     {
         $parts      = array();
         $identifier = $this->getMixer()->getIdentifier();
@@ -98,7 +99,7 @@ class ViewBehaviorRoutable extends ViewBehaviorAbstract
         }
 
         //Create the route
-        $escape = $this->getUrl()->isEscaped();
+        $escape = isset($escape) ? $escape : $this->getUrl()->isEscaped();
         $route  = $this->getObject('lib:dispatcher.router.route', array('escape' =>  $escape))->setQuery($parts);
 
         //Determine of the url needs to be fully qualified

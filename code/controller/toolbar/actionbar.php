@@ -84,8 +84,9 @@ class ControllerToolbarActionbar extends ControllerToolbarAbstract
     {
         if (empty($command->href))
         {
-            $identifier    = $this->getController()->getIdentifier();
-            $command->href = 'component='.$identifier->package.'&view='.$identifier->name;
+            $controller    = $this->getController();
+            $identifier    = $controller->getIdentifier();
+            $command->href = $controller->getView()->getRoute('component='.$identifier->package.'&view='.$identifier->name);
         }
 
         $command->icon = 'k-icon-plus';
