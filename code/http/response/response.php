@@ -463,7 +463,8 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
      */
     public function getMaxAge()
     {
-        $cache_control = (array) $this->_headers->get('Cache-Control', null, false);
+        $cache_control = $this->getCacheControl();
+
         if (isset($cache_control['max-age'])) {
             $result = $cache_control['max-age'];
         } else {
@@ -471,6 +472,34 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
         }
 
         return (int) $result;
+    }
+
+    /**
+     * Get the cache control
+     *
+     * @link https://tools.ietf.org/html/rfc2616#page-108
+     * @return array
+     */
+    public function getCacheControl()
+    {
+        $values = $this->_headers->get('Cache-Control', array());
+
+        if (is_string($values)) {
+            $values = explode(',', $values);
+        }
+
+        foreach ($values as $key => $value)
+        {
+            $parts = explode('=', $value);
+
+            if (count($parts) > 1)
+            {
+                unset($values[$key]);
+                $values[trim($parts[0])] = trim($parts[1]);
+            }
+        }
+
+        return $values;
     }
 
     /**
@@ -531,7 +560,7 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
             return false;
         }
 
-        $cache_control = (array) $this->_headers->get('Cache-Control', null, false);
+        $cache_control = $this->getCacheControl();
         if (isset($cache_control['no-store'])) {
             return false;
         }

@@ -75,15 +75,14 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
      */
     public function isCacheable()
     {
-        $mixer   = $this->getMixer();
-        $request = $mixer->getRequest();
+        $request = $this->getRequest();
 
         $cacheable = false;
         if($request->isCacheable() && $this->getConfig()->cache)
         {
             $cacheable = true;
 
-            if(!$this->getConfig()->cache_private && $mixer->getUser()->isAuthentic()) {
+            if(!$this->getConfig()->cache_private && $this->getUser()->isAuthentic()) {
                 $cacheable = false;
             }
         }
@@ -97,7 +96,7 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
      * Prepares the Response before it is sent to the client. This method set the cache control headers to ensure that
      * it is compliant with RFC 2616 and calculates an etag for the response
      *
-     * @link http://tools.ietf.org/html/rfc2616
+     * @link https://tools.ietf.org/html/rfc2616#page-63
      *
      * @param 	DispatcherContextInterface $context The active command context
      */
@@ -111,15 +110,7 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
             $response->headers->set('Cache-Control', $this->_getCacheControl());
 
             //Set Validator
-            $response->setEtag($this->_getEtag(), true);
-
-            //Determines if the response etag match a conditional value specified in the request.
-            if ($etags = $request->getEtags())
-            {
-                if(in_array($response->getEtag(), $etags) || in_array('*', $etags)) {
-                    $response->setStatus(HttpResponse::NOT_MODIFIED);
-                }
-            }
+            $response->setEtag($this->_getEtag(), !$response->isDownloadable());
         }
     }
 
@@ -152,7 +143,7 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
      * Generate a response etag
      *
      * For files returns a md5 hash of same format as Apache does. Eg "%ino-%size-%0mtime" using the file
-     * info, otherwise return a crc32 digest of the response content and the user identifier
+     * info, otherwise return a crc32 digest the user identifier and response content
      *
      * @link http://stackoverflow.com/questions/44937/how-do-you-make-an-etag-that-matches-apache
      *
