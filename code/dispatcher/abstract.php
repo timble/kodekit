@@ -32,6 +32,13 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
     protected $_controller_action;
 
     /**
+     * Has the dispatcher been forwarded
+     *
+     * @var boolean|DispatcherInterface
+     */
+    protected $_forwarded;
+
+    /**
      * Constructor.
      *
      * @param ObjectConfig $config	An optional ObjectConfig object with configuration options.
@@ -39,6 +46,9 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
     public function __construct(ObjectConfig $config)
     {
         parent::__construct($config);
+
+        //Set the forwarded state
+        $this->_forwarded = $config->forwarded;
 
         //Set the controller
         $this->_controller = $config->controller;
@@ -66,12 +76,23 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
         $config->append(array(
             'controller'        => $this->getIdentifier()->package,
             'controller_action' => 'render',
-            'authenticators'    => array()
+            'authenticators'    => array(),
+            'forwarded'	        => false,
         ))->append(array(
             'behaviors'     => array('authenticatable' => array('authenticators' => $config->authenticators)),
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Has the controller been forwarded
+     *
+     * @return  boolean	Returns true if the dispatcher has been forwarded
+     */
+    public function isForwarded()
+    {
+        return $this->_forwarded;
     }
 
     /**
@@ -288,7 +309,9 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
         }
 
         //Send the response
-        return $this->send($context);
+        if (!$this->isForwarded()) {
+            $this->send($context);
+        }
     }
 
     /**
