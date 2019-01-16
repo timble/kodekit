@@ -139,7 +139,9 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
         }
 
         //Send the response
-        return $this->send($context);
+        if (!$this->isForwarded()) {
+            $this->send($context);
+        }
     }
 
     /**
