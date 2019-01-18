@@ -35,4 +35,15 @@ class TemplateLocatorFactory extends FilesystemLocatorFactory
 
         parent::_initialize($config);
     }
+
+    /**
+     * Find the template path
+     *
+     * @param  string $url The Template url
+     * @return string|false The real template path or FALSE if the template could not be found
+     */
+    public function locate($url)
+    {
+        return $this->createLocator($url)->locate($url);
+    }
 }

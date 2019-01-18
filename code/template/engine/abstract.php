@@ -231,9 +231,7 @@ abstract class TemplateEngineAbstract extends TemplateAbstract implements Templa
      */
     public function locateSource($url)
     {
-        $locator = $this->getObject('template.locator.factory')->createLocator($url);
-
-        if (!$file = $locator->locate($url)) {
+        if (!$file = $this->getObject('template.locator.factory')->locate($url)) {
             throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $url));
         }
 

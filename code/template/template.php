@@ -97,9 +97,7 @@ class Template extends TemplateAbstract
         //If content is a path find the type by locating the file
         if($this->getObject('filter.path')->validate($source))
         {
-            $locator = $this->getObject('template.locator.factory')->createLocator($source);
-
-            if (!$file = $locator->locate($source)) {
+            if (!$file = $this->getObject('template.locator.factory')->locate($source)) {
                 throw new \InvalidArgumentException(sprintf('The template "%s" cannot be located.', $source));
             }
 
