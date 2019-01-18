@@ -25,6 +25,13 @@ class Template extends TemplateAbstract
     private $__parameters;
 
     /**
+     * Excluded types
+     *
+     * @var array
+     */
+    protected $_excluded_types;
+
+    /**
      * Constructor
      *
      * Prevent creating instances of this class by making the constructor private
@@ -37,6 +44,9 @@ class Template extends TemplateAbstract
 
         //Set the parameters
         $this->setParameters($config->parameters);
+
+        //Set the excluded types
+        $this->_excluded_types = ObjectConfig::unbox($config->excluded_types);
 
         // Mixin the behavior (and command) interface
         $this->mixin('lib:behavior.mixin', $config);
@@ -61,6 +71,7 @@ class Template extends TemplateAbstract
                 'parameter'  => array($this, 'getParameter'),
                 'parameters' => array($this, 'getParameters')
             ),
+            'excluded_types'  => array('html'),
         ))->append(array(
             'behaviors'  => array('filterable' => array('filters' => $config->filters)),
         ));
@@ -115,7 +126,7 @@ class Template extends TemplateAbstract
     {
         $source = parent::render($context->source, ObjectConfig::unbox($context->data));
 
-        if($context->type)
+        if($context->type && !in_array($context->type, $this->_excluded_types))
         {
             $source = $this->getObject('template.engine.factory')
                 ->createEngine($context->type, array('functions' => $this->getFunctions()))
