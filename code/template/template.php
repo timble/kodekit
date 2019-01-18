@@ -182,4 +182,16 @@ class Template extends TemplateAbstract
 
         return $context;
     }
+
+    /**
+     * Deep clone of this instance
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        parent::__clone();
+
+        $this->__parameters = clone $this->__parameters;
+    }
 }
