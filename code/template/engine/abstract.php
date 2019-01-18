@@ -164,6 +164,13 @@ abstract class TemplateEngineAbstract extends TemplateAbstract implements Templa
             $url = $basepath. '/' .$basename;
         }
 
+        if(array_search($url, $this->__stack))
+        {
+            throw new \RuntimeException(sprintf(
+                'Template recursion detected while importing "%s" in "%s"', $url
+            ));
+        }
+
         $type = pathinfo( $this->locateSource($url), PATHINFO_EXTENSION);
         $data = array_merge((array) $this->getData(), $data);
 
