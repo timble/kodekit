@@ -100,10 +100,10 @@ class EventSubscriberFactory extends ObjectAbstract implements ObjectSingleton
         $identifier = $this->getIdentifier($identifier);
         $class      = $this->getObject('manager')->getClass($identifier);
 
-        if(!$class || !array_key_exists('KEventSubscriberInterface', class_implements($class)))
+        if(!$class || !array_key_exists('Kodekit\Library\EventSubscriberInterface', class_implements($class)))
         {
             throw new \UnexpectedValueException(
-                'Event Subscriber: '.$identifier.' does not implement KEventSubscriberInterface'
+                'Event Subscriber: '.$identifier.' does not implement Kodekit\Library\EventSubscriberInterface'
             );
         }
 
