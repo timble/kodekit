@@ -355,6 +355,7 @@ class ExceptionHandlerAbstract extends ObjectAbstract implements ExceptionHandle
      */
     public function _handleException($exception)
     {
+        var_dump($exception);die;
         $result = false;
 
         if($this->isEnabled(self::TYPE_EXCEPTION))
