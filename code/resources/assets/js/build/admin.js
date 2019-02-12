@@ -18024,4 +18024,3 @@ var Konami = function (callback) {
 
 window.jQuery = globalCacheForjQueryReplacement;
 globalCacheForjQueryReplacement = undefined;
-if(typeof Kodekit === 'undefined') { var Kodekit = Koowa; }
