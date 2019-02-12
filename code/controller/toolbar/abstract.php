@@ -241,6 +241,19 @@ abstract class ControllerToolbarAbstract extends CommandHandlerAbstract implemen
     }
 
     /**
+     * Removes a command if exists
+     *
+     * @param string $name  The command name
+     * @return $this
+     */
+    public function removeCommand($name)
+    {
+        unset($this->__commands[$name]);
+
+        return $this;
+    }
+
+    /**
      * Get the list of commands
      *
      * @return  array
