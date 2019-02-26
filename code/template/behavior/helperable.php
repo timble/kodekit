@@ -68,7 +68,8 @@ class TemplateBehaviorHelperable extends TemplateBehaviorAbstract
         }
         else $helper = $this->getIdentifier($identifier);
 
-        $helper = $this->getObject('template.helper.factory')->createHelper($helper, ObjectConfig::unbox($params));
+        $params = array_merge(ObjectConfig::unbox($params), ['template' => $this->getMixer()]);
+        $helper = $this->getObject('template.helper.factory')->createHelper($helper, $params);
 
         //Call the helper function
         if (!is_callable(array($helper, $function))) {
