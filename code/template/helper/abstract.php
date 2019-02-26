@@ -18,6 +18,93 @@ namespace Kodekit\Library;
 abstract class TemplateHelperAbstract extends ObjectAbstract implements TemplateHelperInterface
 {
     /**
+     * Template object
+     *
+     * @var	object
+     */
+    private $__template;
+
+    /**
+     * Constructor
+     *
+     * @throws \UnexpectedValueException    If no 'template' config option was passed
+     * @throws \InvalidArgumentException    If the model config option does not implement TemplateInterface
+     */
+    public function __construct(ObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        $this->setTemplate($config->template);
+    }
+
+    /**
+     * Initializes the options for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param  ObjectConfig $config An optional ObjectConfig object with configuration options
+     * @return void
+     */
+    protected function _initialize(ObjectConfig $config)
+    {
+        $config->append(array(
+            'template' => 'default',
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
+     * Gets the template object
+     *
+     * @return  TemplateInterface	The template object
+     */
+    public function getTemplate()
+    {
+        if(!$this->__template instanceof TemplateInterface)
+        {
+            $this->__template = $this->getObject($this->__template);
+
+            if(!$this->__template instanceof TemplateInterface)
+            {
+                throw new \UnexpectedValueException(
+                    'Template: '.get_class($this->_model).' does not implement TemplateInterface'
+                );
+            }
+        }
+
+        return $this->__template;
+    }
+
+    /**
+     * Sets the template object
+     *
+     * @param TemplateInterface $template
+     * @return $this
+     */
+    public function setTemplate($template)
+    {
+        if(!$template instanceof TemplateInterface)
+        {
+            if(empty($template) || (is_string($template) && strpos($template, '.') === false) )
+            {
+                $identifier         = $this->getIdentifier()->toArray();
+                $identifier['path'] = array('template');
+                $identifier['name'] = $template;
+
+                $identifier = $this->getIdentifier($identifier);
+            }
+            else $identifier = $this->getIdentifier($template);
+
+            $template = $identifier;
+        }
+
+        $this->__template = $template;
+
+        return $this->__template;
+    }
+
+    /**
      * Build a string with xml style attributes from  an array of key/value pairs
      *
      * @param   mixed   $array The array of Key/Value pairs for the attributes
@@ -81,6 +168,8 @@ abstract class TemplateHelperAbstract extends ObjectAbstract implements Template
             $identifier['name'] = $helper;
         }
         else $identifier = $this->getIdentifier($helper);
+
+        $config = array_merge(ObjectConfig::unbox($config), ['template' => $this->getTemplate()]);
 
         return $this->getObject('template.helper.factory')->createHelper($identifier, $config);
     }
