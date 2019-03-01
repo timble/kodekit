@@ -247,7 +247,7 @@ abstract class ModelAbstract extends ObjectAbstract implements ModelInterface, C
     protected function _actionCreate(ModelContext $context)
     {
         //Get the data
-        $data = ModelContext::unbox($context->entity);
+        $data = ModelContext::unbox($context->properties);
 
         //Create the entity identifier
         $identifier = $this->getIdentifier()->toArray();
