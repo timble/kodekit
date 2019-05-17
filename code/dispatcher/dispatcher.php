@@ -228,13 +228,14 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
             }
 
             //Execute the controller action
-            $result = $controller->execute($action, $controller->getContext($context));
+            $context = $controller->getContext($context);
+            $result  = $controller->execute($action, $context);
 
             //Return the new representation of the resource
             if ($context->response->isSuccess())
             {
                 if(!is_string($result) && !(is_object($result) && method_exists($result, '__toString'))) {
-                    $result = $controller->execute('render', $controller->getContext($context));
+                    $result = $controller->execute('render', $context);
                 }
             }
         }
@@ -287,13 +288,14 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
             }
 
             //Execute the controller action
-            $result = $controller->execute($action, $controller->getContext($context));
+            $context = $controller->getContext($context);
+            $result  = $controller->execute($action, $context);
 
             //Return the new representation of the resource
             if ($context->response->isSuccess())
             {
                 if(!is_string($result) && !(is_object($result) && method_exists($result, '__toString'))) {
-                    $result = $controller->execute('render', $controller->getContext($context));
+                    $result = $controller->execute('render', $context);
                 }
             }
         }
