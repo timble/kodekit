@@ -74,13 +74,6 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
     protected $_languages;
 
     /**
-     * The request IETF formatted language tag, eg xx-XX
-     *
-     * @var string
-     */
-    protected $_language;
-
-    /**
      * The supported charsets
      *
      * @var array
@@ -963,30 +956,16 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
      */
     public function getLanguage()
     {
-        if (!$this->_language)
+        if(!$language = $this->getUser()->getLanguage())
         {
-            if(!$language = $this->getUser()->getLanguage())
-            {
-                $languages = $this->getLanguages();
-
-                if (!empty($languages))
-                {
-                    foreach ($languages as $language)
-                    {
-                        if (strpos($language, '_') !== false)
-                        {
-                            $language = str_replace('_', '-', $language);
-                            break;
-                        }
-                    }
-                }
-                else $language = $this->getConfig()->language;
+            if ($this->_headers->has('Accept-Language')) {
+                $language = locale_accept_from_http($this->_headers->get('Accept-Language'));
+            } else {
+                $language = $this->getConfig()->language;
             }
-
-            $this->_language = $language;
         }
 
-        return $this->_language;
+        return $language;
     }
 
     /**
