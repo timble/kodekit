@@ -18,13 +18,6 @@ namespace Kodekit\Library;
 abstract class DispatcherRequestAbstract extends ControllerRequest implements DispatcherRequestInterface
 {
     /**
-     * Mediatype to format mappings
-     *
-     * @var array
-     */
-    protected static $_formats;
-
-    /**
      * The request cookies
      *
      * @var HttpMessageParameters
@@ -109,6 +102,13 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
     protected $_transports;
 
     /**
+     * The request format
+     *
+     * @var string
+     */
+    protected $_format;
+
+    /**
      * Constructor
      *
      * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
@@ -177,7 +177,8 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
             'data'    => $_POST,
             'cookies' => $_COOKIE,
             'files'   => $_FILES,
-            'proxies' => array()
+            'proxies' => array(),
+            'format'  => null,
         ));
 
         parent::_initialize($config);
@@ -812,6 +813,7 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
             }
             else $format = $this->query->get('format', 'word');
 
+            $this->_format = $format;
             $this->setFormat($format);
         }
 

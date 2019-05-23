@@ -32,13 +32,6 @@ class ControllerRequest extends HttpRequest implements ControllerRequestInterfac
     protected $_data;
 
     /**
-     * The request format
-     *
-     * @var string
-     */
-    protected $_format;
-
-    /**
      * User object
      *
      * @var	string|object
@@ -146,28 +139,6 @@ class ControllerRequest extends HttpRequest implements ControllerRequestInterfac
     public function getData()
     {
         return $this->_data;
-    }
-
-    /**
-     * Return the request format
-     *
-     * @return  string  The request format
-     */
-    public function getFormat()
-    {
-        return $this->_format;
-    }
-
-    /**
-     * Set the request format
-     *
-     * @param $format
-     * @return ControllerRequest
-     */
-    public function setFormat($format)
-    {
-        $this->_format = $format;
-        return $this;
     }
 
     /**
