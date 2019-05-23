@@ -150,13 +150,13 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
 
                 $directives = array('filename' => '"'.$filename.'"');
 
-                // IE7 and 8 accepts percent encoded file names as the filename value
+                // IE accepts percent encoded file names as the filename value
                 // Other browsers (except Safari) use filename* header starting with UTF-8''
                 $encoded_name = rawurlencode($filename);
 
                 if($encoded_name !== $filename)
                 {
-                    if (preg_match('/(?i)MSIE [4-8]/i', $user_agent)) {
+                    if (preg_match('/(?:\b(MS)?IE\s+|\bTrident\/7\.0;.*\s+rv:)(\d+)/i', $user_agent)) {
                         $directives['filename'] = '"'.$encoded_name.'"';
                     }
                     elseif (!stripos($user_agent, 'AppleWebkit')) {
