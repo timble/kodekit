@@ -354,6 +354,17 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
     }
 
     /**
+     * Generic count function, counts the total amount of entities
+     *
+     * @param    ControllerContext $context A controller context object
+     * @return   integer
+     */
+    protected function _actionCount(ControllerContext $context)
+    {
+        return $this->getModel()->count();
+    }
+
+    /**
      * Fetch the model entity
      *
      * @param ControllerContextModel  $context A controller context object
