@@ -202,6 +202,17 @@ interface HttpUrlInterface extends \Serializable
     public function isEscaped();
 
     /**
+     * Build the url from a template
+     *
+     * @link http://tools.ietf.org/html/rfc6570
+     *
+     * @param string $template  URI template
+     * @param array  $variables Template variables
+     * @return HttpUrlInterface
+     */
+    public static function fromTemplate($template, array $variables);
+
+    /**
      * Build the url from an array
      *
      * @param   array  $parts Associative array like parse_url() returns.
