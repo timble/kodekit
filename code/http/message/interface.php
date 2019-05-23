@@ -82,6 +82,22 @@ interface HttpMessageInterface
     public function getContentType();
 
     /**
+     * Return the message format
+     *
+     * @return  string  The message format NULL if no format could be found
+     */
+    public function getFormat();
+
+    /**
+     * Sets a format
+     *
+     * @param string $format The format
+     * @throws \UnexpectedValueException If the format hasn't been registered.
+     * @return HttpMessage
+     */
+    public function setFormat($format);
+
+    /**
      * Render the message as a string
      *
      * @return string

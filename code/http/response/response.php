@@ -35,13 +35,6 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
     protected $_status_message;
 
     /**
-     * The response content type
-     *
-     * @var string Content type
-     */
-    protected $_content_type;
-
-    /**
      * The response max age
      *
      * @var int Max age in seconds
@@ -250,37 +243,6 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
         }
 
         return $message;
-    }
-
-    /**
-     * Sets the response content type
-     *
-     * @see http://tools.ietf.org/html/rfc2616#section-14.17
-     *
-     * @param string $type Content type
-     * @return HttpResponse
-     */
-    public function setContentType($type)
-    {
-        if($type)
-        {
-            $this->_content_type = $type;
-            $this->_headers->set('Content-Type', array($type => array('charset' => 'utf-8')));
-        }
-
-        return $this;
-    }
-
-    /**
-     * Retrieves the response content type
-     *
-     * @link http://tools.ietf.org/html/rfc2616#section-14.17
-     *
-     * @return string Character set
-     */
-    public function getContentType()
-    {
-        return $this->_content_type;
     }
 
     /**

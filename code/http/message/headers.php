@@ -104,12 +104,16 @@ class HttpMessageHeaders extends ObjectArray
      */
     public function set($key, $values, $replace = true)
     {
-        $key = strtr(strtolower($key), '_', '-');
+        //Keys cannot be numeric, eg status code returned by get_headers($url, true)
+        if(!is_numeric($key))
+        {
+            $key = strtr(strtolower($key), '_', '-');
 
-        if ($replace === true || !isset($this[$key])) {
-            $this->_data[$key] = array($values);
-        } else {
-            $this->_data[$key] = array_merge($this->_data[$key], array($values));
+            if ($replace === true || !isset($this[$key])) {
+                $this->_data[$key] = array($values);
+            } else {
+                $this->_data[$key] = array_merge($this->_data[$key], array($values));
+            }
         }
 
         return $this;
