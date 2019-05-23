@@ -151,15 +151,20 @@ interface HttpResponseInterface extends HttpMessageInterface
      * the next 60 seconds.
      *
      * @link https://tools.ietf.org/html/rfc2616#section-14.9.3
-     * @param integer $max_age The max age of the response in seconds
-     * @return HttpResponseInterface
+     * @param integer $max_age       The number of seconds after which the response should no longer be considered fresh.
+     * @param integer $shared_max_age The number of seconds after which the response should no longer be considered fresh by shared caches.
+     * @return HttpResponse
      */
-    public function setMaxAge($max_age);
+    public function setMaxAge($max_age, $shared_max_age = null);
 
     /**
      * Get the max age
      *
-     * It returns 0 when no max age can be established.
+     * Returns the number of seconds after the time specified in the response's Date header when the response should no
+     * longer be considered fresh.
+     *
+     * First, it checks for a s-maxage directive, then a max-age directive. It returns null when no maximum age can be
+     * established.
      *
      * @link https://tools.ietf.org/html/rfc2616#section-14.9.3
      * @return integer Number of seconds

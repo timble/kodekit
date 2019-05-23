@@ -172,16 +172,13 @@ class HttpMessageHeaders extends ObjectArray
     }
 
     /**
-     * Returns the headers as a string.
+     * Returns the headers as an array
      *
-     * @return string
+     * @return array An associative array
      */
-    public function toString()
+    public function toArray()
     {
-        $headers = $this->_data;
-        $content = '';
-
-        ksort($headers);
+        $headers = array();
 
         //Method to implode header parameters
         $implode = function($parameters)
@@ -209,8 +206,9 @@ class HttpMessageHeaders extends ObjectArray
             return $value = implode($results, ', ');
         };
 
-        //Serialise the headers to a string
-        foreach ($headers as $name => $values)
+        //Serialise the headers to an array
+        ksort($this->_data);
+        foreach ($this->_data as $name => $values)
         {
             $name    = implode('-', array_map('ucfirst', explode('-', $name)));
             $results = array();
@@ -225,8 +223,26 @@ class HttpMessageHeaders extends ObjectArray
             }
 
             if ($value = implode($results, ', ')) {
-                $content .= sprintf("%s %s\r\n", $name.':', $value);
+                $headers[$name] = $value;
             }
+        }
+
+        return $headers;
+    }
+
+    /**
+     * Returns the headers as a string.
+     *
+     * @return string
+     */
+    public function toString()
+    {
+        $headers = $this->toArray();
+        $content = '';
+
+        //Serialise the headers to a string
+        foreach ($headers as $name => $value) {
+            $content .= sprintf("%s %s\r\n", $name.':', $value);
         }
 
         return $content;
