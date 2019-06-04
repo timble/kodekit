@@ -671,6 +671,17 @@ class ModelEntityComposite extends ObjectAbstract implements ModelEntityComposab
     }
 
     /**
+     * Get a property
+     *
+     * @param   string  $property The property name.
+     * @return  mixed
+     */
+    final public function __get($property)
+    {
+        return $this->getProperty($property);
+    }
+
+    /**
      * Test existence of a property
      *
      * @param  string  $property The property name.
