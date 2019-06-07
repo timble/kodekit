@@ -55,9 +55,6 @@ class ControllerRequest extends HttpRequest implements ControllerRequestInterfac
 
         //Set data parameters
         $this->setData($config->data);
-
-        //Set the format
-        $this->setFormat($config->format);
     }
 
     /**
@@ -73,13 +70,41 @@ class ControllerRequest extends HttpRequest implements ControllerRequestInterfac
         $config->append(array(
             'query'    => array(),
             'data'     => array(),
-            'format'   => 'html',
             'user'     => array(),
             'language' => locale_get_default(),
             'timezone' => date_default_timezone_get(),
+            'format'   => 'html'
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Return the request format or mediatype
+     *
+     * Find the format by using following sequence :
+     *
+     * 1. Use the the 'format' request parameter
+     * 2. Use the URL path extension
+     * 3. Use the accept header with the highest quality apply the reverse format map to find the format.
+     *
+     * @param   bool    $mediatype Get the media type
+     * @return  string  The request format or NULL if no format could be found
+     */
+    public function getFormat($mediatype = false)
+    {
+        if (!isset($this->_format))
+        {
+            if(!$this->query->has('format')) {
+                $format = parent::getFormat() ?: $this->getConfig()->format;
+            } else {
+                $format = $this->query->get('format', 'word');
+            }
+
+            $this->_format = $format;
+        }
+
+        return $mediatype ? static::$_formats[$this->_format][0] : $this->_format;
     }
 
     /**

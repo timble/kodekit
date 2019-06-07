@@ -250,20 +250,7 @@ abstract class HttpMessage extends ObjectAbstract implements HttpMessageInterfac
      */
     public function getFormat()
     {
-        $result = null;
-
-        foreach (static::$_formats as $value => $media_types)
-        {
-            $media_type = $this->getContentType();
-
-            if (in_array($media_type, (array)$media_types))
-            {
-                $result = $value;
-                break;
-            }
-        }
-
-        return $result;
+        return $this->_format;
     }
 
     /**
@@ -281,7 +268,7 @@ abstract class HttpMessage extends ObjectAbstract implements HttpMessageInterfac
                 throw new \UnexpectedValueException('Unregistered format: "' . $format . '" given.');
             }
 
-            $this->setContentType(static::$_formats[$format][0]);
+            $this->_format = $format;
         }
 
         return $this;
