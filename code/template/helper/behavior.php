@@ -63,7 +63,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('kodekit'))
         {
-            $html .= $this->jquery();
+            $html .= $this->jquery($config);
             $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'kodekit.js" />';
 
             static::setLoaded('kodekit');
@@ -267,7 +267,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if(!static::isLoaded('modal'))
         {
-            $html .= $this->jquery();
+            $html .= $this->jquery($config);
             $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'jquery.magnific-popup.js" />';
 
             static::setLoaded('modal');
@@ -370,7 +370,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             }
 
             // Build the keep alive script.
-            $html  = $this->jquery();
+            $html  = $this->jquery($config);
             $html .=
                 "<script>
                 (function($){
@@ -469,7 +469,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('select2'))
         {
-            $html .= $this->jquery();
+            $html .= $this->jquery($config);
             $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'kodekit.select2.js" />';
 
             static::setLoaded('select2');
