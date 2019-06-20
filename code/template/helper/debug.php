@@ -498,7 +498,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
                     $collapsed = false;//$level ? count($var) >= 7 : false;
 
                     $result .= '<span class="k-debug-toggle' . ($collapsed ? ' k-debug-collapsed' : '') . '">'  . count($var) . ')</span>';
-                    $result .= '<div' . ($collapsed ? ' class="k-debug-collapsed"' : '') . '>';
+                    $result .= '<span' . ($collapsed ? ' class="k-debug-collapsed"' : '') . '>';
 
                     $var[$marker] = true;
 
@@ -513,7 +513,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
                     }
 
                     unset($var[$marker]);
-                    $result .= '</div>';
+                    $result .= '</span>';
                 }
                 else $result .= count($var) . ") [ ... ]\n";
             }
@@ -599,7 +599,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
                     $collapsed = false;//$level ? count($var) >= 7 : false;
 
                     $result  = '<span class="k-debug-toggle' . ($collapsed ? ' k-debug-collapsed' : '') . '">' . $result . '</span>';
-                    $result .= '<div' . ($collapsed ? ' class="k-debug-collapsed"' : '') . '>';
+                    $result .= '<span' . ($collapsed ? ' class="k-debug-collapsed"' : '') . '>';
 
                     $list[] = $var;
 
@@ -618,7 +618,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
                     }
 
                     array_pop($list);
-                    $result .= '</div>';
+                    $result .= '</span>';
                 }
                 else $result .= ' { ... }'."\n";
             }
@@ -646,7 +646,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
         if (isset($config->resources[$type]))
         {
             $result  = '<span class="k-debug-toggle k-debug-collapsed">'.$result.'</span>';
-            $result .= '<div class="k-debug-collapsed">';
+            $result .= '<span class="k-debug-collapsed">';
 
             foreach (call_user_func($config->resources[$type], $var) as $key => $value)
             {
@@ -654,7 +654,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
                 $result .= '<span class="k-debug-dump-key">' . StringEscaper::html($key) . "</span> => " . $this->_dumpVar($value, $config, $level + 1);
             }
 
-            $result .= '</div>';
+            $result .= '</span>';
 
             return $result;
         }

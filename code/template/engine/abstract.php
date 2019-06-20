@@ -99,6 +99,7 @@ abstract class TemplateEngineAbstract extends TemplateAbstract implements Templa
                 'json'      => 'json_encode',
                 'format'    => 'sprintf',
                 'replace'   => 'strtr',
+                'debug'     => array($this, 'isDebug'),
             )
         ))->append(array(
             'cache_reload' => $config->debug,
