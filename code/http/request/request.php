@@ -80,6 +80,60 @@ class HttpRequest extends HttpMessage implements HttpRequestInterface
     }
 
     /**
+     * Return the request format or mediatype
+     *
+     * Find the format by using following sequence :
+     *
+     * 1. Use the URL path extension
+     * 2. Use the accept header with the highest quality apply the reverse format map to find the format.
+     *
+     * @return  string  The request format or NULL if no format could be found
+     */
+    public function getFormat()
+    {
+        if (!isset($this->_format))
+        {
+            $format = pathinfo($this->getUrl()->getPath(), PATHINFO_EXTENSION);
+
+            if(empty($format) || !isset(static::$_formats[$format]))
+            {
+                $format = null; //reset
+
+                if ($this->_headers->has('Accept'))
+                {
+                    $accept = $this->_headers->get('Accept');
+                    $formats = $this->_parseAccept($accept);
+
+                    /**
+                     * If the browser is requested text/html serve it at all times
+                     *
+                     * @hotfix #409 : Android 2.3 requesting application/xml
+                     */
+                    if (!isset($formats['text/html']))
+                    {
+                        //Get the highest quality format
+                        $mime_type = key($formats);
+
+                        foreach (static::$_formats as $value => $mime_types)
+                        {
+                            if (in_array($mime_type, (array)$mime_types)) {
+                                $format = $value;
+                                break;
+                            }
+                        }
+                    }
+                    else $format = 'html'; //html requested
+                }
+            }
+
+            $this->_format = $format;
+        }
+
+        return $this->_format;
+    }
+
+
+    /**
      * Set the header parameters
      *
      * @param  array $headers
@@ -305,5 +359,61 @@ class HttpRequest extends HttpMessage implements HttpRequestInterface
         if($this->_url instanceof HttpUrl) {
             $this->_url = clone $this->_url;
         }
+    }
+
+    /**
+     * Parses an accept header and returns an array (type => quality) of the accepted types, ordered by quality.
+     *
+     * @param string    $accept     The header to parse
+     * @param array     $defaults   The default values
+     * @return array
+     */
+    protected function _parseAccept($accept, array $defaults = NULL)
+    {
+        if (!empty($accept))
+        {
+            // Get all of the types
+            $types = explode(',', $accept);
+
+            foreach ($types as $type)
+            {
+                // Split the type into parts
+                $parts = explode(';', $type);
+
+                // Make the type only the MIME
+                $type = trim(array_shift($parts));
+
+                // Default quality is 1.0
+                $options = array('quality' => 1.0);
+
+                foreach ($parts as $part)
+                {
+                    // Prevent undefined $value notice below
+                    if (strpos($part, '=') === FALSE) {
+                        continue;
+                    }
+
+                    // Separate the key and value
+                    list ($key, $value) = explode('=', trim($part));
+
+                    switch ($key)
+                    {
+                        case 'q'       : $options['quality'] = (float) trim($value); break;
+                        case 'version' : $options['version'] = (float) trim($value); break;
+                    }
+                }
+
+                // Add the accept type and quality
+                $defaults[$type] = $options;
+            }
+        }
+
+        // Make sure that accepts is an array
+        $accepts = (array) $defaults;
+
+        // Order by quality
+        arsort($accepts);
+
+        return $accepts;
     }
 }

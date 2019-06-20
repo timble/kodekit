@@ -178,7 +178,6 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
             'cookies' => $_COOKIE,
             'files'   => $_FILES,
             'proxies' => array(),
-            'format'  => null,
         ));
 
         parent::_initialize($config);
@@ -762,65 +761,6 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
     }
 
     /**
-     * Return the request format or mediatype
-     *
-     * Find the format by using following sequence :
-     *
-     * 1. Use the the 'format' request parameter
-     * 2. Use the URL path extension
-     * 3. Use the accept header with the highest quality apply the reverse format map to find the format.
-     *
-     * @param   bool    $mediatype Get the media type
-     * @return  string  The request format or NULL if no format could be found
-     */
-    public function getFormat($mediatype = false)
-    {
-        if (!isset($this->_format))
-        {
-            if(!$this->query->has('format'))
-            {
-                $format = pathinfo($this->getUrl()->getPath(), PATHINFO_EXTENSION);
-
-                if(empty($format) || !isset(static::$_formats[$format]))
-                {
-                    $format = 'html'; //define html default
-
-                    if ($this->_headers->has('Accept'))
-                    {
-                        $accept  = $this->_headers->get('Accept');
-                        $formats = $this->__parseAccept($accept);
-
-                        /**
-                         * If the browser is requested text/html serve it at all times
-                         *
-                         * @hotfix #409 : Android 2.3 requesting application/xml
-                         */
-                        if (!isset($formats['text/html']))
-                        {
-                            //Get the highest quality format
-                            $mime_type = key($formats);
-
-                            foreach (static::$_formats as $value => $mime_types)
-                            {
-                                if (in_array($mime_type, (array)$mime_types)) {
-                                    $format = $value;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            else $format = $this->query->get('format', 'word');
-
-            $this->_format = $format;
-            $this->setFormat($format);
-        }
-
-        return $mediatype ? static::$_formats[$this->_format][0] : $this->_format;
-    }
-
-    /**
      * Gets a list of languages acceptable by the client browser.
      *
      * @return array Languages ordered in the user browser preferences
@@ -1154,61 +1094,5 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
 
         $this->_cookies = clone $this->_cookies;
         $this->_files   = clone $this->_files;
-    }
-
-    /**
-     * Parses an accept header and returns an array (type => quality) of the accepted types, ordered by quality.
-     *
-     * @param string    $accept     The header to parse
-     * @param array     $defaults   The default values
-     * @return array
-     */
-    private function __parseAccept($accept, array $defaults = NULL)
-    {
-        if (!empty($accept))
-        {
-            // Get all of the types
-            $types = explode(',', $accept);
-
-            foreach ($types as $type)
-            {
-                // Split the type into parts
-                $parts = explode(';', $type);
-
-                // Make the type only the MIME
-                $type = trim(array_shift($parts));
-
-                // Default quality is 1.0
-                $options = array('quality' => 1.0);
-
-                foreach ($parts as $part)
-                {
-                    // Prevent undefined $value notice below
-                    if (strpos($part, '=') === FALSE) {
-                        continue;
-                    }
-
-                    // Separate the key and value
-                    list ($key, $value) = explode('=', trim($part));
-
-                    switch ($key)
-                    {
-                        case 'q'       : $options['quality'] = (float) trim($value); break;
-                        case 'version' : $options['version'] = (float) trim($value); break;
-                    }
-                }
-
-                // Add the accept type and quality
-                $defaults[$type] = $options;
-            }
-        }
-
-        // Make sure that accepts is an array
-        $accepts = (array) $defaults;
-
-        // Order by quality
-        arsort($accepts);
-
-        return $accepts;
     }
 }
