@@ -144,12 +144,10 @@ class ViewJson extends ViewAbstract
         $model  = $this->getModel();
         $url    = $this->getUrl();
 
+        $output['data'] = $this->_createResource($model->fetch());
+
         if ($this->isCollection())
         {
-            foreach ($model->fetch() as $entity) {
-                $output['data'][] = $this->_createResource($entity);
-            }
-
             $total  = $model->count();
             $limit  = (int) $model->getState()->limit;
             $offset = (int) $model->getState()->offset;
@@ -168,7 +166,6 @@ class ViewJson extends ViewAbstract
                 $output['links']['prev'] = $url->setQuery(array('offset' => max($offset-$limit, 0)), true)->toString();
             }
         }
-        else $output['data'] = $this->_createResource($model->fetch());
 
         if ($this->_included_resources) {
             $output['included'] = array_values($this->_included_resources);
@@ -178,7 +175,24 @@ class ViewJson extends ViewAbstract
     }
 
     /**
-     * Creates a resource object specified by JSON API
+     * Creates a resource
+     * 
+     * @param ModelEntityInterface $entities
+     * @return array
+     */
+    protected function _createResource(ModelEntityInterface $entities)
+    {
+        $result = array();
+
+        foreach ($entities as $entity) {
+            $result[] = $this->_createEntity($entity);
+        }
+
+        return count($result) > 1 ? $result: array_pop($result);
+    }
+
+    /**
+     * Gets a resource object specified by JSON API
      *
      * @see   http://jsonapi.org/format/#document-resource-objects
      *
@@ -186,7 +200,7 @@ class ViewJson extends ViewAbstract
      * @param array $config Resource configuration.
      * @return array The array with data to be encoded to json
      */
-    protected function _createResource(ModelEntityInterface $entity, array $config = array())
+    protected function _createEntity(ModelEntityInterface $entity, array $config = array())
     {
         $config = array_merge(array(
             'links'         => true,
