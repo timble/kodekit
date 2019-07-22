@@ -168,7 +168,7 @@ class ViewJson extends ViewAbstract
                 $output['links']['prev'] = $url->setQuery(array('offset' => max($offset-$limit, 0)), true)->toString();
             }
         }
-        else $output['data'] = $this->_createResource($model->fetch());
+        else $output['data'] = $this->_createResource($model->fetch()->getIterator()->current());
 
         if ($this->_included_resources) {
             $output['included'] = array_values($this->_included_resources);
