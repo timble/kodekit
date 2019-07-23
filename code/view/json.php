@@ -135,6 +135,12 @@ class ViewJson extends ViewAbstract
      */
     protected function _fetchData(ViewContext $context)
     {
+        $content = $this->getContent();
+
+        if (!empty($content)) {
+            return;
+        }
+
         $output = new \ArrayObject(array(
             'jsonapi' => array('version' => $this->_version),
             'links'   => array('self' => $this->getUrl()->toString()),
