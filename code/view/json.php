@@ -135,52 +135,53 @@ class ViewJson extends ViewAbstract
      */
     protected function _fetchData(ViewContext $context)
     {
-        $content = $this->getContent();
-
-        if (!empty($content)) {
-            return;
+        if ($content = $this->getContent()) {
+            $context->content = $content;
         }
-
-        $output = new \ArrayObject(array(
-            'jsonapi' => array('version' => $this->_version),
-            'links'   => array('self' => $this->getUrl()->toString()),
-            'data'    => array()
-        ));
-
-        $model  = $this->getModel();
-        $url    = $this->getUrl();
-
-        if ($this->isCollection())
+        else
         {
-            foreach ($model->fetch() as $entity) {
-                $output['data'][] = $this->_createResource($entity);
+            $output = new \ArrayObject(array(
+                'jsonapi' => array('version' => $this->_version),
+                'links'   => array('self' => $this->getUrl()->toString()),
+                'data'    => array()
+            ));
+
+            $model  = $this->getModel();
+            $url    = $this->getUrl();
+
+            if ($this->isCollection())
+            {
+                foreach ($model->fetch() as $entity) {
+                    $output['data'][] = $this->_createResource($entity);
+                }
+
+                $total  = $model->count();
+                $limit  = (int) $model->getState()->limit;
+                $offset = (int) $model->getState()->offset;
+
+                $output['meta'] = array(
+                    'offset'   => $offset,
+                    'limit'    => $limit,
+                    'total'	   => $total
+                );
+
+                if ($limit && $total-($limit + $offset) > 0) {
+                    $output['links']['next'] = $url->setQuery(array('offset' => $limit+$offset), true)->toString();
+                }
+
+                if ($limit && $offset && $offset >= $limit) {
+                    $output['links']['prev'] = $url->setQuery(array('offset' => max($offset-$limit, 0)), true)->toString();
+                }
+            }
+            else $output['data'] = $this->_createResource($model->fetch()->getIterator()->current());
+
+            if ($this->_included_resources) {
+                $output['included'] = array_values($this->_included_resources);
             }
 
-            $total  = $model->count();
-            $limit  = (int) $model->getState()->limit;
-            $offset = (int) $model->getState()->offset;
-
-            $output['meta'] = array(
-                'offset'   => $offset,
-                'limit'    => $limit,
-                'total'	   => $total
-            );
-
-            if ($limit && $total-($limit + $offset) > 0) {
-                $output['links']['next'] = $url->setQuery(array('offset' => $limit+$offset), true)->toString();
-            }
-
-            if ($limit && $offset && $offset >= $limit) {
-                $output['links']['prev'] = $url->setQuery(array('offset' => max($offset-$limit, 0)), true)->toString();
-            }
+            $context->content = $output;
         }
-        else $output['data'] = $this->_createResource($model->fetch()->getIterator()->current());
 
-        if ($this->_included_resources) {
-            $output['included'] = array_values($this->_included_resources);
-        }
-
-        $context->content = $output;
     }
 
     /**
