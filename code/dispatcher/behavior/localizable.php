@@ -52,13 +52,16 @@ class DispatcherBehaviorLocalizable extends DispatcherBehaviorAbstract
         $package = $this->getIdentifier()->package;
         $domain  = $this->getIdentifier()->domain;
 
-        if($domain) {
-            $url = 'com://'.$domain.'/'.$package;
-        } else {
-            $url = 'com:'.$package;
+        $urls = ['com:'.$package];
+
+        if ($domain) {
+            // Load first to override base translations
+            array_unshift($urls, 'com://'.$domain.'/'.$package);
         }
 
-        $this->getObject('translator')->load($url);
+        foreach ($urls as $url) {
+            $this->getObject('translator')->load($url);
+        }
     }
 
 }
