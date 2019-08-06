@@ -508,22 +508,23 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'element'  => null,
+            'element'          => null,
+            'type'             => $config->name,
             'options_callback' => null, // wraps the call to select2 options in JavaScript, can be used to add JS code
-            'options'  => array(
+            'options'          => array(
                 'minimumInputLength' => 2,
-                'validate'      => false, //Toggle if the forms validation helper is loaded
-                'queryVarName'  => 'search',
-                'width'         => 'resolve',
-                'name'          => '',
-                'model'		    => $config->model,
-                'placeholder'   => $config->prompt,
-                'allowClear'    => $config->deselect,
-                'value'         => $config->value,
-                'text'          => $config->text,
-                'selected'      => $config->selected,
-                'url'           => $config->ajax_url,
-                'multiple'      => false
+                'validate'           => false, //Toggle if the forms validation helper is loaded
+                'queryVarName'       => 'search',
+                'width'              => 'resolve',
+                'name'               => '',
+                'model'              => $config->model,
+                'placeholder'        => $config->prompt,
+                'allowClear'         => $config->deselect,
+                'value'              => $config->value,
+                'text'               => $config->text,
+                'selected'           => $config->selected,
+                'url'                => $config->ajax_url,
+                'multiple'           => false
             )
         ))->append(array(
             'options' => array(
@@ -537,9 +538,9 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             $config->options->url = $this->getObject('lib:http.url', ['url' => $config->options->url]);
         }
 
-        if(!empty($config->name))
+        if(!empty($config->type))
         {
-            $config->options->url->setQuery(array('fields['.$config->name.']' => $config->value.','.$config->text), true);
+            $config->options->url->setQuery(array('fields['.$config->type.']' => $config->value.','.$config->text), true);
             $config->options->url = (string)$config->options->url;
         }
 
