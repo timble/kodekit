@@ -110,8 +110,17 @@ class DatabaseBehaviorParameterizable extends DatabaseBehaviorAbstract
     {
         if(!empty($value))
         {
-            if(!is_string($value)) {
-                $value = $this->getParameters()->merge($value)->toString();
+            if(!is_string($value))
+            {
+                $value = $this->getParameters()->merge($value);
+
+                $handle = $this->getMixer()->getHandle();
+
+                if(isset($this->_parameters[$handle])) {
+                    $this->_parameters[$handle] = $value;
+                }
+
+                $value = $value->toString();
             }
         }
 
