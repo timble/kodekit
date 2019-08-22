@@ -140,7 +140,7 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
                 else
                 {
                     // basename does not work if the string starts with a UTF character
-                    $filename   = ltrim(basename(' '.strtr($response->getStream()->getPath(), array('/' => '/ '))));
+                    $filename   = \Kodekit\basename($response->getStream()->getPath());
                 }
 
                 // Android cuts file names after #
