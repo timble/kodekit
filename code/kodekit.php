@@ -119,6 +119,11 @@ class Kodekit
             self::$_vendor_path = self::$_root_path.'/vendor';
         }
 
+        /*
+         * Load functions
+         */
+        require_once dirname(__FILE__) . '/functions.php';
+
         /**
          * Load the legacy functions
          */
