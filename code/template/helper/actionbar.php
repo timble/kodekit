@@ -32,12 +32,11 @@ class TemplateHelperActionbar extends TemplateHelperToolbar
         ));
 
         $html = '';
+
         if(isset($config->toolbar) && count($config->toolbar))
         {
             //Force the id
             $config->attribs['id'] = 'toolbar-'.$config->toolbar->getType();
-
-            $html .= '<div '.$this->buildAttributes($config->attribs).'>';
 
             foreach ($config->toolbar as $command)
             {
@@ -50,7 +49,9 @@ class TemplateHelperActionbar extends TemplateHelperToolbar
                 }
             }
 
-            $html .= '</div>';
+            if (!empty($html)) {
+                $html = '<div '.$this->buildAttributes($config->attribs).'>'.$html.'</div>';
+            }
         }
 
         return $html;
