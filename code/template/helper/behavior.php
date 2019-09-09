@@ -489,8 +489,13 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             $html .= '<script>
             kQuery(function($){
                 $("'.$config->element.'").select2('.$options.');
-                $("'.$config->element.'").on("select2:close", function () { $(this).focus(); });
-            });</script>';
+                $("'.$config->element.'").on("select2:close", function () { $(this).focus(); });';
+
+            if ($config->init_callback) {
+                $html .= $config->init_callback . '($("'.$config->element.'"));';
+            }
+
+            $html .= '});</script>';
 
             static::setLoaded($signature);
         }
