@@ -458,7 +458,6 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             'cleanup' => false,
             'debug'   => \Kodekit::getInstance()->isDebug(),
             'element' => '.select2-listbox',
-            'handlers' => ['select2:close' => 'function () { $(this).focus(); }'],
             'options_callback' => null, // wraps the call to select2 options in JavaScript, can be used to add JS code
             'options' => array(
                 'theme'   => 'bootstrap',
@@ -487,24 +486,11 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 $options = $config->options_callback.'('.$options.')';
             }
 
-            $handlers = '';
-
-            if ($config->handlers)
-            {
-                $handlers = '$("'.$config->element.'")';
-
-                foreach ($config->handlers as $name => $function) {
-                    $handlers .= '.on("'.$name.'", '.$function.')';
-                }
-
-                $handlers .= ';';
-            }
-
-            $html .= sprintf('<script>
+            $html .= '<script>
             kQuery(function($){
-                $("%1$s").select2(%2$s);
-                %3$s
-            });</script>', $config->element, $options, $handlers);
+                $("'.$config->element.'").select2('.$options.');
+                $("'.$config->element.'").on("select2:close", function () { $(this).focus(); });
+            });</script>';
 
             static::setLoaded($signature);
         }
