@@ -388,14 +388,11 @@ class TemplateHelperListbox extends TemplateHelperSelect
             }
         }
 
-         $html .= $this->optionlist(array(
-            'name'     => $config->name,
-            'id'       => $config->id,
-            'options' => $options,
-            'deselect' => false,
-            'select2'  => false,
-            'attribs'  => $config->attribs
-        ));
+        $config->options  = $options;
+        $config->deselect = false;
+        $config->select2  = false;
+
+         $html .= $this->optionlist($config);
 
         return $html;
     }
