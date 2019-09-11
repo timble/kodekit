@@ -487,10 +487,17 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             }
 
             $html .= '<script>
-            kQuery(function($){
-                $("'.$config->element.'").select2('.$options.');
-                $("'.$config->element.'").on("select2:close", function () { $(this).focus(); });
-            });</script>';
+            kQuery(function($)
+            {
+                var selector = $("'.$config->element.'");                    
+                selector.select2('.$options.');
+                selector.on("select2:close", function () { $(this).focus(); });';
+
+            if ($config->init_callback) {
+                $html .= $config->init_callback . '(selector);';
+            }
+
+            $html .= '});</script>';
 
             static::setLoaded($signature);
         }
@@ -609,9 +616,16 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             }
 
             $html .= '<script>
-            kQuery(function($){
-                $("'.$config->element.'").select2(Kodekit.getSelect2Options('.$options.'));
-            });</script>';
+                kQuery(function($)
+                {
+                    var selector = $("'.$config->element.'");
+                    selector.select2(Kodekit.getSelect2Options('.$options.'));';
+
+            if ($config->init_callback) {
+                $html .= $config->init_callback . '(selector);';
+            }
+
+            $html .= '});</script>';
 
             static::setLoaded($signature);
         }
