@@ -37,10 +37,12 @@ class TemplateHelperTranslator extends TemplateHelperAbstract
         $html  = '';
         $html .= $this->createHelper('behavior')->kodekit() .
             "<script>
-            if (typeof Kodekit === 'object' && Kodekit !== null) {
-                if (typeof Kodekit.translator === 'object' && Kodekit.translator !== null) {
-                    Kodekit.translator.loadTranslations(".json_encode($translations).");
-                }
+            if(!Kodekit) {
+                var Kodekit = typeof Koowa !== 'undefined' ?  Koowa : {};
+            }
+            
+            if (typeof Kodekit.translator === 'object' && Kodekit.translator !== null) {
+                Kodekit.translator.loadTranslations(".json_encode($translations).");
             }
             </script>
             ";
