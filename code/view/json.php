@@ -335,7 +335,12 @@ class ViewJson extends ViewAbstract
             {
                 foreach ($array['links'] as $k => $v)
                 {
-                    if (strpos($v, ':/') === false) {
+                    if (is_array($v) && isset($v['href']) && is_string($v['href'])) {
+                        if (strpos($v['href'], ':/') === false) {
+                            $v['href'] = $base.$v['href'];
+                            $array['links'][$k] = $v;
+                        }
+                    } else if (strpos($v, ':/') === false) {
                         $array['links'][$k] = $base.$v;
                     }
                 }
