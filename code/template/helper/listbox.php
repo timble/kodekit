@@ -366,7 +366,7 @@ class TemplateHelperListbox extends TemplateHelperSelect
 
         $options = array();
 
-        if ((is_scalar($config->selected) && $config->selected) || count($config->selected))
+        if ((is_scalar($config->selected) && $config->selected) || (is_countable($config->selected) && count($config->selected)))
         {
             $selected = $config->selected;
 
