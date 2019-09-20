@@ -659,3 +659,25 @@ if(!function_exists('uri_template'))
     }
 }
 
+/**
+ * is_countable polyfill
+ *
+ * @link https://www.php.net/manual/en/function.is-countable.php
+ *
+ * Based on https://github.com/Ayesh/is_countable-polyfill
+ */
+if (!function_exists('is_countable')) {
+    /**
+     * Verify that the content of a variable is an array or an object
+     * implementing Countable
+     *
+     * @param mixed $var The value to check.
+     * @return bool Returns TRUE if var is countable, FALSE otherwise.
+     */
+    function is_countable($var) {
+        return is_array($var)
+            || $var instanceof \Countable
+            || $var instanceof \SimpleXMLElement
+            || $var instanceof \ResourceBundle;
+    }
+}
