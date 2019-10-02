@@ -53,8 +53,8 @@ class ControllerBehaviorCommandable extends ControllerBehaviorAbstract
     {
         $controller = $context->getSubject();
 
-        // Add toolbars on authenticated requests only.
-        if ($controller->getUser()->isAuthentic())
+        //Add the template filter and inject the toolbars
+        if($controller->getView() instanceof ViewTemplatable)
         {
             //Add the toolbars
             $toolbars = (array)ObjectConfig::unbox($this->getConfig()->toolbars);
@@ -67,10 +67,7 @@ class ControllerBehaviorCommandable extends ControllerBehaviorAbstract
                     $this->addToolbar($key, $value);
                 }
             }
-        }
 
-        //Add the template filter and inject the toolbars
-        if($controller->getView() instanceof ViewTemplatable) {
             $controller->getView()->getTemplate()->addFilter('toolbar', array('toolbars' => $this->getToolbars()));
         }
     }
