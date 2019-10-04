@@ -210,12 +210,18 @@ class DatabaseQuerySelect extends DatabaseQueryAbstract
     /**
      * Build the having clause
      *
-     * @param   array|string $columns A string or array of ordering columns
+     * @param   string $condition   The having condition statement
+     * @param   string $combination The having combination, defaults to 'AND'
+     *
      * @return  DatabaseQuerySelect
      */
-    public function having($columns)
+    public function having($condition, $combination = 'AND')
     {
-        $this->having = array_unique(array_merge($this->having, (array) $columns));
+        $this->having[] = array(
+            'condition'   => $condition,
+            'combination' => count($this->having) ? $combination : ''
+        );
+
         return $this;
     }
 
@@ -349,12 +355,16 @@ class DatabaseQuerySelect extends DatabaseQueryAbstract
 
         if($this->having)
         {
-            $columns = array();
-            foreach($this->having as $column) {
-                $columns[] = $driver->quoteIdentifier($column);
-            }
+            $query .= ' HAVING';
 
-            $query .= ' HAVING '.implode(' , ', $columns);
+            foreach($this->having as $having)
+            {
+                if($having['combination']) {
+                    $query .= ' '.$having['combination'];
+                }
+
+                $query .= ' '. $driver->quoteIdentifier($having['condition']);
+            }
         }
 
         if($this->order)
