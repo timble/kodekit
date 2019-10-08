@@ -147,13 +147,14 @@ class DatabaseQueryUnion extends DatabaseQuerySelect
 
     /**
      * Set having constraints in all queries
-     * @param array|string $columns
+     * @param   string $condition   The having condition statement
+     * @param   string $combination The having combination, defaults to 'AND'
      * @return $this|DatabaseQuerySelect
      */
-    public function having($columns)
+    public function having($condition, $combination = 'AND')
     {
         foreach ($this->queries as $query) {
-            $query->having($columns);
+            $query->having($condition, $combination);
         }
 
         return $this;
