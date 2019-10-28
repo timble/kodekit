@@ -30,10 +30,10 @@ abstract class ControllerToolbarDecorator extends ObjectDecorator implements Con
         $parts  = explode('.', $command->getName());
         $method = '_'.$parts[0].ucfirst($parts[1]);
 
+        $this->getDelegate()->execute($command, $chain);
+
         if(method_exists($this, $method)) {
             $this->$method($command);
-        } else {
-            $this->getDelegate()->execute($command, $chain);
         }
     }
 
