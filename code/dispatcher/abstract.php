@@ -292,7 +292,7 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
         $action     = $this->getControllerAction();
 
         //Execute the component and cast the context
-        $controller->execute($action, $controller->getContext($context));
+        $context->result = $controller->execute($action, $controller->getContext($context));
 
         //Set the result in the response
         if($context->result && !$context->response->isRedirect())
