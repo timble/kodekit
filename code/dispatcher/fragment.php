@@ -140,7 +140,9 @@ class DispatcherFragment extends DispatcherAbstract implements ObjectInstantiabl
      */
     protected function _actionInclude(DispatcherContext $context)
     {
-        return $this->_actionDispatch($context);
+        parent::_actionDispatch($context);
+
+        return $context->result;
     }
 
     /**
