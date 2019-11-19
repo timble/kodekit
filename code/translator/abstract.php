@@ -190,7 +190,7 @@ abstract class TranslatorAbstract extends ObjectAbstract implements TranslatorIn
             {
                 try {
                     $loaded = $this->getObject('object.config.factory')->fromFile($file)->toArray();
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     return false;
                 }
 
@@ -224,12 +224,24 @@ abstract class TranslatorAbstract extends ObjectAbstract implements TranslatorIn
         {
             if ($result = $locator->locate($path .'/'.$fallback.'/'.$fallback.'.*')) {
                 $results[] = $result;
+            } elseif (($pos = strpos($fallback, '-')) !== false) {
+                $fallback = substr($fallback, 0, $pos);
+
+                if ($result = $locator->locate($path .'/'.$fallback.'/'.$fallback.'.*')) {
+                    $results[] = $result;
+                }
             }
         }
 
         // Find translations based on the language
         if ($result = $locator->locate($path .'/'.$language.'/'.$language.'.*')) {
             $results[] = $result;
+        } elseif (($pos = strpos($language, '-')) !== false) {
+            $language = substr($language, 0, $pos);
+
+            if ($result = $locator->locate($path .'/'.$language.'/'.$language.'.*')) {
+                $results[] = $result;
+            }
         }
 
         return $results;
