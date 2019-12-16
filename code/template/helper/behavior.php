@@ -799,9 +799,9 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         $config = new ObjectConfigJson($config);
         $config->append(array(
             'debug'   => \Kodekit::getInstance()->isDebug(),
-            'offset'  => 'USER_UTC',
-            'user_offset'    => $this->getObject('user')->getTimezone(),
-            'server_offset'  => date_default_timezone_get(),
+            'timezone'  => 'USER_UTC',
+            'user_timezone'    => $this->getObject('user')->getTimezone(),
+            'server_timezone'  => date_default_timezone_get(),
             'offset_seconds' => 0,
             'value'   => gmdate("M d Y H:i:s"),
             'name'    => '',
@@ -823,16 +823,16 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             )
         ));
 
-        if ($config->offset && !$config->offset_seconds)
+        if ($config->timezone && !$config->offset_seconds)
         {
-            if (strtoupper($config->offset) === 'SERVER_UTC') {
-                $config->offset = $config->server_offset;
+            if (strtoupper($config->timezone) === 'SERVER_UTC') {
+                $config->timezone = $config->server_timezone;
             }
-            else if (strtoupper($config->offset) === 'USER_UTC') {
-                $config->offset = $config->user_offset ?: $config->server_offset;
+            else if (strtoupper($config->timezone) === 'USER_UTC') {
+                $config->timezone = $config->user_timezone ?: $config->server_timezone;
             }
 
-            $timezone               = new \DateTimeZone($config->offset);
+            $timezone               = new \DateTimeZone($config->timezone);
             $config->offset_seconds = $timezone->getOffset(new \DateTime());
         }
 
