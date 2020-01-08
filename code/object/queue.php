@@ -35,33 +35,21 @@ class ObjectQueue extends ObjectAbstract implements \Iterator, \Countable
      *
      * @var array
      */
-    private $__object_list = null;
+    private $__object_list = [];
 
     /**
      * Priority list
      *
      * @var array
      */
-    private $__priority_list = null;
+    private $__priority_list = [];
 
     /**
      * Identifier list
      *
      * @var array
      */
-    private $__identifier_list = array();
-
-    /**
-     * Constructor
-     *
-     */
-    public function __construct(ObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        $this->__object_list   = new \ArrayObject();
-        $this->__priority_list = new \ArrayObject();
-    }
+    private $__identifier_list = [];
 
     /**
      * Inserts an object to the queue.
@@ -76,10 +64,10 @@ class ObjectQueue extends ObjectAbstract implements \Iterator, \Countable
 
         if($handle = $object->getHandle())
         {
-            $this->__object_list->offsetSet($handle, $object);
+            $this->__object_list[$handle] = $object;
+            $this->__priority_list[$handle] = $priority;
 
-            $this->__priority_list->offsetSet($handle, $priority);
-            $this->__priority_list->asort();
+            asort($this->__priority_list);
 
             if($object instanceof ObjectInterface) {
                 $this->__identifier_list[$handle] = $object->getIdentifier();
@@ -103,10 +91,10 @@ class ObjectQueue extends ObjectAbstract implements \Iterator, \Countable
 
         if($handle = $object->getHandle())
         {
-            if($this->__object_list->offsetExists($handle))
+            if(isset($this->__object_list[$handle]))
             {
-                $this->__object_list->offsetUnset($handle);
-                $this->__priority_list->offsetUnSet($handle);
+                unset($this->__object_list[$handle]);
+                unset($this->__priority_list[$handle]);
 
                 if($object instanceof ObjectInterface) {
                     unset($this->__identifier_list[$handle]);
@@ -130,10 +118,11 @@ class ObjectQueue extends ObjectAbstract implements \Iterator, \Countable
     {
         if($handle = $object->getHandle())
         {
-            if($this->__priority_list->offsetExists($handle))
+            if(isset($this->__priority_list[$handle]))
             {
-                $this->__priority_list->offsetSet($handle, $priority);
-                $this->__priority_list->asort();
+                $this->__priority_list[$handle] = $priority;
+
+                asort($this->__priority_list);
             }
         }
 
@@ -152,8 +141,8 @@ class ObjectQueue extends ObjectAbstract implements \Iterator, \Countable
 
         if($handle = $object->getHandle())
         {
-            if($this->__priority_list->offsetExists($handle)) {
-                $result = $this->__priority_list->offsetGet($handle);
+            if(isset($this->__priority_list[$handle])) {
+                $result = $this->__priority_list[$handle];
             }
         }
 
@@ -197,7 +186,7 @@ class ObjectQueue extends ObjectAbstract implements \Iterator, \Countable
         $result = false;
 
         if($handle = $object->getHandle()) {
-            $result = $this->__object_list->offsetExists($handle);
+            $result = isset($this->__object_list[$handle]);
         }
 
         return $result;
@@ -318,18 +307,5 @@ class ObjectQueue extends ObjectAbstract implements \Iterator, \Countable
         }
 
         return $array;
-    }
-
-    /**
-     * Preform a deep clone of the object
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        parent::__clone();
-
-        $this->__object_list     = clone $this->__object_list;
-        $this->__priority_list   = clone $this->__priority_list;
     }
 }

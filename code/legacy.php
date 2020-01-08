@@ -620,7 +620,7 @@ if(!function_exists('uri_template'))
             {
                 preg_match('`^([^:\*]+)(:([1-9][0-9]*)|\*)?$`', $variable_key, $m);
                 $key = $m[1];
-                $modifier        = count($m) > 2 ? $m[2]{0} : null;
+                $modifier        = count($m) > 2 ? $m[2][0] : null;
                 $modifier_option = count($m) > 3 ? $m[3] : null;
 
                 if (isset($variables[$key]))
