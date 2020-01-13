@@ -205,7 +205,7 @@ class DatabaseQueryInsert extends DatabaseQueryAbstract
         {
             $values = array();
             foreach($this->duplicate_key_values as $value) {
-                $values[] = ' '. $adapter->quoteIdentifier($value);
+                $values[] = ' '. $driver->quoteIdentifier($value);
             }
 
             $update_clause = implode(', ', $values);
