@@ -21,7 +21,7 @@ namespace Kodekit {
      */
     function basename($path, $suffix = null)
     {
-        return substr(\basename(' '.strtr($path, array('/' => '/ ')), $suffix), 1);
+        return substr(\basename(' '.strtr($path, array('/' => '/ ', '\\' => '\\ ')), $suffix), 1);
     }
 
     /**
