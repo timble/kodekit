@@ -13,7 +13,7 @@
   },
   "homepage": "https://github.com/timble/kodekit#readme",
   "devDependencies": {
-    "bootstrap-sass": "3.3.7",
+    "bootstrap-sass": "3.4.1",
     "grunt": "1.0.0",
     "grunt-autoprefixer": "2.2.0",
     "grunt-contrib-copy": "1.0.0",
