@@ -100,6 +100,8 @@ class DatabaseBehaviorCreatable extends DatabaseBehaviorAbstract
                 }
             }
 
+            $users = array_unique($users);
+
             //Lazy load the users
             $this->getObject('user.provider')->fetch($users, true);
         }

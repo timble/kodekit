@@ -180,7 +180,7 @@ class UserProviderModel extends UserProviderAbstract
                     return true;
                 }
             }
-            else $this->_fetch = $identifiers;
+            else $this->_fetch = array_unique($identifiers);
         }
 
         return false;
