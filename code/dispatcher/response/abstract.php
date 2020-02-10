@@ -178,7 +178,7 @@ abstract class DispatcherResponseAbstract extends ControllerResponse implements 
             $content = $this->getContent();
             $factory = $this->getObject('filesystem.stream.factory');
 
-            if(!$this->getObject('filter.path')->validate($content))
+            if(!is_string($content) || !$this->getObject('filter.path')->validate($content))
             {
                 $stream = $factory->createStream('kodekit-buffer://memory', 'w+b');
                 $stream->write($content);
