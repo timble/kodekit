@@ -333,7 +333,7 @@ abstract class DatabaseRowAbstract extends ObjectArray implements DatabaseRowInt
             $column = $this->getTable()->getColumn($name);
 
             if (isset($column) && $column->required) {
-                $this->setProperty($this->_data[$name], $column->default);
+                $this->setProperty($name, $column->default);
             }
             else
             {
