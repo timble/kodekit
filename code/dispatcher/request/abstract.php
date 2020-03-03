@@ -842,7 +842,7 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
     public function getTimezones()
     {
         $country   = locale_get_region($this->getLanguage());
-        $timezones = timezone_identifiers_list(\DateTimeZone::PER_COUNTRY, $country);
+        $timezones = $country ? timezone_identifiers_list(\DateTimeZone::PER_COUNTRY, $country) : [];
 
         return $timezones;
     }
