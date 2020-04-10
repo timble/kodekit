@@ -20,17 +20,11 @@ class DatabaseBehaviorCreatable extends DatabaseBehaviorAbstract
     /**
      * Get the user that created the resource
      *
-     * @return UserInterface|null Returns a User object or NULL if no user could be found
+     * @return UserInterface Returns a User object
      */
     public function getAuthor()
     {
-        $user = null;
-
-        if($this->hasProperty('created_by') && !empty($this->created_by)) {
-            $user = $this->getObject('user.provider')->getUser($this->created_by);
-        }
-
-        return $user;
+        return $this->getObject('user.provider')->getUser($this->created_by);
     }
 
     /**

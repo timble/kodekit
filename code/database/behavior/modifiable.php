@@ -37,17 +37,11 @@ class DatabaseBehaviorModifiable extends DatabaseBehaviorAbstract
     /**
      * Get the user that last edited the resource
      *
-     * @return UserInterface|null Returns a User object or NULL if no user could be found
+     * @return UserInterface Returns a User object
      */
     public function getEditor()
     {
-        $user = null;
-
-        if($this->hasProperty('modified_by') && !empty($this->modified_by)) {
-            $user = $this->getObject('user.provider')->getUser($this->modified_by);
-        }
-
-        return $user;
+        return $this->getObject('user.provider')->getUser($this->modified_by);
     }
 
     /**
