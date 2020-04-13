@@ -174,11 +174,11 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
             if($response->isAttachable()) {
                 $response->setContentType('application/octet-stream');
             }
-        }
 
-        //Add Content-Length if not present
-        if(!$response->headers->has('Content-Length') && $response->getStream()->getSize()) {
-            $response->headers->set('Content-Length', $response->getStream()->getSize());
+            //Add Content-Length if not present
+            if(!$response->headers->has('Content-Length') && $response->getStream()->getSize()) {
+                $response->headers->set('Content-Length', $response->getStream()->getSize());
+            }
         }
 
         //Remove Content-Length for transfer encoded responses that do not contain a content range
