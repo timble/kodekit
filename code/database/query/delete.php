@@ -67,7 +67,7 @@ class DatabaseQueryDelete extends DatabaseQueryAbstract
     /**
      * Build the join clause
      *
-     * @param string $table      The table name to join to.
+     * @param string|array $table      The table name to join to.
      * @param string $condition  The join condition statement.
      * @param string|array $type The type of join; empty for a plain JOIN, or "LEFT", "INNER", etc.
      * @return DatabaseQueryDelete

@@ -62,7 +62,7 @@ class DatabaseQueryUpdate extends DatabaseQueryAbstract
     /**
      * Build the table clause
      *
-     * @param   string $table The name of the table to update.
+     * @param   string|array $table The name of the table to update.
      * @return  DatabaseQueryUpdate
      */
     public function table($table)
