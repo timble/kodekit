@@ -681,3 +681,36 @@ if (!function_exists('is_countable')) {
             || $var instanceof \ResourceBundle;
     }
 }
+
+/**
+ * locale_get_default stub
+ *
+ * @link https://www.php.net/manual/en/locale.getdefault.php
+ */
+if (!function_exists('locale_get_default')) {
+    /**
+     * Get the default Locale
+     *
+     * @return string Always returns en-GB
+     */
+    function locale_get_default() {
+        return 'en-GB';
+    }
+}
+
+/**
+ * locale_set_default stub
+ *
+ * @link https://www.php.net/manual/en/locale.setdefault.php
+ */
+if (!function_exists('locale_set_default')) {
+    /**
+     * Set the default Locale
+     *
+     * @param string $name
+     * @return bool Always returns false
+     */
+    function locale_set_default($name) {
+        return false;
+    }
+}
