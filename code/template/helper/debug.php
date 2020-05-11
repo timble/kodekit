@@ -120,14 +120,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
             )
         ));
 
-        $html = '';
-        if (!static::isLoaded('dump'))
-        {
-            $html .= '<ktml:script src="assets://js/dumper.js" />';
-            $html .= '<ktml:style src="assets://css/dumper.css" />';
-
-            static::setLoaded('dump');
-        }
+        $html = $this->debugger();
 
         $html .= $this->_dumpVar($value, $config);
 
