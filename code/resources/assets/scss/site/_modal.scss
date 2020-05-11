@@ -21,9 +21,6 @@
   position: fixed;
   outline: none !important;
   -webkit-backface-visibility: hidden;
-
-  // Importing the well here so the advanced permissions popup looks nice
-  @import "../../lib/sass-twitter-bootstrap/wells";
 }
 
 .mfp-container {

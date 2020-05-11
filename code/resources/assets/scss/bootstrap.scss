@@ -14,8 +14,8 @@
    * -------------------------
    */
 
-  @import "../lib/sass-twitter-bootstrap/variables";
-  @import "../lib/sass-twitter-bootstrap/mixins";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/variables";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/mixins";
   $iconSpritePath: "../img/glyphicons-halflings.png";
   $iconWhiteSpritePath: "../img/glyphicons-halflings-white.png";
 
@@ -25,7 +25,7 @@
    * ----------
    */
 
-  @import "../lib/sass-twitter-bootstrap/reset";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/reset";
 
 
   /**
@@ -33,9 +33,9 @@
    * ------------------------------
    */
 
-  // @import "../lib/sass-twitter-bootstrap/scaffolding";
-  // @import "../lib/sass-twitter-bootstrap/grid";
-  // @import "../lib/sass-twitter-bootstrap/layouts";
+  // @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/scaffolding";
+  // @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/grid";
+  // @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/layouts";
 
 
   /**
@@ -43,10 +43,10 @@
    * --------
    */
 
-  @import "../lib/sass-twitter-bootstrap/type";
-  @import "../lib/sass-twitter-bootstrap/code";
-  @import "../lib/sass-twitter-bootstrap/forms";
-  @import "../lib/sass-twitter-bootstrap/tables";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/type";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/code";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/forms";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/tables";
 
 
   /**
@@ -54,11 +54,11 @@
    * ------------------
    */
 
-  @import "../lib/sass-twitter-bootstrap/sprites";
-  @import "../lib/sass-twitter-bootstrap/dropdowns";
-  @import "../lib/sass-twitter-bootstrap/wells";
-  @import "../lib/sass-twitter-bootstrap/component-animations";
-  @import "../lib/sass-twitter-bootstrap/close";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/sprites";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/dropdowns";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/wells";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/component-animations";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/close";
 
 
   /**
@@ -67,9 +67,9 @@
    * 1. Note: alerts share common CSS with buttons and thus have styles in buttons
    */
 
-  @import "../lib/sass-twitter-bootstrap/buttons";
-  @import "../lib/sass-twitter-bootstrap/button-groups";
-  @import "../lib/sass-twitter-bootstrap/alerts"; // 1
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/buttons";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/button-groups";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/alerts"; // 1
 
 
   /**
@@ -77,11 +77,11 @@
    * ---------------
    */
 
-  @import "../lib/sass-twitter-bootstrap/navs";
-  // @import "../lib/sass-twitter-bootstrap/navbar";
-  // @import "../lib/sass-twitter-bootstrap/breadcrumbs";
-  @import "../lib/sass-twitter-bootstrap/pagination";
-  @import "../lib/sass-twitter-bootstrap/pager";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/navs";
+  // @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/navbar";
+  // @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/breadcrumbs";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/pagination";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/pager";
 
 
   /**
@@ -89,9 +89,9 @@
    * --------------------
    */
 
-  // @import "../lib/sass-twitter-bootstrap/modals";
-  @import "../lib/sass-twitter-bootstrap/tooltip";
-  // @import "../lib/sass-twitter-bootstrap/popovers";
+  // @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/modals";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/tooltip";
+  // @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/popovers";
 
 
   /**
@@ -99,13 +99,13 @@
    * ----------------
    */
 
-  @import "../lib/sass-twitter-bootstrap/thumbnails";
-  @import "../lib/sass-twitter-bootstrap/media";
-  @import "../lib/sass-twitter-bootstrap/labels-badges";
-  @import "../lib/sass-twitter-bootstrap/progress-bars";
-  // @import "../lib/sass-twitter-bootstrap/accordion";
-  // @import "../lib/sass-twitter-bootstrap/carousel";
-  // @import "../lib/sass-twitter-bootstrap/hero-unit";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/thumbnails";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/media";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/labels-badges";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/progress-bars";
+  // @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/accordion";
+  // @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/carousel";
+  // @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/hero-unit";
 
 
   /**
@@ -114,7 +114,7 @@
    * Has to be last to override when necessary
    */
 
-  @import "../lib/sass-twitter-bootstrap/utilities";
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/utilities";
 
 
   /**

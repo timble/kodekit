@@ -1,10 +1,10 @@
 /* Bootstrap 2.3.2 variables and mixins used in files (Joomla uses old Bootstrap) */
-@import "../lib/sass-twitter-bootstrap/variables";
-@import "../lib/sass-twitter-bootstrap/mixins";
+@import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/variables";
+@import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/mixins";
 
 /* Bootstrap 3.x variables and mixins (select2 bootstrap styling uses BS 3) */
-@import "../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables";
-@import "../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+@import "../../../../../kodekit-ui/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables";
+@import "../../../../../kodekit-ui/node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
 
 /* Site variables and mixins */
 @import "site/utilities/variables";
@@ -15,6 +15,12 @@
 
 /* Outside of the k-ui-namespace scope */
 @import "site/modal";
+
+.mfp-wrap {
+  // Importing the well here so the advanced permissions popup looks nice
+  @import "../../../../../kodekit-ui/src/scss/sass-twitter-bootstrap/wells";
+}
+
 @import "../../../../../kodekit-ui/src/scss/admin/3rdparty/datepicker";
 
 @import "../../../../../kodekit-ui/node_modules/select2/src/scss/core";

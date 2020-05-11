@@ -187,8 +187,6 @@
  * Box sizing border-box all elements for this page
  */
 body * {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
 .hidden {
@@ -383,10 +381,6 @@ pre {
   cursor: pointer;
   line-height: 1.5em;
   text-decoration: none;
-  -webkit-transition: all 0.1s ease-in-out;
-  -moz-transition: all 0.1s ease-in-out;
-  -ms-transition: all 0.1s ease-in-out;
-  -o-transition: all 0.1s ease-in-out;
   transition: all 0.1s ease-in-out; }
 
 .trace__item .trace__item__file {
@@ -436,10 +430,6 @@ pre {
     border-top: 1px solid #fff;
     border-bottom: 1px solid #d7dcdc;
     position: relative;
-    -webkit-transition: all 0.1s ease-in-out;
-    -moz-transition: all 0.1s ease-in-out;
-    -ms-transition: all 0.1s ease-in-out;
-    -o-transition: all 0.1s ease-in-out;
     transition: all 0.1s ease-in-out; }
     .codes_container__item .codes_container__content:hover {
       background: #fff; }
