@@ -17970,13 +17970,10 @@ $(function() {
 
 
 //ui.initialize.js
-var kodekitUI = typeof kodekitUI !== 'undefined' ? kodekitUI : {}; // global variable
+var kodekitUI = typeof kodekitUI !== 'undefined' ? kodekitUI : {};
 
-// Run initialize code
-(function () {
-    // Add js-enabled class to html element
-    document.documentElement.classList.add('k-js-enabled');
-})();
+// Add js-enabled class to html element
+document.documentElement.classList.add('k-js-enabled');
 
 
 
