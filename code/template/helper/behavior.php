@@ -232,7 +232,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if ($config->css && !static::isLoaded('bootstrap-css'))
         {
-            $html .= '<ktml:style src="assets://css/bootstrap.css" />';
+            $html .= '<ktml:style src="assets://css/bootstrap'.($config->debug ? '' : '.min').'.css" />';
 
             static::setLoaded('bootstrap-css');
         }
