@@ -152,8 +152,6 @@
   .k-ui-namespace input[type="checkbox"] {
     cursor: pointer; }
   .k-ui-namespace input[type="search"] {
-    -webkit-box-sizing: content-box;
-    -moz-box-sizing: content-box;
     box-sizing: content-box;
     -webkit-appearance: textfield; }
   .k-ui-namespace input[type="search"]::-webkit-search-decoration,
@@ -220,7 +218,7 @@
     color: #999; }
   .k-ui-namespace a.muted:hover,
   .k-ui-namespace a.muted:focus {
-    color: #807f7f; }
+    color: gray; }
   .k-ui-namespace .text-warning {
     color: #c09853; }
   .k-ui-namespace a.text-warning:hover,
@@ -395,8 +393,6 @@
     font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
     font-size: 12px;
     color: #333;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
     border-radius: 3px; }
   .k-ui-namespace code {
     padding: 2px 4px;
@@ -417,8 +413,6 @@
     background-color: #f5f5f5;
     border: 1px solid #ccc;
     border: 1px solid rgba(0, 0, 0, 0.15);
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
     border-radius: 4px; }
     .k-ui-namespace pre.prettyprint {
       margin-bottom: 20px; }
@@ -491,8 +485,6 @@
     font-size: 14px;
     line-height: 20px;
     color: #555;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
     border-radius: 4px;
     vertical-align: middle; }
   .k-ui-namespace input,
@@ -519,12 +511,7 @@
   .k-ui-namespace .uneditable-input {
     background-color: #fff;
     border: 1px solid #ccc;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
-    -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
-    -o-transition: border linear 0.2s, box-shadow linear 0.2s;
     transition: border linear 0.2s, box-shadow linear 0.2s; }
     .k-ui-namespace textarea:focus,
     .k-ui-namespace input[type="text"]:focus,
@@ -546,8 +533,6 @@
       outline: 0;
       outline: thin dotted \9;
       /* IE6-9 */
-      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
       box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6); }
   .k-ui-namespace input[type="radio"],
   .k-ui-namespace input[type="checkbox"] {
@@ -591,8 +576,6 @@
     color: #999;
     background-color: #fcfcfc;
     border-color: #ccc;
-    -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.025);
-    -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.025);
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.025);
     cursor: not-allowed; }
   .k-ui-namespace .uneditable-input {
@@ -758,15 +741,11 @@
   .k-ui-namespace .control-group.warning select,
   .k-ui-namespace .control-group.warning textarea {
     border-color: #c09853;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
     .k-ui-namespace .control-group.warning input:focus,
     .k-ui-namespace .control-group.warning select:focus,
     .k-ui-namespace .control-group.warning textarea:focus {
       border-color: #a47e3c;
-      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #dbc59e;
-      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #dbc59e;
       box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #dbc59e; }
   .k-ui-namespace .control-group.warning .input-prepend .add-on,
   .k-ui-namespace .control-group.warning .input-append .add-on {
@@ -787,15 +766,11 @@
   .k-ui-namespace .control-group.error select,
   .k-ui-namespace .control-group.error textarea {
     border-color: #b94a48;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
     .k-ui-namespace .control-group.error input:focus,
     .k-ui-namespace .control-group.error select:focus,
     .k-ui-namespace .control-group.error textarea:focus {
       border-color: #953b39;
-      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
-      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
       box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392; }
   .k-ui-namespace .control-group.error .input-prepend .add-on,
   .k-ui-namespace .control-group.error .input-append .add-on {
@@ -816,15 +791,11 @@
   .k-ui-namespace .control-group.success select,
   .k-ui-namespace .control-group.success textarea {
     border-color: #468847;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
     .k-ui-namespace .control-group.success input:focus,
     .k-ui-namespace .control-group.success select:focus,
     .k-ui-namespace .control-group.success textarea:focus {
       border-color: #356635;
-      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
-      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
       box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b; }
   .k-ui-namespace .control-group.success .input-prepend .add-on,
   .k-ui-namespace .control-group.success .input-append .add-on {
@@ -845,15 +816,11 @@
   .k-ui-namespace .control-group.info select,
   .k-ui-namespace .control-group.info textarea {
     border-color: #3a87ad;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
     .k-ui-namespace .control-group.info input:focus,
     .k-ui-namespace .control-group.info select:focus,
     .k-ui-namespace .control-group.info textarea:focus {
       border-color: #2d6987;
-      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7ab5d3;
-      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7ab5d3;
       box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7ab5d3; }
   .k-ui-namespace .control-group.info .input-prepend .add-on,
   .k-ui-namespace .control-group.info .input-append .add-on {
@@ -869,8 +836,6 @@
     .k-ui-namespace textarea:focus:invalid:focus,
     .k-ui-namespace select:focus:invalid:focus {
       border-color: #e9322d;
-      -webkit-box-shadow: 0 0 6px #f8b9b7;
-      -moz-box-shadow: 0 0 6px #f8b9b7;
       box-shadow: 0 0 6px #f8b9b7; }
   .k-ui-namespace .form-actions {
     padding: 19px 20px 20px;
@@ -926,8 +891,6 @@
       margin-bottom: 0;
       *margin-left: 0;
       vertical-align: top;
-      -webkit-border-radius: 0 4px 4px 0;
-      -moz-border-radius: 0 4px 4px 0;
       border-radius: 0 4px 4px 0; }
       .k-ui-namespace .input-append input:focus,
       .k-ui-namespace .input-append select:focus,
@@ -957,8 +920,6 @@
     .k-ui-namespace .input-prepend .btn,
     .k-ui-namespace .input-prepend .btn-group > .dropdown-toggle {
       vertical-align: top;
-      -webkit-border-radius: 0;
-      -moz-border-radius: 0;
       border-radius: 0; }
     .k-ui-namespace .input-append .active,
     .k-ui-namespace .input-prepend .active {
@@ -969,20 +930,14 @@
     margin-right: -1px; }
   .k-ui-namespace .input-prepend .add-on:first-child,
   .k-ui-namespace .input-prepend .btn:first-child {
-    -webkit-border-radius: 4px 0 0 4px;
-    -moz-border-radius: 4px 0 0 4px;
     border-radius: 4px 0 0 4px; }
   .k-ui-namespace .input-append input,
   .k-ui-namespace .input-append select,
   .k-ui-namespace .input-append .uneditable-input {
-    -webkit-border-radius: 4px 0 0 4px;
-    -moz-border-radius: 4px 0 0 4px;
     border-radius: 4px 0 0 4px; }
     .k-ui-namespace .input-append input + .btn-group .btn:last-child,
     .k-ui-namespace .input-append select + .btn-group .btn:last-child,
     .k-ui-namespace .input-append .uneditable-input + .btn-group .btn:last-child {
-      -webkit-border-radius: 0 4px 4px 0;
-      -moz-border-radius: 0 4px 4px 0;
       border-radius: 0 4px 4px 0; }
   .k-ui-namespace .input-append .add-on,
   .k-ui-namespace .input-append .btn,
@@ -991,32 +946,22 @@
   .k-ui-namespace .input-append .add-on:last-child,
   .k-ui-namespace .input-append .btn:last-child,
   .k-ui-namespace .input-append .btn-group:last-child > .dropdown-toggle {
-    -webkit-border-radius: 0 4px 4px 0;
-    -moz-border-radius: 0 4px 4px 0;
     border-radius: 0 4px 4px 0; }
   .k-ui-namespace .input-prepend.input-append input,
   .k-ui-namespace .input-prepend.input-append select,
   .k-ui-namespace .input-prepend.input-append .uneditable-input {
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
     border-radius: 0; }
     .k-ui-namespace .input-prepend.input-append input + .btn-group .btn,
     .k-ui-namespace .input-prepend.input-append select + .btn-group .btn,
     .k-ui-namespace .input-prepend.input-append .uneditable-input + .btn-group .btn {
-      -webkit-border-radius: 0 4px 4px 0;
-      -moz-border-radius: 0 4px 4px 0;
       border-radius: 0 4px 4px 0; }
   .k-ui-namespace .input-prepend.input-append .add-on:first-child,
   .k-ui-namespace .input-prepend.input-append .btn:first-child {
     margin-right: -1px;
-    -webkit-border-radius: 4px 0 0 4px;
-    -moz-border-radius: 4px 0 0 4px;
     border-radius: 4px 0 0 4px; }
   .k-ui-namespace .input-prepend.input-append .add-on:last-child,
   .k-ui-namespace .input-prepend.input-append .btn:last-child {
     margin-left: -1px;
-    -webkit-border-radius: 0 4px 4px 0;
-    -moz-border-radius: 0 4px 4px 0;
     border-radius: 0 4px 4px 0; }
   .k-ui-namespace .input-prepend.input-append .btn-group:first-child {
     margin-left: 0; }
@@ -1027,29 +972,17 @@
     padding-left: 4px \9;
     /* IE7-8 doesn't have border-radius, so don't indent the padding */
     margin-bottom: 0;
-    -webkit-border-radius: 15px;
-    -moz-border-radius: 15px;
     border-radius: 15px; }
   .k-ui-namespace .form-search .input-append .search-query,
   .k-ui-namespace .form-search .input-prepend .search-query {
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
     border-radius: 0; }
   .k-ui-namespace .form-search .input-append .search-query {
-    -webkit-border-radius: 14px 0 0 14px;
-    -moz-border-radius: 14px 0 0 14px;
     border-radius: 14px 0 0 14px; }
   .k-ui-namespace .form-search .input-append .btn {
-    -webkit-border-radius: 0 14px 14px 0;
-    -moz-border-radius: 0 14px 14px 0;
     border-radius: 0 14px 14px 0; }
   .k-ui-namespace .form-search .input-prepend .search-query {
-    -webkit-border-radius: 0 14px 14px 0;
-    -moz-border-radius: 0 14px 14px 0;
     border-radius: 0 14px 14px 0; }
   .k-ui-namespace .form-search .input-prepend .btn {
-    -webkit-border-radius: 14px 0 0 14px;
-    -moz-border-radius: 14px 0 0 14px;
     border-radius: 14px 0 0 14px; }
   .k-ui-namespace .form-search input,
   .k-ui-namespace .form-search textarea,
@@ -1181,8 +1114,6 @@
     border-collapse: separate;
     *border-collapse: collapse;
     border-left: 0;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
     border-radius: 4px; }
     .k-ui-namespace .table-bordered th,
     .k-ui-namespace .table-bordered td {
@@ -1200,52 +1131,36 @@
     .k-ui-namespace .table-bordered thead:first-child tr:first-child > th:first-child,
     .k-ui-namespace .table-bordered tbody:first-child tr:first-child > td:first-child,
     .k-ui-namespace .table-bordered tbody:first-child tr:first-child > th:first-child {
-      -webkit-border-top-left-radius: 4px;
-      -moz-border-radius-topleft: 4px;
       border-top-left-radius: 4px; }
     .k-ui-namespace .table-bordered thead:first-child tr:first-child > th:last-child,
     .k-ui-namespace .table-bordered tbody:first-child tr:first-child > td:last-child,
     .k-ui-namespace .table-bordered tbody:first-child tr:first-child > th:last-child {
-      -webkit-border-top-right-radius: 4px;
-      -moz-border-radius-topright: 4px;
       border-top-right-radius: 4px; }
     .k-ui-namespace .table-bordered thead:last-child tr:last-child > th:first-child,
     .k-ui-namespace .table-bordered tbody:last-child tr:last-child > td:first-child,
     .k-ui-namespace .table-bordered tbody:last-child tr:last-child > th:first-child,
     .k-ui-namespace .table-bordered tfoot:last-child tr:last-child > td:first-child,
     .k-ui-namespace .table-bordered tfoot:last-child tr:last-child > th:first-child {
-      -webkit-border-bottom-left-radius: 4px;
-      -moz-border-radius-bottomleft: 4px;
       border-bottom-left-radius: 4px; }
     .k-ui-namespace .table-bordered thead:last-child tr:last-child > th:last-child,
     .k-ui-namespace .table-bordered tbody:last-child tr:last-child > td:last-child,
     .k-ui-namespace .table-bordered tbody:last-child tr:last-child > th:last-child,
     .k-ui-namespace .table-bordered tfoot:last-child tr:last-child > td:last-child,
     .k-ui-namespace .table-bordered tfoot:last-child tr:last-child > th:last-child {
-      -webkit-border-bottom-right-radius: 4px;
-      -moz-border-radius-bottomright: 4px;
       border-bottom-right-radius: 4px; }
     .k-ui-namespace .table-bordered tfoot + tbody:last-child tr:last-child td:first-child {
-      -webkit-border-bottom-left-radius: 0;
-      -moz-border-radius-bottomleft: 0;
       border-bottom-left-radius: 0; }
     .k-ui-namespace .table-bordered tfoot + tbody:last-child tr:last-child td:last-child {
-      -webkit-border-bottom-right-radius: 0;
-      -moz-border-radius-bottomright: 0;
       border-bottom-right-radius: 0; }
     .k-ui-namespace .table-bordered caption + thead tr:first-child th:first-child,
     .k-ui-namespace .table-bordered caption + tbody tr:first-child td:first-child,
     .k-ui-namespace .table-bordered colgroup + thead tr:first-child th:first-child,
     .k-ui-namespace .table-bordered colgroup + tbody tr:first-child td:first-child {
-      -webkit-border-top-left-radius: 4px;
-      -moz-border-radius-topleft: 4px;
       border-top-left-radius: 4px; }
     .k-ui-namespace .table-bordered caption + thead tr:first-child th:last-child,
     .k-ui-namespace .table-bordered caption + tbody tr:first-child td:last-child,
     .k-ui-namespace .table-bordered colgroup + thead tr:first-child th:last-child,
     .k-ui-namespace .table-bordered colgroup + tbody tr:first-child td:last-child {
-      -webkit-border-top-right-radius: 4px;
-      -moz-border-radius-topright: 4px;
       border-top-right-radius: 4px; }
   .k-ui-namespace .table-striped tbody > tr:nth-child(odd) > td,
   .k-ui-namespace .table-striped tbody > tr:nth-child(odd) > th {
@@ -1685,11 +1600,7 @@
     border: 1px solid rgba(0, 0, 0, 0.2);
     *border-right-width: 2px;
     *border-bottom-width: 2px;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
     border-radius: 6px;
-    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     -webkit-background-clip: padding-box;
     -moz-background-clip: padding;
@@ -1720,10 +1631,6 @@
     text-decoration: none;
     color: #fff;
     background-color: #0081c2;
-    background-image: -moz-linear-gradient(top, #08c, #0077b3);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#08c), to(#0077b3));
-    background-image: -webkit-linear-gradient(top, #08c, #0077b3);
-    background-image: -o-linear-gradient(top, #08c, #0077b3);
     background-image: linear-gradient(to bottom, #08c, #0077b3);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF0088CC', endColorstr='#FF0077B3', GradientType=0); }
@@ -1734,10 +1641,6 @@
     text-decoration: none;
     outline: 0;
     background-color: #0081c2;
-    background-image: -moz-linear-gradient(top, #08c, #0077b3);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#08c), to(#0077b3));
-    background-image: -webkit-linear-gradient(top, #08c, #0077b3);
-    background-image: -o-linear-gradient(top, #08c, #0077b3);
     background-image: linear-gradient(to bottom, #08c, #0077b3);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF0088CC', endColorstr='#FF0077B3', GradientType=0); }
@@ -1783,8 +1686,6 @@
     left: 100%;
     margin-top: -6px;
     margin-left: -1px;
-    -webkit-border-radius: 0 6px 6px 6px;
-    -moz-border-radius: 0 6px 6px 6px;
     border-radius: 0 6px 6px 6px; }
   .k-ui-namespace .dropdown-submenu:hover > .dropdown-menu {
     display: block; }
@@ -1793,8 +1694,6 @@
     bottom: 0;
     margin-top: 0;
     margin-bottom: -2px;
-    -webkit-border-radius: 5px 5px 5px 0;
-    -moz-border-radius: 5px 5px 5px 0;
     border-radius: 5px 5px 5px 0; }
   .k-ui-namespace .dropdown-submenu > a:after {
     display: block;
@@ -1815,8 +1714,6 @@
     .k-ui-namespace .dropdown-submenu.pull-left > .dropdown-menu {
       left: -100%;
       margin-left: 10px;
-      -webkit-border-radius: 6px 0 6px 6px;
-      -moz-border-radius: 6px 0 6px 6px;
       border-radius: 6px 0 6px 6px; }
   .k-ui-namespace .dropdown .dropdown-menu .nav-header {
     padding-left: 20px;
@@ -1824,8 +1721,6 @@
   .k-ui-namespace .typeahead {
     z-index: 1051;
     margin-top: 2px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
     border-radius: 4px; }
   .k-ui-namespace .well {
     min-height: 20px;
@@ -1833,30 +1728,19 @@
     margin-bottom: 20px;
     background-color: #f5f5f5;
     border: 1px solid #e3e3e3;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
     border-radius: 4px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05); }
     .k-ui-namespace .well blockquote {
       border-color: #ddd;
       border-color: rgba(0, 0, 0, 0.15); }
   .k-ui-namespace .well-large {
     padding: 24px;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
     border-radius: 6px; }
   .k-ui-namespace .well-small {
     padding: 9px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
     border-radius: 3px; }
   .k-ui-namespace .fade {
     opacity: 0;
-    -webkit-transition: opacity 0.15s linear;
-    -moz-transition: opacity 0.15s linear;
-    -o-transition: opacity 0.15s linear;
     transition: opacity 0.15s linear; }
     .k-ui-namespace .fade.in {
       opacity: 1; }
@@ -1864,9 +1748,6 @@
     position: relative;
     height: 0;
     overflow: hidden;
-    -webkit-transition: height 0.35s ease;
-    -moz-transition: height 0.35s ease;
-    -o-transition: height 0.35s ease;
     transition: height 0.35s ease; }
     .k-ui-namespace .collapse.in {
       height: auto; }
@@ -1906,31 +1787,23 @@
     color: #333;
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
     background-color: whitesmoke;
-    background-image: -moz-linear-gradient(top, #fff, #e6e5e5);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fff), to(#e6e5e5));
-    background-image: -webkit-linear-gradient(top, #fff, #e6e5e5);
-    background-image: -o-linear-gradient(top, #fff, #e6e5e5);
-    background-image: linear-gradient(to bottom, #fff, #e6e5e5);
+    background-image: linear-gradient(to bottom, #fff, #e6e6e6);
     background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFE6E5E5', GradientType=0);
-    border-color: #e6e5e5 #e6e5e5 #bfbfbf;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFE6E6E6', GradientType=0);
+    border-color: #e6e6e6 #e6e6e6 #bfbfbf;
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-    *background-color: #e6e5e5;
+    *background-color: #e6e6e6;
     /* Darken IE7 buttons by default so they stand out more given they won't have borders */
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
     border: 1px solid #ccc;
     *border: 0;
-    border-bottom-color: #b3b2b2;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
+    border-bottom-color: #b3b3b3;
     border-radius: 4px;
     *margin-left: .3em;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); }
     .k-ui-namespace .btn:hover, .k-ui-namespace .btn:focus, .k-ui-namespace .btn:active, .k-ui-namespace .btn.active, .k-ui-namespace .btn.disabled, .k-ui-namespace .btn[disabled] {
       color: #333;
-      background-color: #e6e5e5;
+      background-color: #e6e6e6;
       *background-color: #d9d9d9; }
     .k-ui-namespace .btn:active, .k-ui-namespace .btn.active {
       background-color: #cccccc \9; }
@@ -1940,9 +1813,6 @@
       color: #333;
       text-decoration: none;
       background-position: 0 -15px;
-      -webkit-transition: background-position 0.1s linear;
-      -moz-transition: background-position 0.1s linear;
-      -o-transition: background-position 0.1s linear;
       transition: background-position 0.1s linear; }
     .k-ui-namespace .btn:focus {
       outline: thin dotted #333;
@@ -1951,22 +1821,16 @@
     .k-ui-namespace .btn.active, .k-ui-namespace .btn:active {
       background-image: none;
       outline: 0;
-      -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
-      -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05); }
     .k-ui-namespace .btn.disabled, .k-ui-namespace .btn[disabled] {
       cursor: default;
       background-image: none;
       opacity: 0.65;
       filter: alpha(opacity=65);
-      -webkit-box-shadow: none;
-      -moz-box-shadow: none;
       box-shadow: none; }
   .k-ui-namespace .btn-large {
     padding: 11px 19px;
     font-size: 17.5px;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
     border-radius: 6px; }
   .k-ui-namespace .btn-large [class^="icon-"],
   .k-ui-namespace .btn-large [class*=" icon-"] {
@@ -1974,8 +1838,6 @@
   .k-ui-namespace .btn-small {
     padding: 2px 10px;
     font-size: 11.9px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
     border-radius: 3px; }
   .k-ui-namespace .btn-small [class^="icon-"],
   .k-ui-namespace .btn-small [class*=" icon-"] {
@@ -1986,16 +1848,12 @@
   .k-ui-namespace .btn-mini {
     padding: 0px 6px;
     font-size: 10.5px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
     border-radius: 3px; }
   .k-ui-namespace .btn-block {
     display: block;
     width: 100%;
     padding-left: 0;
     padding-right: 0;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box; }
   .k-ui-namespace .btn-block + .btn-block {
     margin-top: 5px; }
@@ -2014,10 +1872,6 @@
     color: #fff;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #006dcc;
-    background-image: -moz-linear-gradient(top, #08c, #0044cc);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#08c), to(#0044cc));
-    background-image: -webkit-linear-gradient(top, #08c, #0044cc);
-    background-image: -o-linear-gradient(top, #08c, #0044cc);
     background-image: linear-gradient(to bottom, #08c, #0044cc);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF0088CC', endColorstr='#FF0044CC', GradientType=0);
@@ -2036,10 +1890,6 @@
     color: #fff;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #faa732;
-    background-image: -moz-linear-gradient(top, #fbb450, #f89406);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fbb450), to(#f89406));
-    background-image: -webkit-linear-gradient(top, #fbb450, #f89406);
-    background-image: -o-linear-gradient(top, #fbb450, #f89406);
     background-image: linear-gradient(to bottom, #fbb450, #f89406);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFBB450', endColorstr='#FFF89406', GradientType=0);
@@ -2058,10 +1908,6 @@
     color: #fff;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #da4f49;
-    background-image: -moz-linear-gradient(top, #ee5f5b, #bd362f);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));
-    background-image: -webkit-linear-gradient(top, #ee5f5b, #bd362f);
-    background-image: -o-linear-gradient(top, #ee5f5b, #bd362f);
     background-image: linear-gradient(to bottom, #ee5f5b, #bd362f);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFEE5F5B', endColorstr='#FFBD362F', GradientType=0);
@@ -2080,10 +1926,6 @@
     color: #fff;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #5bb75b;
-    background-image: -moz-linear-gradient(top, #62c462, #51a351);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351));
-    background-image: -webkit-linear-gradient(top, #62c462, #51a351);
-    background-image: -o-linear-gradient(top, #62c462, #51a351);
     background-image: linear-gradient(to bottom, #62c462, #51a351);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF62C462', endColorstr='#FF51A351', GradientType=0);
@@ -2102,10 +1944,6 @@
     color: #fff;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #49afcd;
-    background-image: -moz-linear-gradient(top, #5bc0de, #2f96b4);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5bc0de), to(#2f96b4));
-    background-image: -webkit-linear-gradient(top, #5bc0de, #2f96b4);
-    background-image: -o-linear-gradient(top, #5bc0de, #2f96b4);
     background-image: linear-gradient(to bottom, #5bc0de, #2f96b4);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF5BC0DE', endColorstr='#FF2F96B4', GradientType=0);
@@ -2124,10 +1962,6 @@
     color: #fff;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #363636;
-    background-image: -moz-linear-gradient(top, #444, #222);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#444), to(#222));
-    background-image: -webkit-linear-gradient(top, #444, #222);
-    background-image: -o-linear-gradient(top, #444, #222);
     background-image: linear-gradient(to bottom, #444, #222);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF444444', endColorstr='#FF222222', GradientType=0);
@@ -2141,7 +1975,7 @@
       background-color: #222;
       *background-color: #151515; }
     .k-ui-namespace .btn-inverse:active, .k-ui-namespace .btn-inverse.active {
-      background-color: #090808 \9; }
+      background-color: #090909 \9; }
   .k-ui-namespace button.btn,
   .k-ui-namespace input[type="submit"].btn {
     *padding-top: 3px;
@@ -2167,15 +2001,11 @@
   .k-ui-namespace .btn-link[disabled] {
     background-color: transparent;
     background-image: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
     box-shadow: none; }
   .k-ui-namespace .btn-link {
     border-color: transparent;
     cursor: pointer;
     color: #08c;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
     border-radius: 0; }
   .k-ui-namespace .btn-link:hover,
   .k-ui-namespace .btn-link:focus {
@@ -2210,8 +2040,6 @@
       margin-left: 5px; }
   .k-ui-namespace .btn-group > .btn {
     position: relative;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
     border-radius: 0; }
   .k-ui-namespace .btn-group > .btn + .btn {
     margin-left: -1px; }
@@ -2227,35 +2055,19 @@
     font-size: 17.5px; }
   .k-ui-namespace .btn-group > .btn:first-child {
     margin-left: 0;
-    -webkit-border-top-left-radius: 4px;
-    -moz-border-radius-topleft: 4px;
     border-top-left-radius: 4px;
-    -webkit-border-bottom-left-radius: 4px;
-    -moz-border-radius-bottomleft: 4px;
     border-bottom-left-radius: 4px; }
   .k-ui-namespace .btn-group > .btn:last-child,
   .k-ui-namespace .btn-group > .dropdown-toggle {
-    -webkit-border-top-right-radius: 4px;
-    -moz-border-radius-topright: 4px;
     border-top-right-radius: 4px;
-    -webkit-border-bottom-right-radius: 4px;
-    -moz-border-radius-bottomright: 4px;
     border-bottom-right-radius: 4px; }
   .k-ui-namespace .btn-group > .btn.large:first-child {
     margin-left: 0;
-    -webkit-border-top-left-radius: 6px;
-    -moz-border-radius-topleft: 6px;
     border-top-left-radius: 6px;
-    -webkit-border-bottom-left-radius: 6px;
-    -moz-border-radius-bottomleft: 6px;
     border-bottom-left-radius: 6px; }
   .k-ui-namespace .btn-group > .btn.large:last-child,
   .k-ui-namespace .btn-group > .large.dropdown-toggle {
-    -webkit-border-top-right-radius: 6px;
-    -moz-border-radius-topright: 6px;
     border-top-right-radius: 6px;
-    -webkit-border-bottom-right-radius: 6px;
-    -moz-border-radius-bottomright: 6px;
     border-bottom-right-radius: 6px; }
   .k-ui-namespace .btn-group > .btn:hover,
   .k-ui-namespace .btn-group > .btn:focus,
@@ -2268,8 +2080,6 @@
   .k-ui-namespace .btn-group > .btn + .dropdown-toggle {
     padding-left: 8px;
     padding-right: 8px;
-    -webkit-box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.125), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.125), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
     box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.125), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
     *padding-top: 5px;
     *padding-bottom: 5px; }
@@ -2288,11 +2098,9 @@
     *padding-bottom: 7px; }
   .k-ui-namespace .btn-group.open .dropdown-toggle {
     background-image: none;
-    -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05); }
   .k-ui-namespace .btn-group.open .btn.dropdown-toggle {
-    background-color: #e6e5e5; }
+    background-color: #e6e6e6; }
   .k-ui-namespace .btn-group.open .btn-primary.dropdown-toggle {
     background-color: #0044cc; }
   .k-ui-namespace .btn-group.open .btn-warning.dropdown-toggle {
@@ -2336,27 +2144,17 @@
     display: block;
     float: none;
     max-width: 100%;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
     border-radius: 0; }
   .k-ui-namespace .btn-group-vertical > .btn + .btn {
     margin-left: 0;
     margin-top: -1px; }
   .k-ui-namespace .btn-group-vertical > .btn:first-child {
-    -webkit-border-radius: 4px 4px 0 0;
-    -moz-border-radius: 4px 4px 0 0;
     border-radius: 4px 4px 0 0; }
   .k-ui-namespace .btn-group-vertical > .btn:last-child {
-    -webkit-border-radius: 0 0 4px 4px;
-    -moz-border-radius: 0 0 4px 4px;
     border-radius: 0 0 4px 4px; }
   .k-ui-namespace .btn-group-vertical > .btn-large:first-child {
-    -webkit-border-radius: 6px 6px 0 0;
-    -moz-border-radius: 6px 6px 0 0;
     border-radius: 6px 6px 0 0; }
   .k-ui-namespace .btn-group-vertical > .btn-large:last-child {
-    -webkit-border-radius: 0 0 6px 6px;
-    -moz-border-radius: 0 0 6px 6px;
     border-radius: 0 0 6px 6px; }
   .k-ui-namespace .alert {
     padding: 8px 35px 8px 14px;
@@ -2364,8 +2162,6 @@
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
     background-color: #fcf8e3;
     border: 1px solid #fbeed5;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
     border-radius: 4px; }
   .k-ui-namespace .alert,
   .k-ui-namespace .alert h4 {
@@ -2488,8 +2284,6 @@
     padding-bottom: 8px;
     line-height: 20px;
     border: 1px solid transparent;
-    -webkit-border-radius: 4px 4px 0 0;
-    -moz-border-radius: 4px 4px 0 0;
     border-radius: 4px 4px 0 0; }
     .k-ui-namespace .nav-tabs > li > a:hover, .k-ui-namespace .nav-tabs > li > a:focus {
       border-color: #eee #eee #ddd; }
@@ -2506,8 +2300,6 @@
     padding-bottom: 8px;
     margin-top: 2px;
     margin-bottom: 2px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
     border-radius: 5px; }
   .k-ui-namespace .nav-pills > .active > a,
   .k-ui-namespace .nav-pills > .active > a:hover,
@@ -2522,22 +2314,12 @@
     border-bottom: 0; }
   .k-ui-namespace .nav-tabs.nav-stacked > li > a {
     border: 1px solid #ddd;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
     border-radius: 0; }
   .k-ui-namespace .nav-tabs.nav-stacked > li:first-child > a {
-    -webkit-border-top-right-radius: 4px;
-    -moz-border-radius-topright: 4px;
     border-top-right-radius: 4px;
-    -webkit-border-top-left-radius: 4px;
-    -moz-border-radius-topleft: 4px;
     border-top-left-radius: 4px; }
   .k-ui-namespace .nav-tabs.nav-stacked > li:last-child > a {
-    -webkit-border-bottom-right-radius: 4px;
-    -moz-border-radius-bottomright: 4px;
     border-bottom-right-radius: 4px;
-    -webkit-border-bottom-left-radius: 4px;
-    -moz-border-radius-bottomleft: 4px;
     border-bottom-left-radius: 4px; }
   .k-ui-namespace .nav-tabs.nav-stacked > li > a:hover,
   .k-ui-namespace .nav-tabs.nav-stacked > li > a:focus {
@@ -2548,12 +2330,8 @@
   .k-ui-namespace .nav-pills.nav-stacked > li:last-child > a {
     margin-bottom: 1px; }
   .k-ui-namespace .nav-tabs .dropdown-menu {
-    -webkit-border-radius: 0 0 6px 6px;
-    -moz-border-radius: 0 0 6px 6px;
     border-radius: 0 0 6px 6px; }
   .k-ui-namespace .nav-pills .dropdown-menu {
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
     border-radius: 6px; }
   .k-ui-namespace .nav .dropdown-toggle .caret {
     border-top-color: #08c;
@@ -2618,8 +2396,6 @@
     margin-top: -1px;
     margin-bottom: 0; }
   .k-ui-namespace .tabs-below > .nav-tabs > li > a {
-    -webkit-border-radius: 0 0 4px 4px;
-    -moz-border-radius: 0 0 4px 4px;
     border-radius: 0 0 4px 4px; }
     .k-ui-namespace .tabs-below > .nav-tabs > li > a:hover, .k-ui-namespace .tabs-below > .nav-tabs > li > a:focus {
       border-bottom-color: transparent;
@@ -2642,8 +2418,6 @@
     border-right: 1px solid #ddd; }
   .k-ui-namespace .tabs-left > .nav-tabs > li > a {
     margin-right: -1px;
-    -webkit-border-radius: 4px 0 0 4px;
-    -moz-border-radius: 4px 0 0 4px;
     border-radius: 4px 0 0 4px; }
   .k-ui-namespace .tabs-left > .nav-tabs > li > a:hover,
   .k-ui-namespace .tabs-left > .nav-tabs > li > a:focus {
@@ -2659,8 +2433,6 @@
     border-left: 1px solid #ddd; }
   .k-ui-namespace .tabs-right > .nav-tabs > li > a {
     margin-left: -1px;
-    -webkit-border-radius: 0 4px 4px 0;
-    -moz-border-radius: 0 4px 4px 0;
     border-radius: 0 4px 4px 0; }
   .k-ui-namespace .tabs-right > .nav-tabs > li > a:hover,
   .k-ui-namespace .tabs-right > .nav-tabs > li > a:focus {
@@ -2686,11 +2458,7 @@
     *zoom: 1;
     margin-left: 0;
     margin-bottom: 0;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
     border-radius: 4px;
-    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
   .k-ui-namespace .pagination ul > li {
     display: inline; }
@@ -2722,19 +2490,11 @@
   .k-ui-namespace .pagination ul > li:first-child > a,
   .k-ui-namespace .pagination ul > li:first-child > span {
     border-left-width: 1px;
-    -webkit-border-top-left-radius: 4px;
-    -moz-border-radius-topleft: 4px;
     border-top-left-radius: 4px;
-    -webkit-border-bottom-left-radius: 4px;
-    -moz-border-radius-bottomleft: 4px;
     border-bottom-left-radius: 4px; }
   .k-ui-namespace .pagination ul > li:last-child > a,
   .k-ui-namespace .pagination ul > li:last-child > span {
-    -webkit-border-top-right-radius: 4px;
-    -moz-border-radius-topright: 4px;
     border-top-right-radius: 4px;
-    -webkit-border-bottom-right-radius: 4px;
-    -moz-border-radius-bottomright: 4px;
     border-bottom-right-radius: 4px; }
   .k-ui-namespace .pagination-centered {
     text-align: center; }
@@ -2746,39 +2506,23 @@
     font-size: 17.5px; }
   .k-ui-namespace .pagination-large ul > li:first-child > a,
   .k-ui-namespace .pagination-large ul > li:first-child > span {
-    -webkit-border-top-left-radius: 6px;
-    -moz-border-radius-topleft: 6px;
     border-top-left-radius: 6px;
-    -webkit-border-bottom-left-radius: 6px;
-    -moz-border-radius-bottomleft: 6px;
     border-bottom-left-radius: 6px; }
   .k-ui-namespace .pagination-large ul > li:last-child > a,
   .k-ui-namespace .pagination-large ul > li:last-child > span {
-    -webkit-border-top-right-radius: 6px;
-    -moz-border-radius-topright: 6px;
     border-top-right-radius: 6px;
-    -webkit-border-bottom-right-radius: 6px;
-    -moz-border-radius-bottomright: 6px;
     border-bottom-right-radius: 6px; }
   .k-ui-namespace .pagination-mini ul > li:first-child > a,
   .k-ui-namespace .pagination-mini ul > li:first-child > span,
   .k-ui-namespace .pagination-small ul > li:first-child > a,
   .k-ui-namespace .pagination-small ul > li:first-child > span {
-    -webkit-border-top-left-radius: 3px;
-    -moz-border-radius-topleft: 3px;
     border-top-left-radius: 3px;
-    -webkit-border-bottom-left-radius: 3px;
-    -moz-border-radius-bottomleft: 3px;
     border-bottom-left-radius: 3px; }
   .k-ui-namespace .pagination-mini ul > li:last-child > a,
   .k-ui-namespace .pagination-mini ul > li:last-child > span,
   .k-ui-namespace .pagination-small ul > li:last-child > a,
   .k-ui-namespace .pagination-small ul > li:last-child > span {
-    -webkit-border-top-right-radius: 3px;
-    -moz-border-radius-topright: 3px;
     border-top-right-radius: 3px;
-    -webkit-border-bottom-right-radius: 3px;
-    -moz-border-radius-bottomright: 3px;
     border-bottom-right-radius: 3px; }
   .k-ui-namespace .pagination-small ul > li > a,
   .k-ui-namespace .pagination-small ul > li > span {
@@ -2807,8 +2551,6 @@
     padding: 5px 14px;
     background-color: #fff;
     border: 1px solid #ddd;
-    -webkit-border-radius: 15px;
-    -moz-border-radius: 15px;
     border-radius: 15px; }
   .k-ui-namespace .pager li > a:hover,
   .k-ui-namespace .pager li > a:focus {
@@ -2858,8 +2600,6 @@
     text-align: center;
     text-decoration: none;
     background-color: #000;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
     border-radius: 4px; }
   .k-ui-namespace .tooltip-arrow {
     position: absolute;
@@ -2912,21 +2652,12 @@
     padding: 4px;
     line-height: 20px;
     border: 1px solid #ddd;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
     border-radius: 4px;
-    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
-    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
-    -webkit-transition: all 0.2s ease-in-out;
-    -moz-transition: all 0.2s ease-in-out;
-    -o-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out; }
   .k-ui-namespace a.thumbnail:hover,
   .k-ui-namespace a.thumbnail:focus {
     border-color: #08c;
-    -webkit-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
-    -moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
     box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25); }
   .k-ui-namespace .thumbnail > img {
     display: block;
@@ -2970,14 +2701,10 @@
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #999; }
   .k-ui-namespace .label {
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
     border-radius: 3px; }
   .k-ui-namespace .badge {
     padding-left: 9px;
     padding-right: 9px;
-    -webkit-border-radius: 9px;
-    -moz-border-radius: 9px;
     border-radius: 9px; }
   .k-ui-namespace .label:empty,
   .k-ui-namespace .badge:empty {
@@ -3005,7 +2732,7 @@
   .k-ui-namespace .label-inverse {
     background-color: #333; }
   .k-ui-namespace .label-inverse[href] {
-    background-color: #1a1919; }
+    background-color: #1a1a1a; }
   .k-ui-namespace .badge-important {
     background-color: #b94a48; }
   .k-ui-namespace .badge-important[href] {
@@ -3025,7 +2752,7 @@
   .k-ui-namespace .badge-inverse {
     background-color: #333; }
   .k-ui-namespace .badge-inverse[href] {
-    background-color: #1a1919; }
+    background-color: #1a1a1a; }
   .k-ui-namespace .btn .label,
   .k-ui-namespace .btn .badge {
     position: relative;
@@ -3040,24 +2767,6 @@
   to {
     background-position: 0 0; } }
 
-@-moz-keyframes progress-bar-stripes {
-  from {
-    background-position: 40px 0; }
-  to {
-    background-position: 0 0; } }
-
-@-ms-keyframes progress-bar-stripes {
-  .k-ui-namespace from {
-    background-position: 40px 0; }
-  .k-ui-namespace to {
-    background-position: 0 0; } }
-
-@-o-keyframes progress-bar-stripes {
-  from {
-    background-position: 0 0; }
-  to {
-    background-position: 40px 0; } }
-
 @keyframes progress-bar-stripes {
   from {
     background-position: 40px 0; }
@@ -3068,18 +2777,10 @@
     height: 20px;
     margin-bottom: 20px;
     background-color: #f7f7f7;
-    background-image: -moz-linear-gradient(top, #f5f5f5, #f9f9f9);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f5f5f5), to(#f9f9f9));
-    background-image: -webkit-linear-gradient(top, #f5f5f5, #f9f9f9);
-    background-image: -o-linear-gradient(top, #f5f5f5, #f9f9f9);
     background-image: linear-gradient(to bottom, #f5f5f5, #f9f9f9);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF5F5F5', endColorstr='#FFF9F9F9', GradientType=0);
-    -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
     border-radius: 4px; }
   .k-ui-namespace .progress .bar {
     width: 0%;
@@ -3090,107 +2791,52 @@
     text-align: center;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #0e90d2;
-    background-image: -moz-linear-gradient(top, #149bdf, #0480be);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#149bdf), to(#0480be));
-    background-image: -webkit-linear-gradient(top, #149bdf, #0480be);
-    background-image: -o-linear-gradient(top, #149bdf, #0480be);
     background-image: linear-gradient(to bottom, #149bdf, #0480be);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF149BDF', endColorstr='#FF0480BE', GradientType=0);
-    -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-    -moz-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
     box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
-    -webkit-transition: width 0.6s ease;
-    -moz-transition: width 0.6s ease;
-    -o-transition: width 0.6s ease;
     transition: width 0.6s ease; }
   .k-ui-namespace .progress .bar + .bar {
-    -webkit-box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-    -moz-box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.15);
     box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.15); }
   .k-ui-namespace .progress-striped .bar {
     background-color: #149bdf;
-    background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(255, 255, 255, 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(255, 255, 255, 0.15)), color-stop(0.75, rgba(255, 255, 255, 0.15)), color-stop(0.75, transparent), to(transparent));
-    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-    background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-    background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
     background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-    -webkit-background-size: 40px 40px;
-    -moz-background-size: 40px 40px;
-    -o-background-size: 40px 40px;
     background-size: 40px 40px; }
   .k-ui-namespace .progress.active .bar {
     -webkit-animation: progress-bar-stripes 2s linear infinite;
-    -moz-animation: progress-bar-stripes 2s linear infinite;
-    -ms-animation: progress-bar-stripes 2s linear infinite;
-    -o-animation: progress-bar-stripes 2s linear infinite;
     animation: progress-bar-stripes 2s linear infinite; }
   .k-ui-namespace .progress-danger .bar, .k-ui-namespace .progress .bar-danger {
     background-color: #dd514c;
-    background-image: -moz-linear-gradient(top, #ee5f5b, #c43c35);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#c43c35));
-    background-image: -webkit-linear-gradient(top, #ee5f5b, #c43c35);
-    background-image: -o-linear-gradient(top, #ee5f5b, #c43c35);
     background-image: linear-gradient(to bottom, #ee5f5b, #c43c35);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFEE5F5B', endColorstr='#FFC43C35', GradientType=0); }
   .k-ui-namespace .progress-danger.progress-striped .bar, .k-ui-namespace .progress-striped .bar-danger {
     background-color: #ee5f5b;
-    background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(255, 255, 255, 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(255, 255, 255, 0.15)), color-stop(0.75, rgba(255, 255, 255, 0.15)), color-stop(0.75, transparent), to(transparent));
-    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-    background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-    background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
     background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent); }
   .k-ui-namespace .progress-success .bar, .k-ui-namespace .progress .bar-success {
     background-color: #5eb95e;
-    background-image: -moz-linear-gradient(top, #62c462, #57a957);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#57a957));
-    background-image: -webkit-linear-gradient(top, #62c462, #57a957);
-    background-image: -o-linear-gradient(top, #62c462, #57a957);
     background-image: linear-gradient(to bottom, #62c462, #57a957);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF62C462', endColorstr='#FF57A957', GradientType=0); }
   .k-ui-namespace .progress-success.progress-striped .bar, .k-ui-namespace .progress-striped .bar-success {
     background-color: #62c462;
-    background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(255, 255, 255, 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(255, 255, 255, 0.15)), color-stop(0.75, rgba(255, 255, 255, 0.15)), color-stop(0.75, transparent), to(transparent));
-    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-    background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-    background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
     background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent); }
   .k-ui-namespace .progress-info .bar, .k-ui-namespace .progress .bar-info {
     background-color: #4bb1cf;
-    background-image: -moz-linear-gradient(top, #5bc0de, #339bb9);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5bc0de), to(#339bb9));
-    background-image: -webkit-linear-gradient(top, #5bc0de, #339bb9);
-    background-image: -o-linear-gradient(top, #5bc0de, #339bb9);
     background-image: linear-gradient(to bottom, #5bc0de, #339bb9);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF5BC0DE', endColorstr='#FF339BB9', GradientType=0); }
   .k-ui-namespace .progress-info.progress-striped .bar, .k-ui-namespace .progress-striped .bar-info {
     background-color: #5bc0de;
-    background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(255, 255, 255, 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(255, 255, 255, 0.15)), color-stop(0.75, rgba(255, 255, 255, 0.15)), color-stop(0.75, transparent), to(transparent));
-    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-    background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-    background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
     background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent); }
   .k-ui-namespace .progress-warning .bar, .k-ui-namespace .progress .bar-warning {
     background-color: #faa732;
-    background-image: -moz-linear-gradient(top, #fbb450, #f89406);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fbb450), to(#f89406));
-    background-image: -webkit-linear-gradient(top, #fbb450, #f89406);
-    background-image: -o-linear-gradient(top, #fbb450, #f89406);
     background-image: linear-gradient(to bottom, #fbb450, #f89406);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFBB450', endColorstr='#FFF89406', GradientType=0); }
   .k-ui-namespace .progress-warning.progress-striped .bar, .k-ui-namespace .progress-striped .bar-warning {
     background-color: #fbb450;
-    background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(255, 255, 255, 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(255, 255, 255, 0.15)), color-stop(0.75, rgba(255, 255, 255, 0.15)), color-stop(0.75, transparent), to(transparent));
-    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-    background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-    background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
     background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent); }
   .k-ui-namespace .pull-right {
     float: right; }
@@ -3222,8 +2868,6 @@
     display: block;
     width: 100%;
     min-height: 30px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box; }
   .k-ui-namespace .btn,
   .k-ui-namespace #editor-xtd-buttons a,

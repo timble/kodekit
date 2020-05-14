@@ -1,3 +1,4 @@
+//koowa.kquery.js
 /**
  * Go through all loaded jQuery instances and assign the first one on the page with a version >=1.8.0 to kQuery
  */
@@ -26,3 +27,4 @@ if (typeof window.kQuery === 'undefined' && typeof window.jQuery !== 'undefined'
 
     window.kQuery = kQuery;
 }
+

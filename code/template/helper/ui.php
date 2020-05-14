@@ -33,9 +33,14 @@ class TemplateHelperUi extends TemplateHelperAbstract implements TemplateHelperP
             'package' => $identifier->package,
             'domain'  => $identifier->domain,
             'type'    => $identifier->type,
-            'styles' => array(),
         ))->append(array(
-            'k_ui_container' => ($config->domain === 'admin' || $config->domain === '') && $config->type === 'com'
+            'k_ui_container' => ($config->domain === 'admin' || $config->domain === '') && $config->type === 'com',
+            'styles' => array(
+                'debug' => $config->debug,
+                'package' => $config->package,
+                'domain' => $config->domain,
+                'decorator' => $config->decorator
+            ),
         ))->append(array(
             'wrapper_class' => array(
                 // Only add k-ui-container for top-level component templates
@@ -54,19 +59,7 @@ class TemplateHelperUi extends TemplateHelperAbstract implements TemplateHelperP
 
         $html = '';
 
-        if ($config->styles !== false)
-        {
-            if ($config->package) {
-                $config->styles->package = $config->package;
-            }
-
-            if ($config->domain) {
-                $config->styles->domain = $config->domain;
-            }
-
-            $config->styles->debug = $config->debug;
-            $config->styles->decorator = $config->decorator;
-
+        if ($config->styles !== false) {
             $html .= $this->styles($config->styles);
         }
 
@@ -118,15 +111,21 @@ class TemplateHelperUi extends TemplateHelperAbstract implements TemplateHelperP
 
         $html = '';
 
+        if (!TemplateHelperBehavior::isLoaded('k-js-enabled'))
+        {
+            $html .= '<script data-inline type="text/javascript">document.documentElement.classList.add(\'k-js-enabled\');</script>';
+
+            TemplateHelperBehavior::setLoaded('k-js-enabled');
+        }
+
         $html .= $this->createHelper('behavior')->modernizr($config);
-        $html .= $this->createHelper('behavior')->kodekitui($config);
 
         if (($config->domain === 'admin' || $config->domain === '')  && !TemplateHelperBehavior::isLoaded('admin.js')) {
             // Make sure jQuery is always loaded right before admin.js, helps when wrapping components
             TemplateHelperBehavior::setLoaded('jquery', false);
 
             $html .= $this->createHelper('behavior')->jquery($config);
-            $html .= '<ktml:script src="assets://js/'.($config->debug ? 'build/' : 'min/').'admin.js" />';
+            $html .= '<ktml:script src="assets://js/admin'.($config->debug ? '' : '.min').'.js" />';
 
             TemplateHelperBehavior::setLoaded('admin.js');
             TemplateHelperBehavior::setLoaded('modal');
@@ -135,16 +134,10 @@ class TemplateHelperUi extends TemplateHelperAbstract implements TemplateHelperP
             TemplateHelperBehavior::setLoaded('tree');
             TemplateHelperBehavior::setLoaded('calendar');
             TemplateHelperBehavior::setLoaded('tooltip');
+            TemplateHelperBehavior::setLoaded('validator');
         }
 
         $html .= $this->createHelper('behavior')->kodekit($config);
-
-        if (!TemplateHelperBehavior::isLoaded('k-js-enabled'))
-        {
-            $html .= '<script data-inline type="text/javascript">(function() {var el = document.documentElement; var cl = "k-js-enabled"; if (el.classList) { el.classList.add(cl); }else{ el.className += " " + cl;}})()</script>';
-
-            TemplateHelperBehavior::setLoaded('k-js-enabled');
-        }
 
         return $html;
     }

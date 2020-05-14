@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Location of the config file relative to the build-scripts/assets folder. You only need to change this:
+CONFIGFILE="timble/kodekit"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+SCRIPTS_DIR="$(dirname $(dirname "$DIR"))/build-scripts"
+
+if [ ! -d "$SCRIPTS_DIR" ]; then
+    echo "cloning build-scripts into Projects folder..."
+    git clone git@github.com:joomlatools/build-scripts.git "$SCRIPTS_DIR"
+fi
+
+source $SCRIPTS_DIR/assets/compile
