@@ -33,9 +33,14 @@ class TemplateHelperUi extends TemplateHelperAbstract implements TemplateHelperP
             'package' => $identifier->package,
             'domain'  => $identifier->domain,
             'type'    => $identifier->type,
-            'styles' => array(),
         ))->append(array(
-            'k_ui_container' => ($config->domain === 'admin' || $config->domain === '') && $config->type === 'com'
+            'k_ui_container' => ($config->domain === 'admin' || $config->domain === '') && $config->type === 'com',
+            'styles' => array(
+                'debug' => $config->debug,
+                'package' => $config->package,
+                'domain' => $config->domain,
+                'decorator' => $config->decorator
+            ),
         ))->append(array(
             'wrapper_class' => array(
                 // Only add k-ui-container for top-level component templates
@@ -54,19 +59,7 @@ class TemplateHelperUi extends TemplateHelperAbstract implements TemplateHelperP
 
         $html = '';
 
-        if ($config->styles !== false)
-        {
-            if ($config->package) {
-                $config->styles->package = $config->package;
-            }
-
-            if ($config->domain) {
-                $config->styles->domain = $config->domain;
-            }
-
-            $config->styles->debug = $config->debug;
-            $config->styles->decorator = $config->decorator;
-
+        if ($config->styles !== false) {
             $html .= $this->styles($config->styles);
         }
 
