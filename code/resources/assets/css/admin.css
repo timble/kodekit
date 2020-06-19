@@ -11413,6 +11413,10 @@ img.mfp-img {
   box-shadow: none;
 }
 
+.select2-dropdown {
+  z-index: 10051 !important;
+}
+
 /* Datepicker
    ========================================================================== */
 .datepicker {
