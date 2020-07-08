@@ -6473,13 +6473,23 @@ Koowa.getSelect2Options = function(options) {
                 var results = [],
                     more = (page * 10) < data.meta.total; // whether or not there are more results available
 
-                kQuery.each(data.data, function(i, item) {
-                    // Change format to what select2 expects
-                    item.id   = item.attributes[options.value];
-                    item.text = item.attributes[options.text];
+                if (typeof data.entities !== 'undefined') {
+                    kQuery.each(data.entities, function(i, item) {
+                        // Change format to what select2 expects
+                        item.id   = item[options.value];
+                        item.text = item[options.text];
 
-                    results.push(item);
-                });
+                        results.push(item);
+                    });
+                } else if (typeof data.data !== 'undefined') {
+                    kQuery.each(data.data, function(i, item) {
+                        // Change format to what select2 expects
+                        item.id   = item.attributes[options.value];
+                        item.text = item.attributes[options.text];
+
+                        results.push(item);
+                    });
+                }
 
                 // notice we return the value of more so Select2 knows if more results can be loaded
                 return {results: results, more: more};
