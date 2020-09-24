@@ -66,4 +66,9 @@ class DispatcherBehaviorLimitable extends DispatcherBehaviorAbstract
             $controller->getModel()->getState()->limit = $limit;
         }
     }
+
+    protected function _beforeInclude(DispatcherContext $context)
+    {
+        $this->_beforeGet($context);
+    }
 }
