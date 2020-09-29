@@ -201,6 +201,8 @@ class DispatcherAuthenticatorJwt extends DispatcherAuthenticatorAbstract
      */
     public function authenticateRequest(DispatcherContext $context)
     {
+        $result = false;
+
         if($token = $this->getToken())
         {
             if($token->verify($this->getSecret()))
@@ -237,9 +239,13 @@ class DispatcherAuthenticatorJwt extends DispatcherAuthenticatorAbstract
                 }
 
                 //Login the user
-                return $this->loginUser($user, $data);
+                if ($result = $this->loginUser($user, $data)) {
+                    $context->setAuthentic(); //Explicitly authenticate the request
+                }
             }
             else throw new ControllerExceptionRequestNotAuthenticated('Invalid Token');
         }
+
+        return $result;
     }
 }
