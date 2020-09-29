@@ -443,17 +443,41 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
      * the next 60 seconds.
      *
      * @link https://tools.ietf.org/html/rfc2616#section-14.9.3
-     * @param integer $max_age       The number of seconds after which the response should no longer be considered fresh.
-     * @param integer $shared_max_age The number of seconds after which the response should no longer be considered fresh by shared caches.
+     * @link https://www.php.net/manual/en/datetime.formats.relative.php
+     *
+     * @param integer|string $max_age        The number of seconds or an English textual relative datetime format  after
+     * 										 which the response should no longer be considered fresh.
+     * @param integer|string $shared_max_age The number of seconds after or an an English textual relative datetime format
+     * 										 which the response should no longer be considered fresh by shared caches.
      * @return HttpResponse
      */
     public function setMaxAge($max_age, $shared_max_age = null)
     {
         $cache_control = $this->getCacheControl();
 
-        $cache_control['max-age'] = (int) $max_age;
+        //Convert max_age to seconds
+        if(!ctype_digit($max_age))
+        {
+            if($max_age = strtotime($max_age)) {
+                $max_age = $max_age - strtotime('now');
+            }
+        }
 
-        if(!is_null($shared_max_age) && $shared_max_age > $max_age) {
+        //Convert shared_max_age to seconds
+        if(!ctype_digit($shared_max_age))
+        {
+            if($shared_max_age = strtotime($shared_max_age)) {
+                $shared_max_age = $shared_max_age - strtotime('now');
+            }
+        }
+
+        if($max_age !== false) {
+            $cache_control['max-age'] = (int) $max_age;
+        } else {
+            unset($cache_control['max-age']);
+        }
+
+        if(!is_null($shared_max_age) && !$shared_max_age !== false && $shared_max_age > $max_age) {
             $cache_control['s-maxage'] = (int) $shared_max_age;
         }
 
