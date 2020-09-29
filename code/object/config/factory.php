@@ -40,7 +40,11 @@ final class ObjectConfigFactory extends ObjectAbstract implements ObjectSingleto
     {
         parent::__construct($config);
 
-        $this->_formats = $config->formats;
+        $this->_formats = array();
+
+        foreach($config->formats as $format => $identifier) {
+            $this->registerFormat($format, $identifier);
+        }
     }
 
     /**
@@ -55,12 +59,12 @@ final class ObjectConfigFactory extends ObjectAbstract implements ObjectSingleto
     {
         $config->append(array(
             'formats' => array(
-                'php'  => __NAMESPACE__.'\ObjectConfigPhp',
-                'ini'  => __NAMESPACE__.'\ObjectConfigIni',
-                'json' => __NAMESPACE__.'\ObjectConfigJson',
-                'xml'  => __NAMESPACE__.'\ObjectConfigXml',
-                'yml'  => __NAMESPACE__.'\ObjectConfigYaml',
-                'yaml' => __NAMESPACE__.'\ObjectConfigYaml'
+                'php'  => 'lib:object.config.php',
+                'ini'  => 'lib:object.config.ini',
+                'json' => 'lib:object.config.json',
+                'xml'  => 'lib:object.config.xml',
+                'yml'  => 'lib:object.config.yaml',
+                'yaml' => 'lib:object.config.yaml'
             )
         ));
 
@@ -110,12 +114,14 @@ final class ObjectConfigFactory extends ObjectAbstract implements ObjectSingleto
      * Register config format
      *
      * @param string $format The name of the format
-     * @param mixed  $class Class name
+     * @param string $identifier A fully qualified object identifier
      * @throws \InvalidArgumentException If the class does not exist
      * @return ObjectConfigFactory
      */
-    public function registerFormat($format, $class)
+    public function registerFormat($format, $identifier)
     {
+        $class = $this->getObject('manager')->getClass($identifier);
+        
         if(!class_exists($class, true)) {
             throw new \InvalidArgumentException('Class : '.$class.' cannot does not exist.');
         }
