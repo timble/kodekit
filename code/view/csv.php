@@ -108,9 +108,21 @@ class ViewCsv extends ViewAbstract
         $fields = array();
         foreach($data as $value)
         {
+            //Cast objects to string
+            if(is_object($value) && method_exists($value, '__toString')) {
+                $value = (string) $value;
+            } else {
+                $value = null;
+            }
+
             //Implode array's
-            if(is_array($value)) {
-                $value = implode(',', $value);
+            if(is_array($value))
+            {
+                if(is_numeric(key($value))) {
+                    $value = implode(',',$value);
+                } else {
+                    $value = json_encode($value);
+                }
             }
 
              // Escape the quote character within the field (e.g. " becomes "")
