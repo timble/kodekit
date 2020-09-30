@@ -149,7 +149,7 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
         $this->setStatus($config->status_code, $config->status_message);
 
         if (!$this->_headers->has('Date')) {
-            $this->setDate(new \DateTime(null, new \DateTimeZone('UTC')));
+            $this->setDate(new DateTime('now'));
         }
     }
 
@@ -479,6 +479,8 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
 
         if($shared_max_age > $max_age) {
             $cache_control['s-maxage'] = (int) $shared_max_age;
+        } else {
+            unset($cache_control['s-maxage']);
         }
 
         $this->_headers->set('Cache-Control', $cache_control);
@@ -553,8 +555,7 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
      */
     public function isInvalid()
     {
-        $status_code = $this->getStatusCode();
-        return ($status_code < 100 || $status_code >= 600);
+        return $this->getStatusCode() < 100 || $this->getStatusCode() >= 600;
     }
 
 
@@ -600,16 +601,29 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
      */
     public function isCacheable()
     {
-        if (!in_array($this->_status_code, array(200, 203, 300, 301, 302, 304, 404, 410))) {
-            return false;
-        }
-
         $cache_control = $this->getCacheControl();
-        if (isset($cache_control['no-store'])) {
+
+        if (in_array('no-store', $cache_control, true)) {
             return false;
         }
 
-        return $this->isValidateable();
+        if (in_array('public', $cache_control, true)) {
+            return true;
+        }
+
+        if (isset($cache_control['max-age']) || isset($cache_control['s-maxage'])) {
+            return true;
+        }
+
+        if($this->isValidateable()) {
+            return true;
+        }
+
+        if (in_array($this->getStatusCode(), array(200 , 203 , 204 , 206 , 300 , 301 , 404 , 405 , 410 , 414 , 501))) {
+            return false;
+        }
+
+        return false;
     }
 
     /**
@@ -634,11 +648,22 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
     public function isStale()
     {
         $result = true;
+
         if ($maxAge = (int) $this->getMaxAge()) {
             $result = ($maxAge - $this->getAge()) <= 0;
         }
 
         return $result;
+    }
+
+    /**
+     * Return true of the response has not been modified
+     *
+     * @return Boolean true if the response is not modified
+     */
+    public function isNotModified()
+    {
+        return (bool) ($this->getStatusCode() == 304);
     }
 
     /**

@@ -339,6 +339,48 @@ abstract class DispatcherResponseAbstract extends ControllerResponse implements 
     }
 
     /**
+     * Returns true if the response is "stale".
+     *
+     * When the responses is stale, the response may not be served from cache without first re-validating with
+     * the origin.
+     *
+     * @return Boolean true if the response is stale, false otherwise
+     */
+    public function isStale()
+    {
+        $cache_control = $this->getRequest()->getCacheControl();
+
+        if(isset($cache_control['max-age']))
+        {
+            $maxAge = $cache_control['max-age'];
+            $result = ($maxAge - $this->getAge()) <= 0;
+        }
+        else  $result = parent::isStale();
+
+        return $result;
+    }
+
+    /**
+     * Returns true if the response is worth caching under any circumstance.
+     *
+     * Responses that cannot be stored or are without cache validation (Last-Modified, ETag) heades are
+     * considered un-cacheable.
+     *
+     * @link https://tools.ietf.org/html/rfc7234#section-3
+     * @return Boolean true if the response is worth caching, false otherwise
+     */
+    public function isCacheable()
+    {
+        $result = false;
+
+        if($this->getRequest()->isCacheable() && parent::isCacheable()) {
+            $result = true;
+        }
+
+        return $result;
+    }
+
+    /**
      * Check if the response is downloadable
      *
      * @return bool

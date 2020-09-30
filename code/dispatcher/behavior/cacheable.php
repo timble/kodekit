@@ -131,8 +131,6 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
 
         if($response->getUser()->isAuthentic()) {
             $cache[] = 'private';
-        } else {
-            $cache[] = 'public';
         }
 
         return $cache;

@@ -132,6 +132,36 @@ class HttpRequest extends HttpMessage implements HttpRequestInterface
         return $this->_format;
     }
 
+    /**
+     * Get the cache control
+     *
+     * @link https://tools.ietf.org/html/rfc7234#section-5.2.1
+     * @return array
+     */
+    public function getCacheControl()
+    {
+        $values = $this->_headers->get('Cache-Control', array());
+
+        if (is_string($values)) {
+            $values = explode(',', $values);
+        }
+
+        foreach ($values as $key => $value)
+        {
+            if(is_string($value))
+            {
+                $parts = explode('=', $value);
+
+                if (count($parts) > 1)
+                {
+                    unset($values[$key]);
+                    $values[trim($parts[0])] = trim($parts[1]);
+                }
+            }
+        }
+
+        return $values;
+    }
 
     /**
      * Set the header parameters
@@ -328,7 +358,7 @@ class HttpRequest extends HttpMessage implements HttpRequestInterface
      */
     public function isCacheable()
     {
-        return ($this->isGet() || $this->isHead()) && $this->_headers->get('Cache-Control') != 'no-cache';
+        return ($this->isGet() || $this->isHead()) && !in_array('no-store', $this->getCacheControl(), true);
     }
 
     /**
