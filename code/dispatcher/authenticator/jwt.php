@@ -201,7 +201,7 @@ class DispatcherAuthenticatorJwt extends DispatcherAuthenticatorAbstract
      */
     public function authenticateRequest(DispatcherContext $context)
     {
-        $result = false;
+        $result = true;
 
         if($token = $this->getToken())
         {
