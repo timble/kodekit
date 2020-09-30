@@ -500,19 +500,19 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
      */
     public function getMaxAge()
     {
-        $result = 0;
+        $result = null;
 
         $cache_control = $this->getCacheControl();
 
         if (isset($cache_control['max-age'])) {
-            $result = $cache_control['max-age'];
+            $result = (int) $cache_control['max-age'];
         }
 
         if (isset($cache_control['s-maxage'])) {
-            $result = $cache_control['s-maxage'];
+            $result = (int) $cache_control['s-maxage'];
         }
 
-        return (int) $result;
+        return $result;
     }
 
     /**
@@ -634,7 +634,7 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
     public function isStale()
     {
         $result = true;
-        if ($maxAge = $this->getMaxAge()) {
+        if ($maxAge = (int) $this->getMaxAge()) {
             $result = ($maxAge - $this->getAge()) <= 0;
         }
 
