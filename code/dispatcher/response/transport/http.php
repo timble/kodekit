@@ -192,27 +192,13 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
         }
 
         //Set cache-control header to most conservative value.
-        $cache_control = (array) $response->headers->get('Cache-Control', null, false);
-        if (empty($cache_control) || !$request->isCacheable()) {
+        if (!$request->isCacheable()) {
             $response->headers->set('Cache-Control', array('private', 'no-cache', 'no-store'));
         }
 
         //Validate the response
-        if($response->isCacheable() && !$response->isStale())
-        {
-            if ($etags = $request->getEtags())
-            {
-                if(in_array($response->getEtag(), $etags) || in_array('*', $etags)) {
-                    $response->setStatus(HttpResponse::NOT_MODIFIED);
-                }
-            }
-
-            if($since = $request->headers->get('If-Modified-Since') && $response->getLastModified())
-            {
-                if(!($response->getLastModified()->getTimestamp() > strtotime($since))) {
-                    $response->setStatus(HttpResponse::NOT_MODIFIED);
-                }
-            }
+        if($response->isNotModified()) {
+            $response->setStatus(HttpResponse::NOT_MODIFIED);
         }
 
         //Modifies the response so that it conforms to the rules defined for a 304 status code.

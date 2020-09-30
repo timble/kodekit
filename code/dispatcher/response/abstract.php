@@ -353,11 +353,11 @@ abstract class DispatcherResponseAbstract extends ControllerResponse implements 
         if(isset($cache_control['max-age']))
         {
             $maxAge = $cache_control['max-age'];
-            $result = ($maxAge - $this->getAge()) <= 0;
+            $stale  = ($maxAge - $this->getAge()) <= 0;
         }
-        else  $result = parent::isStale();
+        else $stale = parent::isStale();
 
-        return $result;
+        return $stale;
     }
 
     /**
@@ -392,6 +392,37 @@ abstract class DispatcherResponseAbstract extends ControllerResponse implements 
         }
 
         return false;
+    }
+
+    /**
+     * Validate the response
+     *
+     * @link: https://tools.ietf.org/html/rfc7234#section-4.3.2
+     * @return Boolean true if the response is not modified
+     */
+    public function isNotModified()
+    {
+        $result  = null;
+        $request = $this->getRequest();
+
+        if($this->isCacheable() && !$this->isStale())
+        {
+            if ($etags = $request->getEtags())
+            {
+                if(in_array($this->getEtag(), $etags) || in_array('*', $etags)) {
+                    $result = true;
+                }
+            }
+
+            if($since = $request->headers->get('If-Modified-Since') && $this->getLastModified())
+            {
+                if(!($this->getLastModified()->getTimestamp() > strtotime($since))) {
+                    $result = true;
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
