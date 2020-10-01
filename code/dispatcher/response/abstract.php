@@ -76,6 +76,9 @@ abstract class DispatcherResponseAbstract extends ControllerResponse implements 
         $config->append(array(
             'content'     => null,
             'transports'  => array('redirect', 'json', 'http'),
+            'headers'     => [
+                'Cache-Control' => ['no-store']
+            ]
         ));
 
         parent::_initialize($config);
