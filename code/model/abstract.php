@@ -331,7 +331,7 @@ abstract class ModelAbstract extends ObjectAbstract implements ModelInterface, C
         if (!isset($this->_mixed_methods[$method]))
         {
             //Check if a behavior is mixed
-            $parts = KStringInflector::explode($method);
+            $parts = StringInflector::explode($method);
 
             if ($parts[0] == 'is' && isset($parts[1])) {
                 return false;

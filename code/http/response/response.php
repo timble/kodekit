@@ -149,7 +149,7 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
         $this->setStatus($config->status_code, $config->status_message);
 
         if (!$this->_headers->has('Date')) {
-            $this->setDate(new DateTime('now'));
+            $this->setDate(new \DateTime('now'));
         }
     }
 

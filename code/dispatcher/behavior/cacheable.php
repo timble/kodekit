@@ -71,7 +71,7 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
             }
             else
             {
-                $cache_control = (array) KObjectConfig::unbox($this->getConfig()->cache_control_private);
+                $cache_control = (array) ObjectConfig::unbox($this->getConfig()->cache_control_private);
                 $response->headers->set('Cache-Control', $cache_control, true);
 
                 $response->setMaxAge($this->getConfig()->cache_time);
