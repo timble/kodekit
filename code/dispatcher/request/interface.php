@@ -230,13 +230,13 @@ interface DispatcherRequestInterface extends ControllerRequestInterface
     public function getRanges();
 
     /**
-     * Gets the etags
+     * Gets the etag
      *
      * @link https://tools.ietf.org/html/rfc7232#page-14
      *
-     * @return array The entity tags
+     * @return string The entity tag
      */
-    public function getETags();
+    public function getETag();
 
     /**
      * Checks whether the request is secure or not.
