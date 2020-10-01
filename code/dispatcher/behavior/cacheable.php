@@ -62,19 +62,21 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
             $response = $mixer->getResponse();
             $user     = $mixer->getUser();
 
+            //Reset cache control header (if caching enabled)
             if(!$user->isAuthentic())
             {
                 $cache_control = (array) KObjectConfig::unbox($this->getConfig()->cache_control);
+                $response->headers->set('Cache-Control', $cache_control, true);
+
                 $response->setMaxAge($this->getConfig()->cache_time, $this->getConfig()->cache_time_shared);
             }
             else
             {
                 $cache_control = (array) KObjectConfig::unbox($this->getConfig()->cache_control_private);
+                $response->headers->set('Cache-Control', $cache_control, true);
+
                 $response->setMaxAge($this->getConfig()->cache_time_private);
             }
-
-            //Reset cache control header (if caching enabled)
-            $response->headers->set('Cache-Control', $cache_control, true);
         }
     }
 
