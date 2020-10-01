@@ -125,12 +125,12 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
 
         ////Set Etag
         if($this->isCacheable()) {
-            $response->setEtag($this->_getEtag($response), !$response->isDownloadable());
+            $response->setEtag($this->getHash(), !$response->isDownloadable());
         }
     }
 
     /**
-     * Generate a response etag
+     * Generate a response hash
      *
      * For files returns a md5 hash of same format as Apache does. Eg "%ino-%size-%0mtime" using the file
      * info, otherwise return a crc32 digest the user identifier and response content
@@ -139,15 +139,17 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
      *
      * @return string
      */
-    protected function _getEtag(HttpResponseInterface $response)
+    protected function getHash()
     {
+        $response = $this->getResponse();
+
         if($response->isDownloadable())
         {
             $info = $response->getStream()->getInfo();
-            $etag = sprintf('"%x-%x-%s"', $info['ino'], $info['size'],base_convert(str_pad($info['mtime'],16,"0"),10,16));
+            $hash = sprintf('"%x-%x-%s"', $info['ino'], $info['size'],base_convert(str_pad($info['mtime'],16,"0"),10,16));
         }
-        else $etag = hash('crc32b', $response->getContent().$response->getFormat().$response->getUser()->getId());
-        
-        return $etag;
+        else $hash = hash('crc32b', $response->getContent().$response->getFormat().$response->getUser()->getId());
+
+        return $hash;
     }
 }
