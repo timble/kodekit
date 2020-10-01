@@ -56,7 +56,7 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
         parent::onMixin($mixer);
 
         //Set max age default
-        if($this->isCacheable()) {
+        if($this->isSupported()) {
             $this->getMixer()->getResponse()->setMaxAge($this->getConfig()->cache_time, $this->getConfig()->cache_time_shared);
         }
     }
@@ -68,7 +68,7 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
      */
     public function isSupported()
     {
-        return $this->isCacheable() ? parent::isSupported() : false;
+        return $this->getConfig() ? parent::isSupported() : false;
     }
 
     /**
