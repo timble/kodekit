@@ -36,7 +36,6 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
             'priority'              => self::PRIORITY_LOW,
             'cache'                 => true,
             'cache_time'            => 0, //must revalidate
-            'cache_time_private'    => 0, //must revalidate proxy
             'cache_time_shared'     => 0, //must revalidate proxy,
             'cache_control'         => [],
             'cache_control_private' => ['private'],
@@ -65,7 +64,7 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
             //Reset cache control header (if caching enabled)
             if(!$user->isAuthentic())
             {
-                $cache_control = (array) KObjectConfig::unbox($this->getConfig()->cache_control);
+                $cache_control = (array) ObjectConfig::unbox($this->getConfig()->cache_control);
                 $response->headers->set('Cache-Control', $cache_control, true);
 
                 $response->setMaxAge($this->getConfig()->cache_time, $this->getConfig()->cache_time_shared);
@@ -75,7 +74,7 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
                 $cache_control = (array) KObjectConfig::unbox($this->getConfig()->cache_control_private);
                 $response->headers->set('Cache-Control', $cache_control, true);
 
-                $response->setMaxAge($this->getConfig()->cache_time_private);
+                $response->setMaxAge($this->getConfig()->cache_time);
             }
         }
     }
@@ -97,15 +96,7 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
      */
     public function isCacheable()
     {
-        $request = $this->getRequest();
-
-        if($request->isCacheable() && $this->getConfig()->cache) {
-            $cacheable = true;
-        } else {
-            $cacheable = false;
-        }
-
-        return $cacheable;
+        return $this->getRequest()->isCacheable() && $this->getConfig()->cache;
     }
 
     /**
@@ -121,7 +112,6 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
     protected function _beforeSend(DispatcherContextInterface $context)
     {
         $response = $context->response;
-        $request  = $context->request;
 
         ////Set Etag
         if($this->isCacheable()) {
