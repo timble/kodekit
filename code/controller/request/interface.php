@@ -63,6 +63,14 @@ interface ControllerRequestInterface extends HttpRequestInterface
     public function getFormat();
 
     /**
+     * The timestamp of the start of the request, with microsecond precision
+     *
+     * @see: https://www.php.net/manual/en/reserved.variables.server.php
+     * @return float
+     */
+    public function getTime();
+
+    /**
      * Set the user object
      *
      * @param UserInterface $user A request object
