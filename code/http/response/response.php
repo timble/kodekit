@@ -607,6 +607,10 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
             return false;
         }
 
+        if (in_array('private', $cache_control, true)) {
+            return false;
+        }
+
         if (in_array('public', $cache_control, true)) {
             return true;
         }
@@ -650,9 +654,9 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
      */
     public function isStale()
     {
-        $stale = !$this->isCacheable();
+        $stale = null;
 
-        if (!$stale && $this->getMaxAge() === NULL)
+        if ($this->getMaxAge() === NULL)
         {
             //Calculate heuristic freshness and determine if response is still fresh
             if($this->getLastModified())
