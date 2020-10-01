@@ -405,7 +405,7 @@ abstract class DispatcherResponseAbstract extends ControllerResponse implements 
         $result  = null;
         $request = $this->getRequest();
 
-        if($this->isCacheable() && !$this->isStale())
+        if($this->isCacheable())
         {
             if ($etags = $request->getEtags())
             {
