@@ -56,14 +56,16 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
     {
         parent::onMixin($mixer);
 
-        if($this->isCacheable())
+        if($this->isSupported())
         {
-            //Set cache control default
-            $cache_control = (array) KObjectConfig::unbox($this->getConfig()->cache_control);
-            $this->getMixer()->getResponse()->getHeaders()->set('Cache-Control', $cache_control);
+            $response = $mixer->getResponse();
+
+            //Reset cache control header (if caching enabled)
+            $cache_control = (array) ObjectConfig::unbox($this->getConfig()->cache_control);
+            $response->headers->set('Cache-Control', $cache_control, true);
 
             //Set max age default
-            $this->getMixer()->getResponse()->setMaxAge($this->getConfig()->cache_time, $this->getConfig()->cache_time_shared);
+            $response->setMaxAge($this->getConfig()->cache_time, $this->getConfig()->cache_time_shared);
         }
     }
 
@@ -74,7 +76,7 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
      */
     public function isSupported()
     {
-        return $this->getConfig() ? parent::isSupported() : false;
+        return $this->getConfig()->cache ? parent::isSupported() : false;
     }
 
     /**
@@ -111,8 +113,8 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
      */
     protected function _beforeSend(DispatcherContextInterface $context)
     {
-        $response = $context->getResponse();
-        $request  = $context->getRequest();
+        $response = $context->response;
+        $request  = $context->request;
 
         if($this->isCacheable())
         {
@@ -161,8 +163,8 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
             $info = $response->getStream()->getInfo();
             $etag = sprintf('"%x-%x-%s"', $info['ino'], $info['size'],base_convert(str_pad($info['mtime'],16,"0"),10,16));
         }
-        else $etag = crc32($this->getUser()->getId().'/###'.$this->getResponse()->getContent());
-
+        else $etag = hash('crc32b', $response->getContent().$response->getFormat());
+        
         return $etag;
     }
 }
