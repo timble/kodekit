@@ -942,15 +942,12 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
      *
      * @link https://tools.ietf.org/html/rfc7232#page-14
      *
-     * @return string The entity tag
+     * @return string|null The entity tag, or null if the etag header doesn't exist
      */
     public function getETag()
     {
-        $result = array();
-        if($this->_headers->has('If-None-Match'))
+        if($result = $this->_headers->get('If-None-Match'))
         {
-            $result = $this->_headers->get('If-None-Match');
-
             //Remove the encoding from the etag
             //
             //RFC-7232 explicitly states that ETags should be content-coding aware
