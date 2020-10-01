@@ -239,6 +239,13 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
             $response->headers->set('Cache-Control', '');
         }
 
+        //Add request time in seconds
+        if($start = $response->getRequest()->getTime())
+        {
+            $time  = (microtime(true) - $start) * 1000;
+            $response->headers->set('Server-Timing', 'tot;desc="Total";dur='.(int) $time);
+        }
+
         //Send headers and content
         $this->sendHeaders($response)
              ->sendContent($response);
