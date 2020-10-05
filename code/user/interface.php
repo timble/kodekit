@@ -66,10 +66,10 @@ interface UserInterface extends ObjectEquatable
     /**
      * Checks if the user has a role.
      *
-     * @param  mixed|array $role A role name or an array containing role names.
+     * @param bool $strict If true, the user has to have all the provided roles, not just one
      * @return bool True if the user has at least one of the provided roles, false otherwise.
      */
-    public function hasRole($role);
+    public function hasRole($role, $strict = false);
 
     /**
      * Returns the groups the user is part of
@@ -77,6 +77,15 @@ interface UserInterface extends ObjectEquatable
      * @return array An array of group identifiers
      */
     public function getGroups();
+
+    /**
+     * Checks if the user is part of a group
+     *
+     * @param mixed|array $group  A role name or an array containing group names.©≈©
+     * @param bool        $strict If true, the user needs to be part of all provided group(s), not just one.
+     * @return bool
+     */
+    public function hasGroup($group, $strict = false);
 
     /**
      * Returns the hashed password used to authenticate the user.
