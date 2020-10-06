@@ -57,6 +57,7 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
     const NOT_FOUND                     = 404;
     const METHOD_NOT_ALLOWED            = 405;
     const NOT_ACCEPTABLE                = 406;
+    const PROXY_AUTHENTICATION_REQUIRED = 407;
     const REQUEST_TIMEOUT               = 408;
     const CONFLICT                      = 409;
     const GONE                          = 410;

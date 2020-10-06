@@ -180,11 +180,11 @@ final class ObjectConfigFactory extends ObjectAbstract implements ObjectSingleto
      * Writes a config to a file
      *
      * @param string $filename
-     * @param ObjectConfigInterface $config
+     * @param ObjectConfigInterface|array $config
      * @throws \RuntimeException
      * @return ObjectConfigFactory
      */
-    public function toFile($filename, ObjectConfigInterface $config)
+    public function toFile($filename, $config)
     {
         $pathinfo = pathinfo($filename);
 
@@ -195,7 +195,7 @@ final class ObjectConfigFactory extends ObjectAbstract implements ObjectSingleto
             ));
         }
 
-        $this->createFormat($pathinfo['extension'])->toFile($filename, $config);
+        $this->createFormat($pathinfo['extension'], $config)->toFile($filename);
         return $this;
     }
 
