@@ -48,7 +48,7 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
-            'methods'        => array('get', 'head', 'post', 'put', 'delete', 'options'),
+            'methods'        => array('get', 'head', 'post', 'put', 'patch', 'delete', 'options'),
             'behaviors'      => array('routable', 'limitable', 'resettable', 'localizable'),
             'authenticators' => array('csrf')
          ));
@@ -149,6 +149,8 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
      *
      * This function translates a GET request into a render action.
      *
+     * @link https://tools.ietf.org/html/rfc7231#page-24
+     *
      * @param DispatcherContext $context  A dispatcher context object
      * @return ModelEntityInterface
      */
@@ -167,6 +169,8 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
 
     /**
      * Head method
+     *
+     * @link https://tools.ietf.org/html/rfc7231#page-25
      *
      * @param DispatcherContext $context  A dispatcher context object
      * @return ModelEntityInterface
@@ -192,6 +196,8 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
      *
      * If an _action parameter exists in the request data it will be used instead. If no action can be found an bad
      * request exception will be thrown.
+     *
+     * @link https://tools.ietf.org/html/rfc7231#page-25
      *
      * @param   DispatcherContext $context  A dispatcher context object
      * @throws  DispatcherExceptionMethodNotAllowed  The action specified in the request is not allowed for the
@@ -251,11 +257,15 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
      * exists an edit action will be executed, if the entity does not exist and the state is unique an add action will
      * be executed.
      *
-     * If the entity already exists it will be completely replaced based on the data available in the request.
+     * If the entity already exists it will be completely replaced based on the data available in the request. The request
+     * needs to contain a complete entity representation.
+     *
+     * @link https://tools.ietf.org/html/rfc7231#page-26
      *
      * @param   DispatcherContext $context    A dispatcher context object
-     * @throws  ControllerExceptionRequestInvalid  If the model state is not unique
      * @return  ModelEntityInterface
+     * @throws  KControllerExceptionRequestInvalid  If the model state is not unique, or if the identity key is used.
+     *
      */
     protected function _actionPut(DispatcherContext $context)
     {
@@ -264,28 +274,24 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
 
         if($controller instanceof ControllerModellable)
         {
-            if($controller->getModel()->getState()->isUnique())
+            $model = $controller->getModel();
+
+            if($model->getState()->isUnique())
             {
-                $action = 'add';
-                $entity = $controller->getModel()->fetch();
+                $entity = $model->fetch();
 
-                if(!$entity->isNew())
+                if($entity->isNew())
                 {
-                    //Reset the row data
-                    $entity->reset();
-                    $action = 'edit';
-                }
+                    $action = 'add';
 
-                //Set the row data based on the unique state information
-                $state = $controller->getModel()->getState()->getValues(true);
-                $entity->setProperties($state);
+                    $identity_key = $entity->getIdentityKey();
+                    if($identity_key && $model->getState()->get($identity_key)) {
+                        throw new KControllerExceptionResourceNotFound('Resource not found');
+                    }
+                }
+                else $action = 'edit';
             }
             else throw new ControllerExceptionRequestInvalid('Resource not found');
-
-            //Throw exception if no action could be determined from the request
-            if(!$action) {
-                throw new ControllerExceptionRequestInvalid('Resource not found');
-            }
 
             //Execute the controller action
             $context = $controller->getContext($context);
@@ -305,9 +311,45 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
     }
 
     /**
+     * Patch method
+     *
+     * This function translates a PATCH request into an edit action.
+     *
+     * @link https://tools.ietf.org/html/rfc5789
+     *
+     * @param   DispatcherContextInterface $context    A dispatcher context object
+     * @throws  ControllerExceptionRequestInvalid  If the model state is not unique, or if the identity key is used.
+     * @return  ModelEntityInterface
+     */
+    protected function _actionPatch(DispatcherContextInterface $context)
+    {
+        $action     = null;
+        $controller = $this->getController();
+
+        if($controller instanceof ControllerModellable)
+        {
+            //Execute the controller action
+            $result = $controller->execute('edit', $context);
+
+            //Return the new representation of the resource
+            if ($context->response->isSuccess())
+            {
+                if(!is_string($result) && !(is_object($result) && method_exists($result, '__toString'))) {
+                    $result = $controller->execute('render', $context);
+                }
+            }
+        }
+        else throw new DispatcherExceptionMethodNotAllowed('Method PATCH not allowed');
+
+        return $result;
+    }
+
+    /**
      * Delete method
      *
      * This function translates a DELETE request into a delete action.
+     *
+     * @link https://tools.ietf.org/html/rfc7231#page-29
      *
      * @param   DispatcherContext $context A dispatcher context object
      * @throws  DispatcherExceptionMethodNotAllowed
@@ -328,6 +370,8 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
 
     /**
      * Options method
+     *
+     * @link https://tools.ietf.org/html/rfc7231#page-31
      *
      * @param   DispatcherContext $context    A dispatcher context object
      * @return  string  The allowed actions; e.g., `GET, POST [add, edit, cancel, save], PUT, DELETE`
@@ -353,7 +397,24 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
             }
         }
 
+        //See: https://tools.ietf.org/html/rfc7231#section-7.4.1
         $context->response->headers->set('Allow', implode(', ', $methods));
+
+        //Set Accept-Post header to framework defaults
+        if(array_search('post', $this->getHttpMethods())) {
+            $context->response->headers->set('Accept-Post', ['application/x-www-form-urlencoded', 'application/json']);
+        }
+
+        //Set Accept-Put header to framework defaults
+        if(array_search('put', $this->getHttpMethods())) {
+            $context->response->headers->set('Accept-Put', ['application/x-www-form-urlencoded', 'application/json']);
+        }
+
+        //Set Accept-Patch header to framework defaults
+        //See: https://tools.ietf.org/html/rfc5789#page-7
+        if(array_search('patch', $this->getHttpMethods())) {
+            $context->response->headers->set('Accept-Patch', ['application/x-www-form-urlencoded', 'application/json']);
+        }
     }
 
     /**

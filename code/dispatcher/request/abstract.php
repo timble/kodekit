@@ -778,8 +778,7 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
 
             if($this->_headers->has('Accept-Language'))
             {
-                $accept    = $this->_headers->get('Accept-Language');
-                $languages = $this->_parseAccept($accept);
+                $languages = $this->getAccept();
 
                 foreach (array_keys($languages) as $lang)
                 {
@@ -888,8 +887,7 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
 
             if($this->_headers->has('Accept-Charset'))
             {
-                $accept   = $this->_headers->get('Accept-Charset');
-                $charsets = $this->_parseAccept($accept);
+                $charsets = $this->getAccept();;
 
                 $this->_charsets = array_keys($charsets);
             }
@@ -1039,8 +1037,7 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
 
         if($this->headers->has('Accept'))
         {
-            $accept = $this->headers->get('Accept');
-            $types  = $this->_parseAccept($accept);
+            $types  = $this->getAccept();
 
             //Get the highest quality format
             $type = key($types);

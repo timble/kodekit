@@ -44,6 +44,13 @@ class HttpRequest extends HttpMessage implements HttpRequestInterface
     protected $_url;
 
     /**
+     * Array of accepted media types
+     *
+     * @var KHttpUrl
+     */
+    protected $_accept;
+
+    /**
      * Constructor
      *
      * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
@@ -99,20 +106,17 @@ class HttpRequest extends HttpMessage implements HttpRequestInterface
             {
                 $format = null; //reset
 
-                if ($this->_headers->has('Accept'))
+                if($accept = $this->getAccept())
                 {
-                    $accept = $this->_headers->get('Accept');
-                    $formats = $this->_parseAccept($accept);
-
                     /**
                      * If the browser is requested text/html serve it at all times
                      *
                      * @hotfix #409 : Android 2.3 requesting application/xml
                      */
-                    if (!isset($formats['text/html']))
+                    if (!isset($accept['text/html']))
                     {
                         //Get the highest quality format
-                        $mime_type = key($formats);
+                        $mime_type = key($accept);
 
                         foreach (static::$_formats as $value => $mime_types)
                         {
@@ -130,6 +134,72 @@ class HttpRequest extends HttpMessage implements HttpRequestInterface
         }
 
         return $this->_format;
+    }
+
+    /**
+     * Return the accept header
+     *
+     * Parses an accept header and returns an array (type => quality) of the accepted types, ordered by quality.
+     *
+     * @link : https://tools.ietf.org/html/rfc7231#page-38
+     *
+     * @param array   $defaults  The default values
+     * @return array
+     */
+    public function getAccept(array $defaults = NULL)
+    {
+        if (!isset($this->_accept))
+        {
+            $accept = $this->_headers->get('Accept');
+
+            if (!empty($accept))
+            {
+                // Get all of the types
+                $types = explode(',', $accept);
+
+                foreach ($types as $type)
+                {
+                    // Split the type into parts
+                    $parts = explode(';', $type);
+
+                    // Make the type only the MIME
+                    $type = trim(array_shift($parts));
+
+                    // Default quality is 1.0
+                    $options = array('quality' => 1.0);
+
+                    foreach ($parts as $part)
+                    {
+                        // Prevent undefined $value notice below
+                        if (strpos($part, '=') === FALSE) {
+                            continue;
+                        }
+
+                        // Separate the key and value
+                        list ($key, $value) = explode('=', trim($part));
+
+                        switch ($key)
+                        {
+                            case 'q'       : $options['quality'] = (float) trim($value); break;
+                            case 'version' : $options['version'] = (float) trim($value); break;
+                        }
+                    }
+
+                    // Add the accept type and quality
+                    $defaults[$type] = $options;
+                }
+            }
+
+            // Make sure that accepts is an array
+            $accepts = (array) $defaults;
+
+            // Order by quality
+            arsort($accepts);
+
+            $this->_accept = $accepts;
+        }
+
+        return $this->_accept;
     }
 
     /**
@@ -389,61 +459,5 @@ class HttpRequest extends HttpMessage implements HttpRequestInterface
         if($this->_url instanceof HttpUrl) {
             $this->_url = clone $this->_url;
         }
-    }
-
-    /**
-     * Parses an accept header and returns an array (type => quality) of the accepted types, ordered by quality.
-     *
-     * @param string    $accept     The header to parse
-     * @param array     $defaults   The default values
-     * @return array
-     */
-    protected function _parseAccept($accept, array $defaults = NULL)
-    {
-        if (!empty($accept))
-        {
-            // Get all of the types
-            $types = explode(',', $accept);
-
-            foreach ($types as $type)
-            {
-                // Split the type into parts
-                $parts = explode(';', $type);
-
-                // Make the type only the MIME
-                $type = trim(array_shift($parts));
-
-                // Default quality is 1.0
-                $options = array('quality' => 1.0);
-
-                foreach ($parts as $part)
-                {
-                    // Prevent undefined $value notice below
-                    if (strpos($part, '=') === FALSE) {
-                        continue;
-                    }
-
-                    // Separate the key and value
-                    list ($key, $value) = explode('=', trim($part));
-
-                    switch ($key)
-                    {
-                        case 'q'       : $options['quality'] = (float) trim($value); break;
-                        case 'version' : $options['version'] = (float) trim($value); break;
-                    }
-                }
-
-                // Add the accept type and quality
-                $defaults[$type] = $options;
-            }
-        }
-
-        // Make sure that accepts is an array
-        $accepts = (array) $defaults;
-
-        // Order by quality
-        arsort($accepts);
-
-        return $accepts;
     }
 }
