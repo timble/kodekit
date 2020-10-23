@@ -189,7 +189,9 @@ class TemplateHelperPaginator extends TemplateHelperSelect
             $link_attribs['href'] = (string)$url;
         }
 
-        $html = '<a '.$this->buildAttributes($link_attribs).'>'.$this->getObject('translator')->translate($page->title).'</a>';
+        $title = is_numeric($page->title) ? $page->title : $this->getObject('translator')->translate($page->title);
+
+        $html = '<a '.$this->buildAttributes($link_attribs).'>'.$title.'</a>';
 
         return $html;
     }
