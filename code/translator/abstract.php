@@ -47,6 +47,20 @@ abstract class TranslatorAbstract extends ObjectAbstract implements TranslatorIn
     private $__loaded;
 
     /**
+     * Debug translations
+     *
+     * @var bool
+     */
+    private $__debug;
+
+    /**
+     * Missing translations for debug mode
+     *
+     * @var array
+     */
+    private $__untranslated = [];
+
+    /**
      * Constructor.
      *
      * @param ObjectConfig $config Configuration options
@@ -57,6 +71,8 @@ abstract class TranslatorAbstract extends ObjectAbstract implements TranslatorIn
 
         $this->__catalogue = $config->catalogue;
         $this->__loaded   = array();
+
+        $this->setDebug($config->debug);
 
         $this->setLanguageFallback($config->language_fallback);
         $this->setLanguage($config->language);
@@ -73,6 +89,7 @@ abstract class TranslatorAbstract extends ObjectAbstract implements TranslatorIn
     protected function _initialize(ObjectConfig $config)
     {
         $config->append(array(
+            'debug'             => false,
             'language'          => locale_get_default(),
             'language_fallback' => 'en-GB',
             'cache'             =>  \Kodekit::getInstance()->isCache(),
@@ -126,7 +143,23 @@ abstract class TranslatorAbstract extends ObjectAbstract implements TranslatorIn
         if(!empty($string))
         {
             $catalogue   = $this->getCatalogue();
-            $translation = $catalogue->has($string) ? $catalogue->get($string) : $string;
+            $key         = $this->generateKey($string);
+
+            if ($this->isTranslatable($key)) {
+                $translation = $catalogue->get($key);
+
+                if ($this->isDebug()) {
+                    $translation = '👌'.$translation.'👌';
+                }
+            } else {
+                $translation = $string;
+
+                if ($this->isDebug()) {
+                    $this->__untranslated[$key] = $translation;
+
+                    $translation = '❓'.$translation.'❓';
+                }
+            }
 
             if (count($parameters)) {
                 $translation = $this->_replaceParameters($translation, $parameters);
@@ -134,6 +167,17 @@ abstract class TranslatorAbstract extends ObjectAbstract implements TranslatorIn
         }
 
         return $translation;
+    }
+
+    /**
+     * Generate translation key
+     *
+     * @param string $string String to be translated
+     * @return string Key for the translation file
+     */
+    public function generateKey($string)
+    {
+        return strtolower($string);
     }
 
     /**
@@ -186,7 +230,7 @@ abstract class TranslatorAbstract extends ObjectAbstract implements TranslatorIn
         {
             $translations = array();
 
-            foreach ($this->find($url) as $file)
+            foreach (array_unique($this->find($url)) as $file)
             {
                 try {
                     $loaded = $this->getObject('object.config.factory')->fromFile($file)->toArray();
@@ -432,6 +476,43 @@ abstract class TranslatorAbstract extends ObjectAbstract implements TranslatorIn
     public function isTranslatable($string)
     {
         return $this->getCatalogue()->has($string);
+    }
+
+    /**
+     * Enable or disable debug
+     *
+     * If debug is enabled, strings will be wrapped in ** or ?? depending on translations being found or not.
+     *
+     * @param bool $debug
+     * @return $this
+     */
+    public function setDebug($debug)
+    {
+        $this->__debug = (bool) $debug;
+
+        return $this;
+    }
+
+    /**
+     * Check if the loader is runnign in debug mode
+     *
+     * @return bool
+     */
+    public function isDebug()
+    {
+        return $this->__debug;
+    }
+
+    /**
+     * Returns a list of untranslated strings
+     *
+     * @return array
+     */
+    public function getUntranslatedStrings()
+    {
+        ksort($this->__untranslated);
+
+        return $this->__untranslated;
     }
 
     /**

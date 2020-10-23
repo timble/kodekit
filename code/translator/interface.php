@@ -130,6 +130,38 @@ interface TranslatorInterface
     public function isTranslatable($string);
 
     /**
+     * Enable or disable debug
+     *
+     * If debug is enabled, strings will be wrapped in ** or ?? depending on translations being found or not.
+     *
+     * @param bool $debug
+     * @return $this
+     */
+    public function setDebug($debug);
+
+    /**
+     * Check if the loader is runnign in debug mode
+     *
+     * @return bool
+     */
+    public function isDebug();
+
+    /**
+     * Returns a list of untranslated strings
+     *
+     * @return array
+     */
+    public function getUntranslatedStrings();
+
+    /**
+     * Generate translation key
+     *
+     * @param string $string String to be translated
+     * @return string Key for the translation file
+     */
+    public function generateKey($string);
+
+    /**
      * Checks if translations from a given url are already loaded.
      *
      * @param mixed $url The url to check
