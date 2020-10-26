@@ -96,7 +96,7 @@ class TemplateFilterScript extends TemplateFilterTag
         {
             $attribs = $this->buildAttributes($attribs);
 
-            $script = '<script'.$attribs.'>'."\n";
+            $script = '<script '.$attribs.'>'."\n";
             $script .= trim($content);
             $script .= '</script>'."\n";
         }

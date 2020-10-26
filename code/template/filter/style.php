@@ -79,7 +79,7 @@ class TemplateFilterStyle extends TemplateFilterTag
         {
             $attribs = $this->buildAttributes($attribs);
 
-            $style  = '<style'.$attribs.'>'."\n";
+            $style  = '<style '.$attribs.'>'."\n";
             $style .= trim($content);
             $style .= '</style>'."\n";
         }
