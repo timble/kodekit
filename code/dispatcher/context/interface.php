@@ -15,4 +15,19 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Dispatcher\Context
  */
-interface DispatcherContextInterface extends ControllerContextInterface {}
+interface DispatcherContextInterface extends ControllerContextInterface
+{
+    /**
+     * The request has been successfully authenticated
+     *
+     * @return Boolean
+     */
+    public function isAuthentic();
+
+    /**
+     * Sets the request as authenticated
+     *
+     * @return $this
+     */
+    public function setAuthentic();
+}

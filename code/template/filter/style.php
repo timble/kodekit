@@ -72,31 +72,32 @@ class TemplateFilterStyle extends TemplateFilterTag
      */
     protected function _renderTag($attribs = array(), $content = null, TemplateInterface $template)
     {
-        $link = isset($attribs['src']) ? $attribs['src'] : false;
+        $link      = isset($attribs['src']) ? $attribs['src'] : false;
         $condition = isset($attribs['condition']) ? $attribs['condition'] : false;
 
         if(!$link)
         {
             $attribs = $this->buildAttributes($attribs);
 
-            $html  = '<style type="text/css" '.$attribs.'>'."\n";
-            $html .= trim($content);
-            $html .= '</style>'."\n";
+            $style  = '<style'.$attribs.'>'."\n";
+            $style .= trim($content);
+            $style .= '</style>'."\n";
         }
         else
         {
             unset($attribs['src']);
-            unset($attribs['condition']);
             $attribs = $this->buildAttributes($attribs);
 
-            if($condition)
-            {
-                $html  = '<!--['.$condition.']>';
-                $html .= '<link type="text/css" rel="stylesheet" href="'.$link.'" '.$attribs.' />'."\n";
-                $html .= '<![endif]-->';
-            }
-            else $html  = '<link type="text/css" rel="stylesheet" href="'.$link.'" '.$attribs.' />'."\n";
+            $style = '<link rel="stylesheet" href="'.$link.'" '.$attribs.' />'."\n";
         }
+
+        if($condition)
+        {
+            $html  = '<!--[if '.$condition.']>'."\n";
+            $html .=  $style;
+            $html .= '<![endif]-->'."\n";
+        }
+        else $html = $style;
 
         return $html;
     }

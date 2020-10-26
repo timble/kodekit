@@ -272,12 +272,14 @@ final class ObjectBootstrapper extends ObjectAbstract implements ObjectBootstrap
                  *
                  * Collect identifiers by priority and then flatten the array.
                  */
-                $identifiers_flat = array();
+                $identifiers_flat = new ObjectConfig();
 
                 ksort($identifiers);
-                foreach ($identifiers as $priority => $merges) {
-                    $identifiers_flat = array_merge_recursive($identifiers_flat, $merges);
+                foreach ($identifiers as $identifier) {
+                    $identifiers_flat->append($identifier);
                 }
+
+                $identifiers_flat = $identifiers_flat->toArray();
 
                 foreach ($identifiers_flat as $identifier => $config) {
                     $manager->setIdentifier(new ObjectIdentifier($identifier, $config));

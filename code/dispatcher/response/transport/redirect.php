@@ -48,7 +48,7 @@ class DispatcherResponseTransportRedirect extends DispatcherResponseTransportHtt
     {
         if($response->isRedirect())
         {
-            $session  = $response->getUser()->getSession();
+            $session = $response->getUser()->getSession();
 
             //Set the messages into the session
             $messages = $response->getMessages();
@@ -75,8 +75,11 @@ class DispatcherResponseTransportRedirect extends DispatcherResponseTransportHtt
 
             if($format == 'html')
             {
-                $response->setContent(sprintf(
-                    '<!DOCTYPE html>
+                if($response->getRequest()->getFormat() == 'html')
+                {
+                    //Set the redirect into the response
+                    $response->setContent(sprintf(
+                        '<!DOCTYPE html>
                         <html>
                             <head>
                                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -89,8 +92,9 @@ class DispatcherResponseTransportRedirect extends DispatcherResponseTransportHtt
                                 Redirecting to <a href="%1$s">%1$s</a>.
                             </body>
                         </html>'
-                    , htmlspecialchars($response->getHeaders()->get('Location'), ENT_QUOTES, 'UTF-8')
-                ), 'text/html');
+                        , htmlspecialchars($response->headers->get('Location'), ENT_QUOTES, 'UTF-8')
+                    ), 'text/html');
+                }
             }
 
             return parent::send($response);

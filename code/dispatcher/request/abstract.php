@@ -155,6 +155,11 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
 
         // Set language to user's settings
         locale_set_default($this->getLanguage());
+
+        //Set the request time
+        if (isset($_SERVER['REQUEST_TIME_FLOAT'])) {
+            $this->setTime($_SERVER['REQUEST_TIME_FLOAT']);
+        }
     }
 
     /**
@@ -773,8 +778,7 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
 
             if($this->_headers->has('Accept-Language'))
             {
-                $accept    = $this->_headers->get('Accept-Language');
-                $languages = $this->_parseAccept($accept);
+                $languages = $this->getAccept();
 
                 foreach (array_keys($languages) as $lang)
                 {
@@ -883,8 +887,7 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
 
             if($this->_headers->has('Accept-Charset'))
             {
-                $accept   = $this->_headers->get('Accept-Charset');
-                $charsets = $this->_parseAccept($accept);
+                $charsets = $this->getAccept();;
 
                 $this->_charsets = array_keys($charsets);
             }
@@ -933,19 +936,16 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
     }
 
     /**
-     * Gets the etags
+     * Gets the etag
      *
      * @link https://tools.ietf.org/html/rfc7232#page-14
      *
-     * @return array The entity tags
+     * @return string|null The entity tag, or null if the etag header doesn't exist
      */
-    public function getETags()
+    public function getETag()
     {
-        $result = array();
-        if($this->_headers->has('If-None-Match'))
+        if($result = $this->_headers->get('If-None-Match'))
         {
-            $result = preg_split('/\s*,\s*/', $this->_headers->get('If-None-Match'), null, PREG_SPLIT_NO_EMPTY);
-
             //Remove the encoding from the etag
             //
             //RFC-7232 explicitly states that ETags should be content-coding aware
@@ -1037,8 +1037,7 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
 
         if($this->headers->has('Accept'))
         {
-            $accept = $this->headers->get('Accept');
-            $types  = $this->_parseAccept($accept);
+            $types  = $this->getAccept();
 
             //Get the highest quality format
             $type = key($types);

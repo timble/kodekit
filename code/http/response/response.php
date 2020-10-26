@@ -57,6 +57,7 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
     const NOT_FOUND                     = 404;
     const METHOD_NOT_ALLOWED            = 405;
     const NOT_ACCEPTABLE                = 406;
+    const PROXY_AUTHENTICATION_REQUIRED = 407;
     const REQUEST_TIMEOUT               = 408;
     const CONFLICT                      = 409;
     const GONE                          = 410;
@@ -149,7 +150,7 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
         $this->setStatus($config->status_code, $config->status_message);
 
         if (!$this->_headers->has('Date')) {
-            $this->setDate(new \DateTime(null, new \DateTimeZone('UTC')));
+            $this->setDate(new \DateTime('now'));
         }
     }
 
@@ -443,18 +444,44 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
      * the next 60 seconds.
      *
      * @link https://tools.ietf.org/html/rfc2616#section-14.9.3
-     * @param integer $max_age       The number of seconds after which the response should no longer be considered fresh.
-     * @param integer $shared_max_age The number of seconds after which the response should no longer be considered fresh by shared caches.
+     * @link https://www.php.net/manual/en/datetime.formats.relative.php
+     *
+     * @param integer|string $max_age        The number of seconds or an English textual relative datetime format  after
+     * 										 which the response should no longer be considered fresh.
+     * @param integer|string $shared_max_age The number of seconds after or an an English textual relative datetime format
+     * 										 which the response should no longer be considered fresh by shared caches.
      * @return HttpResponse
      */
     public function setMaxAge($max_age, $shared_max_age = null)
     {
         $cache_control = $this->getCacheControl();
 
-        $cache_control['max-age'] = (int) $max_age;
+        //Convert max_age to seconds
+        if(!is_numeric($max_age))
+        {
+            if($max_age = strtotime($max_age)) {
+                $max_age = $max_age - strtotime('now');
+            }
+        }
 
-        if(!is_null($shared_max_age) && $shared_max_age > $max_age) {
+        //Convert shared_max_age to seconds
+        if(!is_numeric($shared_max_age))
+        {
+            if($shared_max_age = strtotime($shared_max_age)) {
+                $shared_max_age = $shared_max_age - strtotime('now');
+            }
+        }
+
+        if($max_age !== false) {
+            $cache_control['max-age'] = (int) $max_age;
+        } else {
+            unset($cache_control['max-age']);
+        }
+
+        if($shared_max_age > $max_age) {
             $cache_control['s-maxage'] = (int) $shared_max_age;
+        } else {
+            unset($cache_control['s-maxage']);
         }
 
         $this->_headers->set('Cache-Control', $cache_control);
@@ -476,19 +503,19 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
      */
     public function getMaxAge()
     {
-        $result = 0;
+        $result = null;
 
         $cache_control = $this->getCacheControl();
 
         if (isset($cache_control['max-age'])) {
-            $result = $cache_control['max-age'];
+            $result = (int) $cache_control['max-age'];
         }
 
         if (isset($cache_control['s-maxage'])) {
-            $result = $cache_control['s-maxage'];
+            $result = (int) $cache_control['s-maxage'];
         }
 
-        return (int) $result;
+        return $result;
     }
 
     /**
@@ -502,7 +529,7 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
         $values = $this->_headers->get('Cache-Control', array());
 
         if (is_string($values)) {
-            $values = explode(',', $values);
+            $values = array_map('trim', explode(',', $values));
         }
 
         foreach ($values as $key => $value)
@@ -529,8 +556,7 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
      */
     public function isInvalid()
     {
-        $status_code = $this->getStatusCode();
-        return ($status_code < 100 || $status_code >= 600);
+        return $this->getStatusCode() < 100 || $this->getStatusCode() >= 600;
     }
 
 
@@ -576,16 +602,33 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
      */
     public function isCacheable()
     {
-        if (!in_array($this->_status_code, array(200, 203, 300, 301, 302, 304, 404, 410))) {
-            return false;
-        }
-
         $cache_control = $this->getCacheControl();
-        if (isset($cache_control['no-store'])) {
+
+        if (in_array('no-store', $cache_control, true)) {
             return false;
         }
 
-        return $this->isValidateable();
+        if (in_array('private', $cache_control, true)) {
+            return false;
+        }
+
+        if (in_array('public', $cache_control, true)) {
+            return true;
+        }
+
+        if (isset($cache_control['max-age']) || isset($cache_control['s-maxage'])) {
+            return true;
+        }
+
+        if($this->isValidateable()) {
+            return true;
+        }
+
+        if (in_array($this->getStatusCode(), array(200 , 203 , 204 , 206 , 300 , 301 , 404 , 405 , 410 , 414 , 501))) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -603,18 +646,39 @@ class HttpResponse extends HttpMessage implements HttpResponseInterface
      * Returns true if the response is "stale".
      *
      * When the responses is stale, the response may not be served from cache without first re-validating with
-     * the origin.
+     * the origin. To determine if the response is stale we use the max-age, or in case no max-age directive is
+     * defined try to calculate the heuristic freshness as follows: (Now - (Time since Last-Modified)) * 0.1
+     *
+     * @link https://tools.ietf.org/html/rfc7234#section-4.2.2
      *
      * @return Boolean true if the response is stale, false otherwise
      */
     public function isStale()
     {
-        $result = true;
-        if ($maxAge = $this->getMaxAge()) {
-            $result = ($maxAge - $this->getAge()) <= 0;
-        }
+        $stale = null;
 
-        return $result;
+        if ($this->getMaxAge() === NULL)
+        {
+            //Calculate heuristic freshness and determine if response is still fresh
+            if($this->getLastModified())
+            {
+                $time  = floor((strtotime('now') - $this->getLastModified()->getTimestamp()) * 0.1);
+                $stale = ($time - $this->getAge()) <= 0;
+            }
+        }
+        else $stale = ($this->getMaxAge() - $this->getAge()) <= 0;
+
+        return $stale;
+    }
+
+    /**
+     * Return true of the response has not been modified
+     *
+     * @return Boolean true if the response is not modified
+     */
+    public function isNotModified()
+    {
+        return (bool) ($this->getStatusCode() == 304);
     }
 
     /**

@@ -87,31 +87,34 @@ class TemplateFilterScript extends TemplateFilterTag
      */
     protected function _renderTag($attribs = array(), $content = null, TemplateInterface $template)
     {
-        $link = isset($attribs['src']) ? $attribs['src'] : false;
+        $link      = isset($attribs['src']) ? $attribs['src'] : false;
         $condition = isset($attribs['condition']) ? $attribs['condition'] : false;
+
+        unset($attribs['condition']);
 
         if(!$link)
         {
             $attribs = $this->buildAttributes($attribs);
 
-            $html  = '<script '.$attribs.'>'."\n";
-            $html .= trim($content);
-            $html .= '</script>'."\n";
+            $script = '<script'.$attribs.'>'."\n";
+            $script .= trim($content);
+            $script .= '</script>'."\n";
         }
         else
         {
             unset($attribs['src']);
-            unset($attribs['condition']);
             $attribs = $this->buildAttributes($attribs);
 
-            if($condition)
-            {
-                $html  = '<!--[if '.$condition.']>';
-                $html .= '<script src="'.$link.'" '.$attribs.'></script>'."\n";
-                $html .= '<![endif]-->';
-            }
-            else $html  = '<script src="'.$link.'" '.$attribs.'></script>'."\n";
+            $script = '<script src="'.$link.'" '.$attribs.'></script>'."\n";
         }
+
+        if($condition)
+        {
+            $html  = '<!--[if '.$condition.']>'."\n";
+            $html .= $script;
+            $html .= '<![endif]-->'."\n";
+        }
+        else $html = $script;
 
         return $html;
     }

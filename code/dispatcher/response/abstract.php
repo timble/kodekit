@@ -76,6 +76,9 @@ abstract class DispatcherResponseAbstract extends ControllerResponse implements 
         $config->append(array(
             'content'     => null,
             'transports'  => array('redirect', 'json', 'http'),
+            'headers'     => [
+                'Cache-Control' => ['no-store']
+            ]
         ));
 
         parent::_initialize($config);
@@ -339,6 +342,48 @@ abstract class DispatcherResponseAbstract extends ControllerResponse implements 
     }
 
     /**
+     * Returns true if the response is "stale".
+     *
+     * When the responses is stale, the response may not be served from cache without first re-validating with
+     * the origin.
+     *
+     * @return Boolean true if the response is stale, false otherwise
+     */
+    public function isStale()
+    {
+        $cache_control = $this->getRequest()->getCacheControl();
+
+        if(isset($cache_control['max-age']))
+        {
+            $maxAge = $cache_control['max-age'];
+            $stale  = ($maxAge - $this->getAge()) <= 0;
+        }
+        else $stale = parent::isStale();
+
+        return $stale;
+    }
+
+    /**
+     * Returns true if the response is worth caching under any circumstance.
+     *
+     * Responses that cannot be stored or are without cache validation (Last-Modified, ETag) heades are
+     * considered un-cacheable.
+     *
+     * @link https://tools.ietf.org/html/rfc7234#section-3
+     * @return Boolean true if the response is worth caching, false otherwise
+     */
+    public function isCacheable()
+    {
+        $result = false;
+
+        if($this->getRequest()->isCacheable() && parent::isCacheable()) {
+            $result = true;
+        }
+
+        return $result;
+    }
+
+    /**
      * Check if the response is downloadable
      *
      * @return bool
@@ -350,6 +395,35 @@ abstract class DispatcherResponseAbstract extends ControllerResponse implements 
         }
 
         return false;
+    }
+
+    /**
+     * Validate the response
+     *
+     * @link: https://tools.ietf.org/html/rfc7234#section-4.3.2
+     * @return Boolean true if the response is not modified
+     */
+    public function isNotModified()
+    {
+        $result  = null;
+        $request = $this->getRequest();
+
+        if ($etag = $request->getEtag())
+        {
+            if ($this->getEtag() == $etag)
+            {
+                $result = true;
+            }
+        }
+
+        if($since = $request->headers->get('If-Modified-Since') && $this->getLastModified())
+        {
+            if(!($this->getLastModified()->getTimestamp() > strtotime($since))) {
+                $result = true;
+            }
+        }
+
+        return $result;
     }
 
     /**

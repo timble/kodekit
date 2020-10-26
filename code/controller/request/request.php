@@ -32,6 +32,13 @@ class ControllerRequest extends HttpRequest implements ControllerRequestInterfac
     protected $_data;
 
     /**
+     * The timestamp of the start of the request, with microsecond precision
+     *
+     * @var float
+     */
+    protected $_time;
+
+    /**
      * User object
      *
      * @var	string|object
@@ -55,6 +62,9 @@ class ControllerRequest extends HttpRequest implements ControllerRequestInterfac
 
         //Set data parameters
         $this->setData($config->data);
+
+        //Set the time
+        $this->setTime($config->time);
     }
 
     /**
@@ -74,9 +84,32 @@ class ControllerRequest extends HttpRequest implements ControllerRequestInterfac
             'user'     => array(),
             'language' => locale_get_default(),
             'timezone' => date_default_timezone_get(),
+            'time'     => microtime(true)
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * The timestamp of the start of the request, with microsecond precision
+     *
+     * @return float
+     */
+    public function getTime()
+    {
+        return $this->_time;
+    }
+
+    /**
+     *T he timestamp of the start of the request, with microsecond precision
+     *
+     * @param $time
+     * @return $thi
+     */
+    public function setTime($time)
+    {
+        $this->_time = $time;
+        return $this;
     }
 
     /**

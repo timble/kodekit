@@ -48,6 +48,7 @@ class DispatcherAuthenticatorBasic extends DispatcherAuthenticatorAbstract
      */
     public function authenticateRequest(DispatcherContext $context)
     {
+        $result  = false;
         $request = $context->request;
 
         if($request->headers->has('Authorization'))
@@ -78,14 +79,16 @@ class DispatcherAuthenticatorBasic extends DispatcherAuthenticatorAbstract
                         }
 
                         //Login the user
-                        $this->loginUser($user->getId());
-
-                        return true;
+                        if ($result = $this->loginUser($user->getId())) {
+                            $context->setAuthentic(); //Explicitly authenticate the request
+                        }
                     }
                     else throw new ControllerExceptionRequestNotAuthenticated('Wrong username');
                 }
                 else throw new ControllerExceptionRequestNotAuthenticated('Invalid username');
             }
         }
+
+        return $result;
     }
 }

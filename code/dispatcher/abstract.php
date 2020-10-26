@@ -317,8 +317,8 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
     /**
      * Redirect
      *
-     * Redirect to a URL externally. Method performs a 301 (permanent) redirect. Method should be used to immediately
-     * redirect the dispatcher to another URL after a GET request.
+     * Redirect to a URL externally. If no redirect status code has been specified in the response a 301 (permanent)
+     * redirect will performed.
      *
      * @param DispatcherContext $context    A dispatcher context object
      */
@@ -326,8 +326,12 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
     {
         $url = $context->param;
 
-        $context->response->setStatus(DispatcherResponse::MOVED_PERMANENTLY);
-        $context->response->setRedirect($url);
+        //Only set the status if it hasn't been set yet
+        if(!$context->response->isRedirect()) {
+            $context->response->setStatus(DispatcherResponse::MOVED_PERMANENTLY);
+        }
+
+        $context->response->setRedirect($context->param);
 
         //Send the response
         return $this->send($context);

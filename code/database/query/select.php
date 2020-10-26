@@ -25,6 +25,13 @@ class DatabaseQuerySelect extends DatabaseQueryAbstract
     public $distinct  = false;
 
     /**
+     * Shuffle operation
+     *
+     * @var boolean
+     */
+    public $shuffle  = false;
+
+    /**
      * The columns
      *
      * @var array
@@ -246,6 +253,17 @@ class DatabaseQuerySelect extends DatabaseQueryAbstract
     }
 
     /**
+     * Build the shuffle clause
+     *
+     * @return  $this
+     */
+    public function shuffle()
+    {
+        $this->shuffle = true;
+        return $this;
+    }
+
+    /**
      * Build the limit element
      *
      * @param   integer $limit  Number of items to fetch.
@@ -367,11 +385,16 @@ class DatabaseQuerySelect extends DatabaseQueryAbstract
             }
         }
 
-        if($this->order)
+        if($this->order || $this->shuffle)
         {
             $query .= ' ORDER BY ';
 
             $list = array();
+
+            if($this->shuffle) {
+                $list[] = 'RAND()';
+            }
+
             foreach($this->order as $order) {
                 $list[] = $driver->quoteIdentifier($order['column']).' '.$order['direction'];
             }

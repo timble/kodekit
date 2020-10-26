@@ -236,4 +236,11 @@ interface HttpResponseInterface extends HttpMessageInterface
      * @return Boolean true if the response is fresh, false otherwise
      */
     public function isStale();
+
+    /**
+     * Return true of the response has not been modified
+     *
+     * @return Boolean true if the response is not modified
+     */
+    public function isNotModified();
 }

@@ -33,11 +33,12 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
     protected function _initialize(ObjectConfig  $config)
     {
         $config->append(array(
-            'priority' => self::PRIORITY_LOW,
-            'cache'         => true,
-            'cache_private' => false,
-            'cache_time'         => 0, //must revalidate
-            'cache_time_shared'  => 0, //must revalidate proxy
+            'priority'              => self::PRIORITY_LOW,
+            'cache'                 => true,
+            'cache_time'            => 0, //must revalidate
+            'cache_time_shared'     => 0, //must revalidate proxy,
+            'cache_control'         => [],
+            'cache_control_private' => ['private'],
         ));
 
         parent::_initialize($config);
@@ -55,9 +56,26 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
     {
         parent::onMixin($mixer);
 
-        //Set max age default
-        if($this->isCacheable()) {
-            $this->getMixer()->getResponse()->setMaxAge($this->getConfig()->cache_time, $this->getConfig()->cache_time_shared);
+        if($this->isSupported())
+        {
+            $response = $mixer->getResponse();
+            $user     = $mixer->getUser();
+
+            //Reset cache control header (if caching enabled)
+            if(!$user->isAuthentic())
+            {
+                $cache_control = (array) ObjectConfig::unbox($this->getConfig()->cache_control);
+                $response->headers->set('Cache-Control', $cache_control, true);
+
+                $response->setMaxAge($this->getConfig()->cache_time, $this->getConfig()->cache_time_shared);
+            }
+            else
+            {
+                $cache_control = (array) ObjectConfig::unbox($this->getConfig()->cache_control_private);
+                $response->headers->set('Cache-Control', $cache_control, true);
+
+                $response->setMaxAge($this->getConfig()->cache_time);
+            }
         }
     }
 
@@ -68,7 +86,7 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
      */
     public function isSupported()
     {
-        return $this->isCacheable() ? parent::isSupported() : false;
+        return $this->getConfig()->cache ? parent::isSupported() : false;
     }
 
     /**
@@ -78,19 +96,7 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
      */
     public function isCacheable()
     {
-        $request = $this->getRequest();
-
-        $cacheable = false;
-        if($request->isCacheable() && $this->getConfig()->cache)
-        {
-            $cacheable = true;
-
-            if(!$this->getConfig()->cache_private && $this->getUser()->isAuthentic()) {
-                $cacheable = false;
-            }
-        }
-
-        return $cacheable;
+        return $this->getRequest()->isCacheable() && $this->getConfig()->cache;
     }
 
     /**
@@ -105,41 +111,16 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
      */
     protected function _beforeSend(DispatcherContextInterface $context)
     {
-        $response = $context->getResponse();
-        $request  = $context->getRequest();
+        $response = $context->response;
 
-        if($this->isCacheable())
-        {
-            $response->headers->set('Cache-Control', $this->_getCacheControl());
-
-            //Set Validator
-            $response->setEtag($this->_getEtag(), !$response->isDownloadable());
+        ////Set Etag
+        if($this->isCacheable()) {
+            $response->setEtag($this->getHash(), !$response->isDownloadable());
         }
     }
 
     /**
-     * Get the cache control directives
-     *
-     * @link https://tools.ietf.org/html/rfc7234#page-21
-     *
-     * @return array
-     */
-    protected function _getCacheControl()
-    {
-        $response = $this->getResponse();
-        $cache    = $response->getCacheControl();
-
-        if($response->getUser()->isAuthentic()) {
-            $cache[] = 'private';
-        } else {
-            $cache[] = 'public';
-        }
-
-        return $cache;
-    }
-
-    /**
-     * Generate a response etag
+     * Generate a response hash
      *
      * For files returns a md5 hash of same format as Apache does. Eg "%ino-%size-%0mtime" using the file
      * info, otherwise return a crc32 digest the user identifier and response content
@@ -148,17 +129,17 @@ class DispatcherBehaviorCacheable extends DispatcherBehaviorAbstract
      *
      * @return string
      */
-    protected function _getEtag()
+    protected function getHash()
     {
         $response = $this->getResponse();
 
         if($response->isDownloadable())
         {
             $info = $response->getStream()->getInfo();
-            $etag = sprintf('"%x-%x-%s"', $info['ino'], $info['size'],base_convert(str_pad($info['mtime'],16,"0"),10,16));
+            $hash = sprintf('"%x-%x-%s"', $info['ino'], $info['size'],base_convert(str_pad($info['mtime'],16,"0"),10,16));
         }
-        else $etag = crc32($this->getUser()->getId().'/###'.$this->getResponse()->getContent());
+        else $hash = hash('crc32b', $response->getContent().$response->getFormat().$response->getUser()->getId());
 
-        return $etag;
+        return $hash;
     }
 }

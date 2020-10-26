@@ -192,20 +192,13 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
         }
 
         //Set cache-control header to most conservative value.
-        $cache_control = (array) $response->headers->get('Cache-Control', null, false);
-        if (empty($cache_control) || !$request->isCacheable()) {
-            $response->headers->set('Cache-Control', array('private', 'no-cache', 'no-store'));
+        if (!$request->isCacheable()) {
+            $response->headers->set('Cache-Control', array('no-store'));
         }
 
-        //Validate the response if it's cacheable and a request etag if defined
-        if($response->isCacheable() && !$response->isStale())
-        {
-            if ($etags = $request->getEtags())
-            {
-                if(in_array($response->getEtag(), $etags) || in_array('*', $etags)) {
-                    $response->setStatus(HttpResponse::NOT_MODIFIED);
-                }
-            }
+        //Validate the response
+        if($response->isNotModified()) {
+            $response->setStatus(HttpResponse::NOT_MODIFIED);
         }
 
         //Modifies the response so that it conforms to the rules defined for a 304 status code.
@@ -213,18 +206,20 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
         {
             $headers = array(
                 'Allow',
+                'Age',
                 'Content-Encoding',
                 'Content-Language',
                 'Content-Length',
-                'Content-MD5',
                 'Content-Type',
-                'Last-Modified'
             );
 
             //Remove headers that MUST NOT be included with 304 Not Modified responses
             foreach ($headers as $header) {
                 $response->headers->remove($header);
             }
+
+            //Reset the date if the response has been succesfully validated
+            $response->setDate(new DateTime('now'));
         }
 
         //Modifies the response so that it conforms to the rules defined for a 401 status code.
@@ -242,6 +237,13 @@ class DispatcherResponseTransportHttp extends DispatcherResponseTransportAbstrac
         // @link : http://support.microsoft.com/default.aspx?scid=KB;EN-US;q316431
         if ($request->isSecure() && preg_match('#(?:MSIE |Internet Explorer/)(?:[0-9.]+)#', $request->getAgent())) {
             $response->headers->set('Cache-Control', '');
+        }
+
+        //Add request time in seconds
+        if($start = $response->getRequest()->getTime())
+        {
+            $time  = (microtime(true) - $start) * 1000;
+            $response->headers->set('Server-Timing', 'tot;desc="Total";dur='.(int) $time);
         }
 
         //Send headers and content

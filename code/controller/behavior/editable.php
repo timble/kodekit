@@ -25,6 +25,13 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
     protected $_cookie_path;
 
     /**
+     * Referrer lock status
+     *
+     * @var boolean
+     */
+    protected $_referrer_locked = false;
+
+    /**
      * The cookie name
      *
      * @var string
@@ -115,7 +122,7 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
      */
     public function setReferrer(ControllerContextModel $context)
     {
-        if (!$context->request->cookies->has($this->_cookie_name.'_locked'))
+        if (!$this->_isReferrerLocked() && !$context->request->cookies->has($this->_cookie_name.'_locked'))
         {
             $request  = $context->request->getUrl();
             $referrer = $context->request->getReferrer();
@@ -171,6 +178,8 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
         ));
 
         $context->response->headers->addCookie($cookie);
+
+        $this->_setReferrerLocked(true);
     }
 
     /**
@@ -181,7 +190,37 @@ class ControllerBehaviorEditable extends ControllerBehaviorAbstract
      */
     protected function _unlockReferrer(ControllerContextModel $context)
     {
-        $context->response->headers->clearCookie($this->_cookie_name.'_locked', $this->_cookie_path);
+        if (!$this->_isReferrerLocked()) {
+            $context->response->headers->clearCookie($this->_cookie_name.'_locked', $this->_cookie_path);
+        }
+    }
+
+    /**
+     * Sets referrer lock for the request
+     *
+     * Dispatcher::_actionPost action calls Controller::_actionRender which in turn calls Controller::_actionRead
+     * before sending results. This leads to referrer being locked and unlocked in the same request.
+     *
+     * If referrer lock is set to true, we know that the lock happened in this request, so it is not unlocked yet.
+     *
+     * @param bool $locked
+     * @return $this
+     */
+    protected function _setReferrerLocked($locked)
+    {
+        $this->_referrer_locked = $locked;
+
+        return $this;
+    }
+
+    /**
+     * Checks to see if the referrer has been locked during this request
+     *
+     * @return bool
+     */
+    protected function _isReferrerLocked()
+    {
+        return $this->_referrer_locked;
     }
 
     /**
