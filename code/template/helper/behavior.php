@@ -9,6 +9,8 @@
 
 namespace Kodekit\Library;
 
+use Composer\Installer\LibraryInstaller;
+
 /**
  * Behavior Template Helper
  *
@@ -72,7 +74,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!static::isLoaded('kodekit'))
         {
             $html .= $this->jquery($config);
-            $html .= '<ktml:script src="assets://js/kodekit'.($config->debug ? '' : '.min').'.js" />';
+            $html .= $this->buildElement('ktml:script', ['src' => 'assets://js/kodekit'.($config->debug ? '' : '.min').'.js']);
 
             static::setLoaded('kodekit');
         }
@@ -99,7 +101,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('vue'))
         {
-            $html .= '<ktml:script src="assets://js/vue'.($config->debug ? '' : '.min').'.js" />';
+            $html .= $this->buildElement('ktml:script', ['src' => 'assets://js/vue'.($config->debug ? '' : '.min').'.js']);
 
             static::setLoaded('vue');
         }
@@ -112,20 +114,16 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             $entity['_name']  = StringInflector::singularize($config->entity->getIdentifier()->name);
 
             $html .= $this->kodekit($config);
-            $html .= "
-            <script>
-                kQuery(function($) {
-                    var form = $('.k-js-form-controller');
-                    
-                    if (form.length) {
-                        form.data('controller').store = Kodekit.EntityStore.create({
-                            form: form,
-                            entity: ".json_encode($entity)."
-                        });
-                    }
-                });
-            </script>
-";
+            $html .= $this->_onDomReady("
+                var form = $('.k-js-form-controller');
+                
+                if (form.length) {
+                    form.data('controller').store = Kodekit.EntityStore.create({
+                        form: form,
+                        entity: ".json_encode($entity)."
+                    });
+                }
+            ");
         }
 
         return $html;
@@ -148,7 +146,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('modernizr'))
         {
-            $html = '<ktml:script src="assets://js/modernizr'.($config->debug ? '' : '.min').'.js" />';
+            $html .= $this->buildElement('ktml:script', ['src' => 'assets://js/modernizr'.($config->debug ? '' : '.min').'.js']);
 
             static::setLoaded('modernizr');
         }
@@ -167,8 +165,8 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('debugger'))
         {
-            $html = '<ktml:script src="assets://js/debugger'.($config->debug ? '' : '.min').'.js" />';
-            $html = '<ktml:style src="assets://css/debugger'.($config->debug ? '' : '.min').'.css" />';
+            $html .= $this->buildElement('ktml:script', ['src' => 'assets://js/debugger'.($config->debug ? '' : '.min').'.js']);
+            $html .= $this->buildElement('ktml:style', ['src' => 'assets://css/debugger'.($config->debug ? '' : '.min').'.css']);
 
             static::setLoaded('debugger');
         }
@@ -197,7 +195,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
         if (!static::isLoaded('jquery'))
         {
-            $html .= '<ktml:script src="assets://js/jquery'.($config->debug ? '' : '.min').'.js" />';
+            $html .= $this->buildElement('ktml:script', ['src' => 'assets://js/jquery'.($config->debug ? '' : '.min').'.js']);
 
             static::setLoaded('jquery');
         }
@@ -225,14 +223,14 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if ($config->javascript && !static::isLoaded('bootstrap-javascript'))
         {
             $html .= $this->jquery($config);
-            $html .= '<ktml:script src="assets://js/bootstrap'.($config->debug ? '' : '.min').'.js" />';
+            $html .= $this->buildElement('ktml:script', ['src' => 'assets://js/bootstrap'.($config->debug ? '' : '.min').'.js']);
 
             static::setLoaded('bootstrap-javascript');
         }
 
         if ($config->css && !static::isLoaded('bootstrap-css'))
         {
-            $html .= '<ktml:style src="assets://css/bootstrap'.($config->debug ? '' : '.min').'.css" />';
+            $html .= $this->buildElement('ktml:style', ['src' => 'assets://css/bootstrap'.($config->debug ? '' : '.min').'.css']);
 
             static::setLoaded('bootstrap-css');
         }
@@ -262,31 +260,25 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if(!static::isLoaded('modal'))
         {
             $html .= $this->jquery($config);
-            $html .= '<ktml:script src="assets://js/jquery.magnific-popup'.($config->debug ? '' : '.min').'.js" />';
+            $html .= $this->buildElement('ktml:script', ['src' => 'assets://js/jquery.magnific-popup'.($config->debug ? '' : '.min').'.js']);
 
             static::setLoaded('modal');
         }
 
         if(!static::isLoaded('modal-select2-fix'))
         {
-            $html .= "<script>
-
-                // WORKAROUND FOR ISSUE: #873
-
-                kQuery(function($)
+            // WORKAROUND FOR ISSUE: #873
+            $html .= $this->_onDomReady("
+                $.magnificPopup.instance._onFocusIn = function(e)
                 {
-                    $.magnificPopup.instance._onFocusIn = function(e)
-                    {
-                        // Do nothing if target element is select2 input
-                        if( $(e.target).hasClass('select2-search__field') ) {
-                            return true;
-                        }
-            
-                        // Else call parent method
-                        $.magnificPopup.proto._onFocusIn.call(this,e);
-                    };
-                });
-            </script>";
+                    // Do nothing if target element is select2 input
+                    if( $(e.target).hasClass('select2-search__field') ) {
+                        return true;
+                    }
+        
+                    // Else call parent method
+                    $.magnificPopup.proto._onFocusIn.call(this,e);
+                };");
 
             static::setLoaded('modal-select2-fix');
         }
@@ -300,8 +292,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 $options = $config->options_callback.'('.$options.')';
             }
 
-            $html .= "<script>
-            kQuery(function($){
+            $html .= $this->_onDomReady("
                 $('$config->selector').each(function(idx, el) {
                     var el = $(el);
                     var data = el.data('$config->data');
@@ -310,9 +301,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                         $.extend(true, options, data);
                     }
                     el.magnificPopup(options);
-                });
-            });
-            </script>";
+                });");
 
             static::setLoaded($signature);
         }
@@ -365,8 +354,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
 
             // Build the keep alive script.
             $html  = $this->jquery($config);
-            $html .=
-                "<script>
+            $html .= $this->buildElement('script', [], "
                 (function($){
                     var refresh = '" . $refresh . "';
                     setInterval(function() {
@@ -376,7 +364,8 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                             cache: false
                         })
                     }, refresh * 1000);
-                })(kQuery);</script>";
+                })(kQuery);
+            ");
 
             static::setLoaded('keepalive');
         }
@@ -407,7 +396,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if(!static::isLoaded('validator'))
         {
             $html .= $this->kodekit();
-            $html .= '<ktml:script src="assets://js/jquery.validate'.($config->debug ? '' : '.min').'.js" />';
+            $html .= $this->buildElement('ktml:script', ['src' => 'assets://js/jquery.validate'.($config->debug ? '' : '.min').'.js']);
 
             static::setLoaded('validator');
         }
@@ -421,15 +410,12 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 $options = $config->options_callback.'('.$options.')';
             }
 
-            $html .= "<script>
-            kQuery(function($){
+            $html .= $this->_onDomReady("
                 $('$config->selector').on('k:validate', function(event){
                     if(!$(this).valid() || $(this).validate().pendingRequest !== 0) {
                         event.preventDefault();
                     }
-                }).validate($options);
-            });
-            </script>";
+                }).validate($options);");
 
             static::setLoaded($signature);
         }
@@ -464,7 +450,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!static::isLoaded('select2'))
         {
             $html .= $this->jquery($config);
-            $html .= '<ktml:script src="assets://js/kodekit.select2'.($config->debug ? '' : '.min').'.js" />';
+            $html .= $this->buildElement('ktml:script', ['src' => 'assets://js/kodekit.select2'.($config->debug ? '' : '.min').'.js']);
 
             static::setLoaded('select2');
         }
@@ -599,7 +585,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         if (!static::isLoaded('tree'))
         {
             $html .= $this->kodekit();
-            $html .= '<ktml:script src="assets://js/kodekit.tree'.($config->debug ? '' : '.min').'.js" />';
+            $html .= $this->buildElement('ktml:script', ['src' => 'assets://js/kodekit.tree'.($config->debug ? '' : '.min').'.js']);
 
             static::setLoaded('tree');
         }
@@ -680,7 +666,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         // Load Bootstrap with JS plugins.
         if(!static::isLoaded('tooltip'))
         {
-            $html .= '<ktml:script src="assets://js/tooltip'.($config->debug ? '' : '.min').'.js" />';
+            $html .= $this->buildElement('ktml:script', ['src' => 'assets://js/tooltip'.($config->debug ? '' : '.min').'.js']);
 
             static::setLoaded('tooltip');
         }
@@ -777,15 +763,17 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         $attribs = $this->buildAttributes($config->attribs);
         $value   = StringEscaper::attr($config->value);
 
+        $html = '';
         if ($config->attribs->readonly === 'readonly' || $config->attribs->disabled === 'disabled')
         {
-            $html  = '<div>';
-            $html .= '<input type="text" name="'.$config->name.'" id="'.$config->id.'" value="'.$value.'" '.$attribs.' />';
-            $html .= '</div>';
+            $input = $this->buildElement('input', array_merge([
+                'type' => 'text', 'name' => $config->name, 'id' => $config->id, 'value' => $value,
+            ], ObjectConfig::unbox($config->attribs)));
+            $html .= $this->buildElement('div', [], $input);
         }
         else
         {
-            $html = $this->_loadCalendarScripts($config);
+            $html .= $this->_loadCalendarScripts($config);
 
             if (!isset(self::$_loaded['calendar-triggers'])) {
                 self::$_loaded['calendar-triggers'] = array();
@@ -825,15 +813,21 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
                 $config->format
             );
 
-            $html .= '<div class="k-input-group date" data-date-format="'.$format.'" id="'.$config->id.'">';
-            $html .= '<input class="k-form-control" type="text" name="'.$config->name.'" value="'.$value.'"  '.$attribs.' />';
-            $html .= '<span class="k-input-group__button input-group-btn">';
-            $html .= '<button type="button" class="k-button k-button--default     btn     ">';
-            $html .= '<span class="k-icon-calendar" aria-hidden="true"></span>';
-            $html .= '<span class="k-visually-hidden">calendar</span>';
-            $html .= '</button>';
-            $html .= '</span>';
-            $html .= '</div>';
+            $input = $this->buildElement('input', array_merge([
+                'class' => 'k-form-control', 'type' => 'text', 'name' => $config->name, 'value' => $value,
+            ], ObjectConfig::unbox($config->attribs)));
+            $input .= '
+            <span class="k-input-group__button input-group-btn">
+                <button type="button" class="k-button k-button--default btn">
+                    <span class="k-icon-calendar" aria-hidden="true"></span>
+                    <span class="k-visually-hidden">calendar</span>
+                </button>
+            </span>
+            ';
+
+            $html .= $this->buildElement('div', [
+                'class' => 'k-input-group date', 'data-date-format' => $format, 'id' => $config->id
+            ], $input);
         }
 
         return $html;
@@ -872,11 +866,10 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             $locale['clear']     = $translator->translate('Clear');
             $locale['weekStart'] = $config->first_week_day;
 
-            $html .= '<script>
+            $html .= $this->buildElement('script', [], '
             (function($){
                 $.fn.kdatepicker.dates['.json_encode($config->options->language).'] = '.json_encode($locale).';
-            }(kQuery));
-            </script>';
+            }(kQuery));');
 
             static::setLoaded('calendar-locale');
         }
@@ -902,8 +895,15 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
         $html = '';
 
         if (!static::isLoaded('alpine')) {
-            $html .= '<ktml:script src="assets://js/alpine'.($config->debug ? '' : '.min').'.js" type="module"  />';
-            $html .= '<ktml:script src="assets://js/alpine.ie11'.($config->debug ? '' : '.min').'.js" nomodule defer />';
+            $html .= $this->buildElement('ktml:script', [
+                'src' => 'assets://js/alpine'.($config->debug ? '' : '.min').'.js',
+                'type' => 'module'
+            ]);
+            $html .= $this->buildElement('ktml:script', [
+                'src' => 'assets://js/alpine.ie11'.($config->debug ? '' : '.min').'.js',
+                'nomodule' => true,
+                'defer' => true
+            ]);
 
             static::setLoaded('folikit.alpine');
         }

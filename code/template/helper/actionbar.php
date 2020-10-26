@@ -50,7 +50,7 @@ class TemplateHelperActionbar extends TemplateHelperToolbar
             }
 
             if (!empty($html)) {
-                $html = '<div '.$this->buildAttributes($config->attribs).'>'.$html.'</div>';
+                $html = $this->buildElement('div', $config->attribs, $html);
             }
         }
 
@@ -109,15 +109,10 @@ class TemplateHelperActionbar extends TemplateHelperToolbar
         $attribs = clone $config->attribs;
         $attribs->class = implode(" ", ObjectConfig::unbox($attribs->class));
 
-        $html = '<a '.$this->buildAttributes($attribs).'>';
-
-        $html .= '<span class="'.$config->icon.'" aria-hidden="true"></span> ';
-        $html .= '<span class="k-button__text">';
-        $html .= $translator->translate($config->label);
-        $html .= '</span>';
-        $html .= '</a>';
-
-        return $html;
+        return $this->buildElement('a', $attribs,
+            $this->buildElement('span', ['class' => $config->icon, 'aria-hidden' => true])
+            . ' '.$this->buildElement('span', ['class' => 'k-button__text'], $translator->translate($config->label))
+        );
     }
 
     /**

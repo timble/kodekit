@@ -93,7 +93,7 @@ class TemplateFilterForm extends TemplateFilterAbstract
     {
         if (!empty($this->_token_value))
         {
-            $string = '<meta content="'.$this->_token_value.'" name="csrf-token" />';
+            $string = $this->buildElement('meta', ['content' => $this->_token_value, 'name' => 'csrf-token']);
             if (stripos($text, $string) === false) {
                 $text = $string.$text;
             }
@@ -136,7 +136,7 @@ class TemplateFilterForm extends TemplateFilterAbstract
         {
             // POST: Add token
             $text    = preg_replace('#(<\s*form[^>]+method="post"[^>]*>)#si',
-                '\1'.PHP_EOL.'<input type="hidden" name="'.$this->_token_name.'" value="'.$this->_token_value.'" />',
+                '\1'.PHP_EOL.$this->buildElement('input', ['type' => 'hidden', 'name' => $this->_token_name, 'value' => $this->_token_value]),
                 $text
             );
 
@@ -194,14 +194,13 @@ class TemplateFilterForm extends TemplateFilterAbstract
                             }
 
                             $v = StringEscaper::attr($v);
-
-                            $input .= PHP_EOL.'<input type="hidden" name="'.$name.'" value="'.$v.'" />';
+                            $input .= PHP_EOL.$this->buildElement('input', ['type' => 'hidden', 'name' => $name, 'value' => $v]);
                         }
                     }
                     else
                     {
                         $value  = StringEscaper::attr($value);
-                        $input .= PHP_EOL.'<input type="hidden" name="'.$name.'" value="'.$value.'" />';
+                        $input .= PHP_EOL.$this->buildElement('input', ['type' => 'hidden', 'name' => $name, 'value' => $value]);
                     }
                 }
 

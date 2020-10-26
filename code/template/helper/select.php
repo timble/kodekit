@@ -110,30 +110,27 @@ class TemplateHelperSelect extends TemplateHelperAbstract implements TemplateHel
             'attribs'   => array('size' => 1),
         ));
 
-        $html = array();
+        $config->attribs['name'] = $config->name;
 
-        $html[] = '<select name="'. $config->name .'" '. $this->buildAttributes($config->attribs) .'>';
+        $translator = $this->getObject('translator');
+
+        $html = [];
+        $groupHtml = [];
 
         foreach($config->options as $group => $options)
         {
             if (is_numeric($group)) {
                 $options = array($options);
-            } else {
-                $html[] = '<optgroup label="' . StringEscaper::attr($group) . '">';
             }
 
             foreach ($options as $option)
             {
+                $optionAttribs = isset($option->attribs) ? $option->attribs : [];
                 $value = $option->value;
-                $label = $config->translate ? $this->getObject('translator')->translate( $option->label ) : $option->label;
+                $label = $config->translate ? $translator->translate( $option->label ) : $option->label;
 
-                $extra = '';
                 if(isset($option->disabled) && $option->disabled) {
-                    $extra .= 'disabled="disabled"';
-                }
-
-                if(isset($option->attribs)) {
-                    $extra .= ' '.$this->buildAttributes($option->attribs);
+                    $optionAttribs['disabled'] = true;
                 }
 
                 if(!is_null($config->selected))
@@ -145,25 +142,30 @@ class TemplateHelperSelect extends TemplateHelperAbstract implements TemplateHel
                             $sel = is_object($selected) ? $selected->value : $selected;
                             if ((string) $value == (string) $sel)
                             {
-                                $extra .= 'selected="selected"';
+                                $optionAttribs['selected'] = true;
                                 break;
                             }
                         }
                     }
-                    else $extra .= ((string) $value == (string) $config->selected ? ' selected="selected"' : '');
+                    elseif ((string) $value == (string) $config->selected) {
+                        $optionAttribs['selected'] = true;
+                    }
                 }
 
-                $html[] = '<option value="'. $value .'" '.$extra.'>' . $label . '</option>';
+                $optionAttribs['value'] = $value;
+
+                $groupHtml[] = $this->buildElement('option', $optionAttribs, $label);
             }
 
             if (!is_numeric($group)) {
-                $html[] = '</optgroup>';
+                $html[] = $this->buildElement('optgroup', ['label' => StringEscaper::attr($group)], $groupHtml);
+                $groupHtml = [];
             }
         }
 
-        $html[] = '</select>';
+        $html = array_merge($html, $groupHtml);
 
-        return implode(PHP_EOL, $html);
+        return $this->buildElement('select', $config->attribs, $html);
     }
 
     /**
@@ -184,40 +186,42 @@ class TemplateHelperSelect extends TemplateHelperAbstract implements TemplateHel
             'attribs'	=> array(),
         ));
 
-        $translator = $this->getObject('translator');
-        $attribs    = $this->buildAttributes($config->attribs);
+        $config->attribs['name'] = $config->name;
 
-        $html   = array();
-        $html[] = '<fieldset  name="'. $config->name .'" '. $attribs .'>';
+        $translator = $this->getObject('translator');
+
+        $html = [];
 
         if(isset($config->legend)) {
-            $html[] = '<legend>'.$config->translate ? $translator->translate( $config->legend ) : $config->legend.'</legend>';
+            $legend = $config->translate ? $translator->translate( $config->legend ) : $config->legend;
+            $html[] = $this->buildElement('legend', [], $legend);
         }
 
         foreach($config->options as $option)
         {
             $value = $option->value;
-            $label = $config->translate ? $translator->translate( $option->label ) : $option->label;
+            $optionAttribs = isset($option->attribs) ? $option->attribs : [];
 
-            $extra = ($value == $config->selected ? 'checked="checked"' : '');
+            if ($value == $config->selected) {
+                $optionAttribs['checked'] = true;
+            }
 
             if(isset($option->disabled) && $option->disabled) {
-                $extra .= 'disabled="disabled"';
+                $optionAttribs['disabled'] = true;
             }
 
-            if(isset($option->attribs)) {
-                $attribs = $this->buildAttributes($option->attribs);
-            }
+            $optionAttribs['type'] = 'radio';
+            $optionAttribs['name'] = $config->name.'[]';
+            $optionAttribs['id'] = $config->name.$option->id;
+            $optionAttribs['value'] = $value;
 
-            $html[] = '<label class="radio" for="'.$config->name.$option->id.'">';
-            $html[] = '<input type="radio" name="'.$config->name.'" id="'.$config->name.$option->id.'" value="'.$value.'" '.$extra.' '.$attribs.' />';
-            $html[] = $label;
-            $html[] = '</label>';
+            $html[] = $this->buildElement('label', ['class' => 'radio', 'for' => $option->name.$option->id],
+                $this->buildElement('input', $optionAttribs)
+                . $config->translate ? $translator->translate( $option->label ) : $option->label
+            );
         }
 
-        $html[] = '</fieldset>';
-
-        return implode(PHP_EOL, $html);
+        return $this->buildElement('fieldset', $config->attribs, $html);
     }
 
     /**
@@ -238,23 +242,21 @@ class TemplateHelperSelect extends TemplateHelperAbstract implements TemplateHel
             'attribs'	=> array(),
         ));
 
+        $config->attribs['name'] = $config->name;
+
         $translator = $this->getObject('translator');
-        $attribs    = $this->buildAttributes($config->attribs);
 
-        $html = array();
-
-        $html[] = '<fieldset  name="'. $config->name .'" '. $attribs .'>';
+        $html = [];
 
         if(isset($config->legend)) {
-            $html[] = '<legend>'.$config->translate ? $translator->translate( $config->legend ) : $config->legend.'</legend>';
+            $legend = $config->translate ? $translator->translate( $config->legend ) : $config->legend;
+            $html[] = $this->buildElement('legend', [], $legend);
         }
 
         foreach($config->options as $option)
         {
             $value = $option->value;
-            $label = $config->translate ? $translator->translate( $option->label ) : $option->label;
-
-            $extra = '';
+            $optionAttribs = isset($option->attribs) ? $option->attribs : [];
 
             if ($config->selected instanceof ObjectConfig)
             {
@@ -263,30 +265,31 @@ class TemplateHelperSelect extends TemplateHelperAbstract implements TemplateHel
                     $selected = is_object( $selected ) ? $selected->{$config->value} : $selected;
                     if ($value == $selected)
                     {
-                        $extra .= 'checked="checked"';
+                        $optionAttribs['checked'] = true;
                         break;
                     }
                 }
             }
-            else $extra .= ($value == $config->selected) ? 'checked="checked"' : '';
+            elseif ($value == $config->selected) {
+                $optionAttribs['checked'] = true;
+            }
 
             if(isset($option->disabled) && $option->disabled) {
-                $extra .= 'disabled="disabled"';
+                $optionAttribs['disabled'] = true;
             }
 
-            if(isset($option->attribs)) {
-                $attribs = $this->buildAttributes($option->attribs);
-            }
+            $optionAttribs['type'] = 'checkbox';
+            $optionAttribs['name'] = $config->name.'[]';
+            $optionAttribs['id'] = $config->name.$option->id;
+            $optionAttribs['value'] = $value;
 
-            $html[] = '<label class="checkbox" for="'.$option->name.$option->id.'">';
-            $html[] = '<input type="checkbox" name="'.$option->name.'[]" id="'.$option->name.$option->id.'" value="'.$value.'" '.$extra.' '.$attribs.' />';
-            $html[] = $label;
-            $html[] = '</label>';
+            $html[] = $this->buildElement('label', ['class' => 'checkbox', 'for' => $config->name.$option->id],
+                $this->buildElement('input', $optionAttribs)
+                . $config->translate ? $translator->translate( $option->label ) : $option->label
+            );
         }
 
-        $html[] = '</fieldset>';
-
-        return implode(PHP_EOL, $html);
+        return $this->buildElement('fieldset', $config->attribs, $html);
     }
 
 	/**
@@ -310,29 +313,27 @@ class TemplateHelperSelect extends TemplateHelperAbstract implements TemplateHel
         ));
 
         $name    = $config->name;
-        $attribs = $this->buildAttributes($config->attribs);
+        $attribs = ObjectConfig::unbox($config->attribs);
+        $text1   = $config->translate ? $translator->translate( $config->true ) : $config->true;
+        $text0   = $config->translate ? $translator->translate( $config->false ) : $config->false;
 
-        $html  = array();
+        $input_attribs = array_merge(['type' => 'radio', 'name' => $name], $attribs);
 
-        $html[] = '<div class="k-optionlist k-optionlist--boolean">';
-        $html[] = '<div class="k-optionlist__content">';
+        $input1 = $this->buildElement('input', array_merge($input_attribs, [
+            'id' => $name.'1', 'value' => '1', 'checked' => $config->selected
+        ]));
+        $input0 = $this->buildElement('input', array_merge($input_attribs, [
+            'id' => $name.'0', 'value' => '0', 'checked' => !$config->selected
+        ]));
 
-        $extra = $config->selected ? 'checked="checked"' : '';
-        $text  = $config->translate ? $translator->translate( $config->true ) : $config->true;
-
-        $html[] = '<input type="radio" name="'.$name.'" id="'.$name.'1" value="1" '.$extra.' '.$attribs.' />';
-        $html[] = '<label for="'.$name.'1"><span>'.$text.'</span></label>';
-
-        $extra = !$config->selected ? 'checked="checked"' : '';
-        $text  = $config->translate ? $translator->translate( $config->false ) : $config->false;
-
-        $html[] = '<input type="radio" name="'.$name.'" id="'.$name.'0" value="0" '.$extra.' '.$attribs.' />';
-        $html[] = '<label for="'.$name.'0"><span>'.$text.'</span></label>';
-
-        $html[] = '<div class="k-optionlist__focus"></div>';
-        $html[] = '</div>';
-        $html[] = '</div>';
-
-        return implode(PHP_EOL, $html);
+        return $this->buildElement('div', ['class' => 'k-optionlist k-optionlist--boolean'],
+            $this->buildElement('div', ['class' => 'k-optionlist__content'],
+                $input1
+                . $this->buildElement('label', ['for' => $name.'1'], $this->buildElement('span', [], $text1))
+                . $input0
+                . $this->buildElement('label', ['for' => $name.'0'], $this->buildElement('span', [], $text0))
+                . $this->buildElement('div', ['class' => 'k-optionlist__focus'])
+            )
+        );
     }
 }

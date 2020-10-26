@@ -34,20 +34,23 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
         if($config->entity->isLockable() && $config->entity->isLocked())
         {
             $html = $this->createHelper('behavior')->tooltip();
-            $html .= '<span class="k-icon-lock-locked"
-                            data-k-tooltip
-                            title="'.$this->creaateHelper('grid')->lock_message(array('entity' => $config->entity)).'">
-                    </span>';
+            $html .= $this->buildElement('span', [
+                'class' => 'k-icon-lock-locked',
+                'data-k-tooltip' => true,
+                'title' => $this->creaateHelper('grid')->lock_message(array('entity' => $config->entity))
+            ]);
         }
         else
         {
             $column = $config->entity->getIdentityColumn();
             $value  = StringEscaper::attr($config->entity->{$column});
 
-            $attribs = $this->buildAttributes($config->attribs);
-
-            $html = '<input type="radio" class="k-js-grid-checkbox" name="%s[]" value="%s" %s />';
-            $html = sprintf($html, $column, $value, $attribs);
+            $html = $this->buildElement('input', array_merge([
+                'type' => 'radio',
+                'class' => 'k-js-grid-checkbox',
+                'name'  => $column.'[]',
+                'value' => $value,
+            ], ObjectConfig::unbox($config->attribs)));
         }
 
         return $html;
@@ -71,20 +74,24 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
         if($config->entity->isLockable() && $config->entity->isLocked())
         {
             $html = $this->createHelper('behavior')->tooltip();
-            $html .= '<span class="k-icon-lock-locked"
-                            data-k-tooltip
-                            title="'.$this->createHelper('grid')->lock_message(array('entity' => $config->entity)).'">
-                    </span>';
+
+            $html .= $this->buildElement('span', [
+                'class' => 'k-icon-lock-locked',
+                'data-k-tooltip' => true,
+                'title' => $this->creaateHelper('grid')->lock_message(array('entity' => $config->entity))
+            ]);
         }
         else
         {
             $column = $config->column;
             $value  = StringEscaper::attr($config->entity->{$column});
 
-            $attribs = $this->buildAttributes($config->attribs);
-
-            $html = '<input type="checkbox" class="k-js-grid-checkbox" name="%s[]" value="%s" %s />';
-            $html = sprintf($html, $column, $value, $attribs);
+            $html = $this->buildElement('input', array_merge([
+                'type' => 'checkbox',
+                'class' => 'k-js-grid-checkbox',
+                'name'  => $column.'[]',
+                'value' => $value,
+            ], ObjectConfig::unbox($config->attribs)));
         }
 
         return $html;
@@ -196,8 +203,7 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
      */
     public function checkall($config = array())
     {
-        $html = '<input type="checkbox" class="k-js-grid-checkall" />';
-        return $html;
+        return $this->buildElement('input', ['type' => 'checkbox', 'class' => 'k-js-grid-checkall']);
     }
 
     /**
@@ -241,17 +247,20 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
         $config->url->query['sort']      = $config->column;
         $config->url->query['direction'] = $direction;
 
-        $html  = '<a href="'.$config->url.'" data-k-tooltip=\'{"container":".k-ui-container","delay":{"show":500,"hide":50}}\' data-original-title="'.$translator->translate('Click to sort by this column').'">';
-        $html .= $translator->translate($config->title);
+        $link = $translator->translate($config->title);
 
         if ($config->column == $config->sort)
         {
             $direction = $direction == 'desc' ? 'descending' : 'ascending'; // toggle
-            $html .= '<span class="k-sort-'.$direction.'" aria-hidden="true"></span>';
-            $html .= '<span class="k-visually-hidden">'.$direction.'</span>';
+            $link .= $this->buildElement('span', ['class' => 'k-sort-'.$direction, 'aria-hidden' => true]);
+            $link .= $this->buildElement('span', ['class' => 'k-visually-hidden'], $direction);
         }
 
-        $html .= '</a>';
+        $html = $this->buildElement('a', [
+            'href' => $config->url,
+            'data-k-tooltip' => htmlentities('{"container":".k-ui-container","delay":{"show":500,"hide":50}}'),
+            'data-original-title' => $translator->translate('Click to sort by this column')
+        ], $link);
 
         return $html;
     }
@@ -281,21 +290,23 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
             'icon'      => $config->enabled ? 'enabled' : 'disabled',
         ));
 
-        $class  = $config->enabled ? 'k-table__item--state-published' : 'k-table__item--state-unpublished';
-
-        $tooltip = '';
+        $class   = $config->enabled ? 'k-table__item--state-published' : 'k-table__item--state-unpublished';
+        $attribs = [
+            'class' => 'k-table__item--state '.$class,
+        ];
 
         if ($config->clickable)
         {
             $data    = htmlentities(json_encode($config->data->toArray()));
-            $tooltip = 'data-k-tooltip=\'{"container":".k-ui-container","delay":{"show":500,"hide":50}}\'
-            style="cursor: pointer"
-            data-action="edit" 
-            data-data="'.$data.'" 
-            data-original-title="'.$config->tooltip.'"';
+            $attribs = array_merge($attribs, [
+                'style' => 'cursor: pointer',
+                'data-data' => $data,
+                'data-action' => 'edit',
+                'data-k-tooltip' => htmlentities('{"container":".k-ui-container","delay":{"show":500,"hide":50}}'),
+                'data-original-title' => $config->tooltip]);
         }
 
-        $html = '<span class="k-table__item--state '.$class.'" '.$tooltip.'>'.$config->alt.'</span>';
+        $html = $this->buildElement('span', $attribs, $config->alt);
         $html .= $this->createHelper('behavior')->tooltip();
 
         return $html;

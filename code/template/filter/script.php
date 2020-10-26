@@ -94,18 +94,12 @@ class TemplateFilterScript extends TemplateFilterTag
 
         if(!$link)
         {
-            $attribs = $this->buildAttributes($attribs);
-
-            $script = '<script '.$attribs.'>'."\n";
-            $script .= trim($content);
-            $script .= '</script>'."\n";
+            $script = $this->buildElement('script', $attribs, trim($content));
         }
         else
         {
-            unset($attribs['src']);
-            $attribs = $this->buildAttributes($attribs);
-
-            $script = '<script src="'.$link.'" '.$attribs.'></script>'."\n";
+            $attribs['src'] = $link;
+            $script = $this->buildElement('script', $attribs);
         }
 
         if($condition)

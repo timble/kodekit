@@ -107,7 +107,7 @@ class TemplateFilterTitle extends TemplateFilterTag
             $content = StringEscaper::html($content);
         }
 
-        $html = '<title '.$attribs.'>'.$content.'</title>'."\n";
+        $html = $this->buildElement('title', $attribs, $content)."\n";
         return $html;
     }
 }
