@@ -158,6 +158,7 @@ abstract class UserAbstract extends ObjectAbstract implements UserInterface
     /**
      * Checks if the user has a role.
      *
+     * @param  mixed|array $role A role name or an array containing role names.
      * @param bool $strict If true, the user has to have all the provided roles, not just one
      * @return bool
      */
