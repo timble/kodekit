@@ -18,6 +18,26 @@ namespace Kodekit\Library;
 interface TemplateHelperInterface
 {
     /**
+     * Build an HTML element
+     *
+     * @param string $tag HTML tag name
+     * @param array  $attributes Key/Value pairs for the attributes
+     * @param string $children Child elements, not applicable for self-closing tags
+     * @return string
+     *
+     * Example:
+     * ```php
+     * echo $this->buildElement('a', ['href' => 'https://example.com/'], 'example link');
+     * // returns '<a href="https://example.com/">example link</a>
+     *
+     * echo $this->buildElement('meta', ['name' => 'foo', 'content' => 'bar']);
+     * // returns '<meta name="foo" content="bar" />
+     *
+     * ```
+     */
+    public function buildElement($tag, $attributes = [], $children = '');
+
+    /**
      * Method to build a string with xml style attributes from  an array of key/value pairs
      *
      * @param   mixed   $array The array of Key/Value pairs for the attributes

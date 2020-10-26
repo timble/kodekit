@@ -105,6 +105,47 @@ abstract class TemplateHelperAbstract extends ObjectAbstract implements Template
     }
 
     /**
+     * Build an HTML element
+     *
+     * @param string $tag HTML tag name
+     * @param array  $attributes Key/Value pairs for the attributes
+     * @param string $children Child elements, not applicable for self-closing tags
+     * @return string
+     *
+     * Example:
+     * ```php
+     * echo $this->buildElement('a', ['href' => 'https://example.com/'], 'example link');
+     * // returns '<a href="https://example.com/">example link</a>
+     *
+     * echo $this->buildElement('meta', ['name' => 'foo', 'content' => 'bar']);
+     * // returns '<meta name="foo" content="bar" />
+     *
+     * ```
+     */
+    public function buildElement($tag, $attributes = [], $children = '')
+    {
+        static $self_closing_tags = [
+            'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link',
+            'meta', 'param', 'source', 'track', 'wbr',
+            'ktml:script', 'ktml:style', 'ktml:include', 'ktml:content', 'ktml:toolbar', 'ktml:wrapper',
+        ];
+
+        $attribs = $this->buildAttributes($attributes);
+        $attribs = $attribs ? ' '.$attribs : '';
+        $tag     = strtolower($tag);
+
+        if (in_array($tag, $self_closing_tags)) {
+            return "<$tag$attribs />";
+        } else {
+            if (is_array($children)) {
+                $children = implode("\n", $children);
+            }
+
+            return "<$tag$attribs>$children</$tag>";
+        }
+    }
+
+    /**
      * Build a string with xml style attributes from  an array of key/value pairs
      *
      * @param   mixed   $array The array of Key/Value pairs for the attributes
