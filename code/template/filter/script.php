@@ -110,6 +110,6 @@ class TemplateFilterScript extends TemplateFilterTag
         }
         else $html = $script;
 
-        return $html;
+        return $html."\n";
     }
 }

@@ -95,6 +95,6 @@ class TemplateFilterStyle extends TemplateFilterTag
         }
         else $html = $style;
 
-        return $html;
+        return $html."\n";
     }
 }

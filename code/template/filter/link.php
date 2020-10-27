@@ -61,6 +61,6 @@ class TemplateFilterLink extends TemplateFilterTag
      */
     protected function _renderTag($attribs = array(), $content = null, TemplateInterface $template)
     {
-        return $this->buildElement('link', $attribs);
+        return $this->buildElement('link', $attribs)."\n";
     }
 }

@@ -60,6 +60,6 @@ class TemplateFilterMeta extends TemplateFilterTag
      */
     protected function _renderTag($attribs = array(), $content = null, TemplateInterface $template)
     {
-        return $this->buildElement('meta', $attribs);
+        return $this->buildElement('meta', $attribs)."\n";
     }
 }
