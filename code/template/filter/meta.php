@@ -31,7 +31,7 @@ class TemplateFilterMeta extends TemplateFilterTag
         $tags = '';
 
         $matches = array();
-        if(preg_match_all('#<meta\ content="([^"]+)"(.*)\/>#siU', $text, $matches))
+        if(preg_match_all('#<meta\ content="([^"]+)"(.*)\/*>#siU', $text, $matches))
         {
             foreach($matches[1] as $key => $match)
             {
