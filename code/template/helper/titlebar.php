@@ -48,10 +48,9 @@ class TemplateHelperTitlebar extends TemplateHelperToolbar
         {
             $mobile = ($config->mobile === '' || $config->mobile) ? 'k-title-bar--mobile' : '';
 
-            $html .= '
-            <div class="k-title-bar k-js-title-bar '.$mobile.'">
-                <div class="k-title-bar__heading">' . $title . '</div>
-            </div>';
+            $html .= $this->buildElement('div', [
+                'class' => 'k-title-bar k-js-title-bar '.$mobile
+            ], $this->buildElement('div', ['class' => 'k-title-bar__heading'], $title));
         }
 
         return $html;

@@ -77,18 +77,14 @@ class TemplateFilterStyle extends TemplateFilterTag
 
         if(!$link)
         {
-            $attribs = $this->buildAttributes($attribs);
-
-            $style  = '<style '.$attribs.'>'."\n";
-            $style .= trim($content);
-            $style .= '</style>'."\n";
+            $style = $this->buildElement('style', $attribs, trim($content));
         }
         else
         {
-            unset($attribs['src']);
-            $attribs = $this->buildAttributes($attribs);
+            $attribs['rel'] = 'stylesheet';
+            $attribs['href'] = $link;
 
-            $style = '<link rel="stylesheet" href="'.$link.'" '.$attribs.' />'."\n";
+            $style = $this->buildElement('link', $attribs);
         }
 
         if($condition)
@@ -99,6 +95,6 @@ class TemplateFilterStyle extends TemplateFilterTag
         }
         else $html = $style;
 
-        return $html;
+        return $html."\n";
     }
 }

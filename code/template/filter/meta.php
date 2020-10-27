@@ -31,7 +31,7 @@ class TemplateFilterMeta extends TemplateFilterTag
         $tags = '';
 
         $matches = array();
-        if(preg_match_all('#<meta\ content="([^"]+)"(.*)\/>#siU', $text, $matches))
+        if(preg_match_all('#<meta\ content="([^"]+)"(.*)\/*>#siU', $text, $matches))
         {
             foreach($matches[1] as $key => $match)
             {
@@ -60,9 +60,6 @@ class TemplateFilterMeta extends TemplateFilterTag
      */
     protected function _renderTag($attribs = array(), $content = null, TemplateInterface $template)
     {
-        $attribs = $this->buildAttributes($attribs);
-
-        $html = '<meta '.$attribs.' />'."\n";
-        return $html;
+        return $this->buildElement('meta', $attribs)."\n";
     }
 }

@@ -35,17 +35,15 @@ class TemplateHelperTranslator extends TemplateHelperAbstract
         }
 
         $html  = '';
-        $html .= $this->createHelper('behavior')->kodekit() .
-            "<script>
+        $html .= $this->createHelper('behavior')->kodekit();
+        $html .= $this->buildElement('script', [], "
             if(!Kodekit) {
                 var Kodekit = typeof Koowa !== 'undefined' ?  Koowa : {};
             }
             
             if (typeof Kodekit.translator === 'object' && Kodekit.translator !== null) {
                 Kodekit.translator.loadTranslations(".json_encode($translations).");
-            }
-            </script>
-            ";
+            }");
 
         return $html;
     }

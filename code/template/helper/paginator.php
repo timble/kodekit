@@ -41,31 +41,26 @@ class TemplateHelperPaginator extends TemplateHelperSelect
             'show_pages' => $config->count !== 1
         ));
 
-        $html = '<div class="k-pagination">';
+        $html = '';
 
         if($config->show_limit) {
-            $html .= '<div class="k-pagination__limit">'.$this->limit($config).'</div>';
+            $html .= $this->buildElement('div', ['class' => 'k-pagination__limit'], $this->limit($config));
         }
 
         if($config->show_pages) {
-            $html .= '<ul class="k-pagination__pages">';
-            $html .=  $this->pages($config);
-            $html .= '</ul>';
+            $html .= $this->buildElement('ul', ['class' => 'k-pagination__pages'], $this->pages($config));
         }
 
         if($config->show_count)
         {
-            $current = '<strong class="page-current">'.$config->current.'</strong>';
-            $total   = '<strong class="page-total">'.$config->count.'</strong>';
+            $current = $this->buildElement('strong', ['class' => 'page-current'], $config->current);
+            $total   = $this->buildElement('strong', ['class' => 'page-total'], $config->count);
+            $text    = sprintf($this->getObject('translator')->translate('Page %s of %s'), $current, $total);
 
-            $html .= '<div class="k-pagination-pages">';
-            $html .= sprintf($this->getObject('translator')->translate('Page %s of %s'), $current, $total);
-            $html .= '</div>';
+            $html .= $this->buildElement('div', ['class' => 'k-pagination-pages'], $text);
         }
 
-        $html .= '</div>';
-
-        return $html;
+        return $this->buildElement('div', ['class' => 'k-pagination'], $html);
     }
 
     /**
@@ -141,17 +136,19 @@ class TemplateHelperPaginator extends TemplateHelperSelect
         foreach ($pages->offsets as $page)
         {
             if ($previous && $page->page - $previous->page > 1) {
-                $html .= '<li class="k-is-disabled"><span>&hellip;</span></li>';
+                $html .= $this->buildElement('li', ['class' => 'k-is-disabled'], '<span>&hellip;</span>');
             }
 
-            $html .= '<li class="'.($page->active && !$page->current ? '' : 'k-is-active').'">';
-            $html .= $this->page($page, $config->url);
-            $html .= '</li>';
+            $html .= $this->buildElement('li', [
+                'class' => ($page->active && !$page->current ? '' : 'k-is-active')
+            ], $this->page($page, $config->url));
 
             $previous = $page;
         }
 
-        $html  .= $pages->next->active ? '<li>'.$this->page($pages->next, $config->url).'</li>' : '';
+        if ($pages->next->active) {
+            $html .= $this->buildElement('li', [], $this->page($pages->next, $config->url));
+        }
 
         return $html;
     }
@@ -191,8 +188,6 @@ class TemplateHelperPaginator extends TemplateHelperSelect
 
         $title = is_numeric($page->title) ? $page->title : $this->getObject('translator')->translate($page->title);
 
-        $html = '<a '.$this->buildAttributes($link_attribs).'>'.$title.'</a>';
-
-        return $html;
+        return $this->buildElement('a', $link_attribs, $title);
     }
 }
