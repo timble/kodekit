@@ -55,7 +55,7 @@ interface TemplateFilterInterface extends ObjectHandlable
      *
      * @param string $tag HTML tag name
      * @param array  $attributes Key/Value pairs for the attributes
-     * @param string $children Child elements, not applicable for self-closing tags
+     * @param string|array|callable $children Child elements, not applicable for self-closing tags
      * @return string
      *
      * Example:

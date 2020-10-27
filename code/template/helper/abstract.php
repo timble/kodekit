@@ -109,7 +109,7 @@ abstract class TemplateHelperAbstract extends ObjectAbstract implements Template
      *
      * @param string $tag HTML tag name
      * @param array  $attributes Key/Value pairs for the attributes
-     * @param string $children Child elements, not applicable for self-closing tags
+     * @param string|array|callable $children Child elements, not applicable for self-closing tags
      * @return string
      *
      * Example:
@@ -125,9 +125,8 @@ abstract class TemplateHelperAbstract extends ObjectAbstract implements Template
     public function buildElement($tag, $attributes = [], $children = '')
     {
         static $self_closing_tags = [
-            'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link',
-            'meta', 'param', 'source', 'track', 'wbr',
-            'ktml:script', 'ktml:style', 'ktml:include', 'ktml:content', 'ktml:toolbar', 'ktml:wrapper',
+            'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+            'link', 'meta', 'param', 'source', 'track', 'wbr',
         ];
 
         $attribs = $this->buildAttributes($attributes);
@@ -135,8 +134,14 @@ abstract class TemplateHelperAbstract extends ObjectAbstract implements Template
         $tag     = strtolower($tag);
 
         if (in_array($tag, $self_closing_tags)) {
+            return "<$tag$attribs>";
+        } else if (strpos($tag, 'ktml:') === 0 && !$children) {
             return "<$tag$attribs />";
         } else {
+            if (!is_scalar($children) && is_callable($children)) {
+                $children = $children($tag, $attributes);
+            }
+
             if (is_array($children)) {
                 $children = implode("\n", $children);
             }
