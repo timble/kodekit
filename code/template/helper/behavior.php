@@ -708,170 +708,134 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     public function calendar($config = array())
     {
         $config = new ObjectConfigJson($config);
-        $config->append(array(
-            'debug'   => \Kodekit::getInstance()->isDebug(),
+        $config->append([
             'timezone'  => 'USER_UTC',
             'user_timezone'    => $this->getObject('user')->getTimezone(),
             'server_timezone'  => date_default_timezone_get(),
-            'offset_seconds' => 0,
-            'value'   => gmdate("M d Y H:i:s"),
+            'offset' => 0,
+            'value'   => 'now',
             'name'    => '',
-            'format'  => '%Y-%m-%d %H:%M:%S',
-            'first_week_day' => 0,
-            'attribs'        => array(
-                'size'        => 25,
-                'maxlength'   => 19,
-                'placeholder' => ''
-            )
-        ))->append(array(
-            'id'      => 'datepicker-'.$config->name,
-            'options_callback' => null,
-            'options' => array(
-                'todayBtn' => false,
-                'clearBtn' => false,
-                'language' => 'en-GB',
-                'autoclose' => true,
-            )
-        ));
+            'attribs' => [],
+            'type'  => 'datetime', // date, time, or datetime (default)
+        ])->append([
+            'selector' => 'input[name="'.$config->name.'"]'
+        ]);
 
-        if ($config->timezone && !$config->offset_seconds)
-        {
-            if (strtoupper($config->timezone) === 'SERVER_UTC') {
-                $config->timezone = $config->server_timezone;
-            }
-            else if (strtoupper($config->timezone) === 'USER_UTC') {
-                $config->timezone = $config->user_timezone ?: $config->server_timezone;
-            }
-
-            $timezone               = new \DateTimeZone($config->timezone);
-            $config->offset_seconds = $timezone->getOffset(new \DateTime());
-        }
-
-        if ($config->value && $config->value != '0000-00-00 00:00:00' && $config->value != '0000-00-00')
-        {
-            if (strtoupper($config->value) == 'NOW') {
-                $config->value = strftime($config->format);
-            }
-
-            $date = new \DateTime($config->value, new \DateTimeZone('UTC'));
-
-            $config->value = gmstrftime($config->format, ((int)$date->format('U')) + $config->offset_seconds);
-        } else {
-            $config->value = '';
-        }
-
-        $attribs = $this->buildAttributes($config->attribs);
-        $value   = StringEscaper::attr($config->value);
-
+        $has_time = $config->type !== 'date';
+        $value = $config->value;
+        $offset = $config->offset;
+        $timezone = $config->timezone;
         $html = '';
-        if ($config->attribs->readonly === 'readonly' || $config->attribs->disabled === 'disabled')
-        {
-            $input = $this->buildElement('input', array_merge([
-                'type' => 'text', 'name' => $config->name, 'id' => $config->id, 'value' => $value,
-            ], ObjectConfig::unbox($config->attribs)));
-            $html .= $this->buildElement('div', [], $input);
-        }
-        else
-        {
-            $html .= $this->_loadCalendarScripts($config);
 
-            if (!isset(self::$_loaded['calendar-triggers'])) {
-                self::$_loaded['calendar-triggers'] = array();
+        if ($has_time && $timezone && !$offset)
+        {
+            if (strtoupper($timezone) === 'SERVER_UTC') {
+                $timezone = $config->server_timezone;
+            }
+            else if (strtoupper($timezone) === 'USER_UTC') {
+                $timezone = $config->user_timezone ?: $config->server_timezone;
             }
 
-            // Only display the triggers once for each control.
-            if (!in_array($config->id, self::$_loaded['calendar-triggers']))
+            $timezone = $timezone instanceof \DateTimeZone ? $timezone : new \DateTimeZone($timezone);
+            $offset = $timezone->getOffset(new \DateTime());
+
+            if ($offset)
             {
-                $options = (string) $config->options;
+                $key = 'calendar-triggers-'.$config->selector;
 
-                if ($config->options_callback) {
-                    $options = $config->options_callback.'('.$options.')';
-                }
+                if (!static::isLoaded($key)) {
+                    static::setLoaded($key);
 
-                $html .= $this->_onDomReady("$('#".$config->id."').kdatepicker(".$options.");");
-
-                if ($config->offset_seconds)
-                {
                     $html .= $this->_onDomReady("
-                        $('.k-js-form-controller').on('k:submit', function() {
-                            var element = kQuery('#".$config->id."'),
-                                picker  = element.data('kdatepicker'),
-                                offset  = $config->offset_seconds;
-
-                            if (picker && element.children('input').val()) {
-                                picker.setDate(new Date(picker.getDate().getTime() + (-1*offset*1000)));
-                            }
-                        });");
+                    $('.k-js-form-controller').on('k:submit', function() {
+                        var element = document.querySelector('".$config->selector."'),
+                            offset  = $offset;
+    
+                        if (element.value) {
+                            var date = new Date(Date.parse(element.value.replace(/[-]/g,'/')));
+                            date.setSeconds(date.getSeconds() - offset);
+                            element.value = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 19).replace('T', ' ');
+                        }
+                    });");
                 }
-
-                static::setLoaded('calendar-triggers'.$config->id);
             }
-
-            $format = str_replace(
-                array('%Y', '%y', '%m', '%d', '%H', '%M', '%S'),
-                array('yyyy', 'yy', 'mm', 'dd', 'hh', 'ii', 'ss'),
-                $config->format
-            );
-
-            $input = $this->buildElement('input', array_merge([
-                'class' => 'k-form-control', 'type' => 'text', 'name' => $config->name, 'value' => $value,
-            ], ObjectConfig::unbox($config->attribs)));
-            $input .= '
-            <span class="k-input-group__button input-group-btn">
-                <button type="button" class="k-button k-button--default btn">
-                    <span class="k-icon-calendar" aria-hidden="true"></span>
-                    <span class="k-visually-hidden">calendar</span>
-                </button>
-            </span>
-            ';
-
-            $html .= $this->buildElement('div', [
-                'class' => 'k-input-group date', 'data-date-format' => $format, 'id' => $config->id
-            ], $input);
         }
 
-        return $html;
-    }
-
-    /**
-     * @param ObjectConfig $config
-     * @return string
-     */
-    protected function _loadCalendarScripts(ObjectConfig $config)
-    {
-        $html = '';
-
-        if (!static::isLoaded('calendar')) {
-            $html .= '<ktml:script src="assets://js/kodekit.datepicker'.($config->debug ? '' : '.min').'.js" />';
-
-            static::setLoaded('calendar');
-        }
-
-        if (!static::isLoaded('calendar-locale'))
+        if ($value && $value != '0000-00-00 00:00:00' && $value != '0000-00-00')
         {
-            $locale = array(
-                'days'        => ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-                'daysShort'   => ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-                'daysMin'     => ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
-                'months'      => ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-                'monthsShort' => ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            if (strtoupper($value) == 'NOW') {
+                $value = strftime('%Y-%m-%d %H:%M:%S');
+            }
+
+            $date = new \DateTime($value, new \DateTimeZone('UTC'));
+
+            if ($offset) {
+                $date = $date->add(new \DateInterval('PT'.$offset.'S'));
+            }
+
+            $value = $date->format('Y-m-d H:i:s');
+        } else {
+            $value = '';
+        }
+
+        $selectedDate = substr($value, 0, 10);
+        $selectedTime = substr($value, 11);
+
+        $date_attributes = array_merge([
+            'class' => 'k-form-control', 'type' => 'date', 'name' => $config->name, 'value' => $selectedDate,
+            'pattern' => '[0-9]{4}-[0-9]{2}-[0-9]{2}'
+        ], ObjectConfig::unbox($config->attribs));
+
+        $time_attributes = array_merge([
+            'class' => 'k-form-control', 'type' => 'time', 'name' => $config->name, 'value' => $selectedTime,
+            'pattern' => '[0-9]{2}:[0-9]{2}:[0-9]{2}'
+        ], ObjectConfig::unbox($config->attribs));
+
+        if ($config->type === 'date') {
+            $html .= $this->buildElement('input', $date_attributes);
+        } elseif ($config->type === 'time') {
+            $html .= $this->buildElement('input', $time_attributes);
+        } else {
+            $hidden_attributes = array_merge([
+                'type' => 'hidden', 'name' => $config->name, 'value' => $value,
+            ], ObjectConfig::unbox($config->attribs));
+
+            unset($date_attributes['name']);
+            unset($time_attributes['name']);
+            unset($date_attributes['id']);
+            unset($time_attributes['id']);
+            unset($time_attributes['x-ref']);
+            unset($time_attributes['x-ref']);
+
+            $html .= $this->buildElement('div', ['class' => 'k-input-group k-js-datetime-group'],
+                $this->buildElement('input', $hidden_attributes)
+                . $this->buildElement('input', $date_attributes)
+                . $this->buildElement('input', $time_attributes)
             );
 
-            $translator = $this->getObject('translator');
+            if (!static::isLoaded('calendar-combiner')) {
+                static::setLoaded('calendar-combiner');
 
-            foreach($locale as $key => $items){
-                $locale[$key] = array_map(array($translator, 'translate'), $items);
+                $html .= <<<SCRIPT
+<script data-inline>
+document.addEventListener('input', function(e) {
+    for (var target = e.target; target && target !== this; target = target.parentNode) {
+        if (target.matches(".k-js-datetime-group")) {
+            var hiddenElement = target.querySelector("input[type=\"hidden\"]");
+            
+            if (hiddenElement) {
+                var dateElement = target.querySelector("input[type=\"date\"]");
+                var timeElement = target.querySelector("input[type=\"time\"]");
+                
+                hiddenElement.value = dateElement.value+" "+timeElement.value;
             }
-            $locale['today']     = $translator->translate('Today');
-            $locale['clear']     = $translator->translate('Clear');
-            $locale['weekStart'] = $config->first_week_day;
-
-            $html .= $this->buildElement('script', [], '
-            (function($){
-                $.fn.kdatepicker.dates['.json_encode($config->options->language).'] = '.json_encode($locale).';
-            }(kQuery));');
-
-            static::setLoaded('calendar-locale');
+            
+            break;
+        }
+    }
+}, false);</script>
+SCRIPT;
+            }
         }
 
         return $html;
