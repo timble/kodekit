@@ -128,13 +128,6 @@ class TemplateHelperUi extends TemplateHelperAbstract implements TemplateHelperP
             $html .= '<ktml:script src="assets://js/admin'.($config->debug ? '' : '.min').'.js" />';
 
             TemplateHelperBehavior::setLoaded('admin.js');
-            TemplateHelperBehavior::setLoaded('modal');
-            TemplateHelperBehavior::setLoaded('select2');
-            TemplateHelperBehavior::setLoaded('tooltip');
-            TemplateHelperBehavior::setLoaded('tree');
-            TemplateHelperBehavior::setLoaded('calendar');
-            TemplateHelperBehavior::setLoaded('tooltip');
-            TemplateHelperBehavior::setLoaded('validator');
         }
 
         $html .= $this->createHelper('behavior')->kodekit($config);

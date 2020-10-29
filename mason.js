@@ -16,9 +16,9 @@ async function files() {
 }
 
 async function js() {
+    await fs.rename(`${libraryAssetsPath}/js/admin.kodekit.js`, `${libraryAssetsPath}/js/admin.js`);
+    await fs.rename(`${libraryAssetsPath}/js/admin.kodekit.min.js`, `${libraryAssetsPath}/js/admin.min.js`);
     const append = [
-        `${libraryAssetsPath}/js/admin.js`,
-        `${libraryAssetsPath}/js/admin.min.js`,
         `${libraryAssetsPath}/js/kodekit.js`,
         `${libraryAssetsPath}/js/kodekit.min.js`,
         `${libraryAssetsPath}/js/kodekit.select2.js`,
