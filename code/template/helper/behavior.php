@@ -566,7 +566,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
-            'debug'   => false,
+            'debug' => \Kodekit::getInstance()->isDebug(),
             'element' => '',
             'selected'  => '',
             'list'    => array()
@@ -655,6 +655,7 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
     {
         $config = new ObjectConfigJson($config);
         $config->append(array(
+            'debug' => \Kodekit::getInstance()->isDebug(),
             'selector' => '[data-k-tooltip]',
             'data'     => 'k-tooltip',
             'options_callback' => null,
