@@ -84,6 +84,8 @@ class TemplateFilterStyle extends TemplateFilterTag
             $attribs['rel'] = 'stylesheet';
             $attribs['href'] = $link;
 
+            unset($attribs['src']);
+
             $style = $this->buildElement('link', $attribs);
         }
 
