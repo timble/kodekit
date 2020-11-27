@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Http\Client
  */
-class HttpClient extends Object implements HttpClientInterface
+class HttpClient extends ObjectAbstract implements HttpClientInterface
 {
     /**
      * Initializes the options for the object
@@ -64,7 +64,7 @@ class HttpClient extends Object implements HttpClientInterface
         $content = @file_get_contents($url, false, $context);
 
         if($content === false) {
-            throw new HttpExceptionError(sprintf('Failed to establish connectiion to: "%s"', $url));
+            throw new HttpExceptionError(sprintf('Failed to establish connection to: "%s"', $url));
         }
 
         $response = $this->_createResponse($http_response_header);
