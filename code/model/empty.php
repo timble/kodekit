@@ -31,6 +31,18 @@ final class ModelEmpty extends ModelAbstract
     }
 
     /**
+     * Create a new entity for the data store
+     *
+     * @param ModelContext $context A model context object
+     *
+     * @return ModelEntityInterface The entity
+     */
+    protected function _actionCreate(ModelContext $context)
+    {
+        return $this->_entity;
+    }
+
+    /**
      * Get the total number of entities
      *
      * @param ModelContext $context A model context object
