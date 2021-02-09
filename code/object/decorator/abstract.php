@@ -248,27 +248,7 @@ abstract class ObjectDecoratorAbstract implements ObjectDecoratorInterface
         //Call the method if it exists
         if ($exists)
         {
-            $result = null;
-
-            // Call_user_func_array is ~3 times slower than direct method calls.
-            switch (count($arguments))
-            {
-                case 0 :
-                    $result = $delegate->$method();
-                    break;
-                case 1 :
-                    $result = $delegate->$method($arguments[0]);
-                    break;
-                case 2:
-                    $result = $delegate->$method($arguments[0], $arguments[1]);
-                    break;
-                case 3:
-                    $result = $delegate->$method($arguments[0], $arguments[1], $arguments[2]);
-                    break;
-                default:
-                    // Resort to using call_user_func_array for many segments
-                    $result = call_user_func_array(array($delegate, $method), $arguments);
-            }
+            $result = $delegate->$method(...$arguments);
 
             //Allow for method chaining through the decorator
             $class = get_class($delegate);

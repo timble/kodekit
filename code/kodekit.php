@@ -283,30 +283,9 @@ class Kodekit
      */
     public static function __callStatic($method, $arguments)
     {
-        if(self::$__object_manager instanceof Library\ObjectManager)
-        {
-            // Call_user_func_array is ~3 times slower than direct method calls.
-            switch (count($arguments))
-            {
-                case 0 :
-                    $result = self::$__object_manager->$method();
-                    break;
-                case 1 :
-                    $result = self::$__object_manager->$method($arguments[0]);
-                    break;
-                case 2 :
-                    $result = self::$__object_manager->$method($arguments[0], $arguments[1]);
-                    break;
-                case 3 :
-                    $result = self::$__object_manager->$method($arguments[0], $arguments[1], $arguments[2]);
-                    break;
-                default:
-                    // Resort to using call_user_func_array for many segments
-                    $result = call_user_func_array(array(self::$__object_manager, $method), $arguments);
-            }
+        if(self::$__object_manager instanceof Library\ObjectManager) {
+            return self::$__object_manager->$method(...$arguments);
         }
         else throw new \BadMethodCallException('Cannot call method: $s. Kodekit has not been instantiated', $method);
-
-        return $result;
     }
 }

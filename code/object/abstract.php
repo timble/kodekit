@@ -390,24 +390,7 @@ abstract class ObjectAbstract implements ObjectInterface, ObjectMixable, ObjectH
             if ($this->__mixed_methods[$method] instanceof \Closure)
             {
                 $closure = $this->__mixed_methods[$method];
-
-                switch (count($arguments)) {
-                    case 0 :
-                        $result = $closure();
-                        break;
-                    case 1 :
-                        $result = $closure($arguments[0]);
-                        break;
-                    case 2 :
-                        $result = $closure($arguments[0], $arguments[1]);
-                        break;
-                    case 3 :
-                        $result = $closure($arguments[0], $arguments[1], $arguments[2]);
-                        break;
-                    default:
-                        // Resort to using call_user_func_array for many segments
-                        $result = call_user_func_array($closure, $arguments);
-                }
+                $result  = $closure(...$arguments);
             }
             elseif(is_object($this->__mixed_methods[$method]))
             {
@@ -416,25 +399,7 @@ abstract class ObjectAbstract implements ObjectInterface, ObjectMixable, ObjectH
                 //Switch the mixin's attached mixer
                 $mixin->setMixer($this);
 
-                // Call_user_func_array is ~3 times slower than direct method calls.
-                switch (count($arguments))
-                {
-                    case 0 :
-                        $result = $mixin->$method();
-                        break;
-                    case 1 :
-                        $result = $mixin->$method($arguments[0]);
-                        break;
-                    case 2 :
-                        $result = $mixin->$method($arguments[0], $arguments[1]);
-                        break;
-                    case 3 :
-                        $result = $mixin->$method($arguments[0], $arguments[1], $arguments[2]);
-                        break;
-                    default:
-                        // Resort to using call_user_func_array for many segments
-                        $result = call_user_func_array(array($mixin, $method), $arguments);
-                }
+                $result = $mixin->$method(...$arguments);
             }
             else $result = $this->__mixed_methods[$method];
 

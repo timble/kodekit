@@ -246,29 +246,8 @@ abstract class ObjectMixinAbstract implements ObjectMixinInterface
         $mixer = $this->getMixer();
 
         //Make sure we don't end up in a recursive loop
-        if(isset($mixer) && !($mixer instanceof $this))
-        {
-            // Call_user_func_array is ~3 times slower than direct method calls.
-            switch(count($arguments))
-            {
-                case 0 :
-                    $result = $mixer->$method();
-                    break;
-                case 1 :
-                    $result = $mixer->$method($arguments[0]);
-                    break;
-                case 2:
-                    $result = $mixer->$method($arguments[0], $arguments[1]);
-                    break;
-                case 3:
-                    $result = $mixer->$method($arguments[0], $arguments[1], $arguments[2]);
-                    break;
-                default:
-                    // Resort to using call_user_func_array for many segments
-                    $result = call_user_func_array(array($mixer, $method), $arguments);
-             }
-
-            return $result;
+        if(isset($mixer) && !($mixer instanceof $this)) {
+            return $mixer->$method(...$arguments);
         }
 
         throw new \BadMethodCallException('Call to undefined method :'.$method);

@@ -167,7 +167,7 @@ class TemplateEngineFactory extends ObjectAbstract implements ObjectSingleton
             );
         }
 
-        $types = call_user_func(array($class, 'getFileTypes'));/*$class::getFileTypes();*/
+        $types = $class::getFileTypes();
 
         if (!empty($types))
         {
@@ -213,7 +213,7 @@ class TemplateEngineFactory extends ObjectAbstract implements ObjectSingleton
                 );
             }
 
-            $types = call_user_func(array($class, 'getFileTypes'));/*$class::getFileTypes();*/
+            $types = $class::getFileTypes();
 
         }
         else $types = (array) $identifier;
@@ -284,7 +284,7 @@ class TemplateEngineFactory extends ObjectAbstract implements ObjectSingleton
                 );
             }
 
-            $types = call_user_func(array($class, 'getFileTypes'));/*$class::getFileTypes();*/
+            $types = $class::getFileTypes();
         }
         else $types = (array) $identifier;
 

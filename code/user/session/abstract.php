@@ -86,11 +86,7 @@ class UserSessionAbstract extends ObjectAbstract implements UserSessionInterface
         parent::__construct($config);
 
         //Session write and close handlers are called after destructing objects since PHP 5.0.5.
-        if (version_compare(phpversion(), '5.4.0', '>=')) {
-            session_register_shutdown();
-        } else {
-            register_shutdown_function('session_write_close');
-        }
+        session_register_shutdown();
 
         //Only configure the session if it's not active yet
         if(!$this->isActive())

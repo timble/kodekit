@@ -715,27 +715,8 @@ class ModelEntityComposite extends ObjectAbstract implements ModelEntityComposab
     {
         $result = null;
 
-        if($entity = $this->getIterator()->current())
-        {
-            // Call_user_func_array is ~3 times slower than direct method calls.
-            switch (count($arguments))
-            {
-                case 0 :
-                    $result = $entity->$method();
-                    break;
-                case 1 :
-                    $result = $entity->$method($arguments[0]);
-                    break;
-                case 2 :
-                    $result = $entity->$method($arguments[0], $arguments[1]);
-                    break;
-                case 3 :
-                    $result = $entity->$method($arguments[0], $arguments[1], $arguments[2]);
-                    break;
-                default:
-                    // Resort to using call_user_func_array for many segments
-                    $result = call_user_func_array(array($entity, $method), $arguments);
-            }
+        if($entity = $this->getIterator()->current()) {
+            $result = $entity->$method(...$arguments);
         }
 
         return $result;
