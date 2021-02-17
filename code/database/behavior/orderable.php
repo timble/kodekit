@@ -81,7 +81,7 @@ class DatabaseBehaviorOrderable extends DatabaseBehaviorAbstract
             $new = $new <= 0 ? 1 : $new;
 
             $table = $this->getTable();
-            $query = $this->getObject('lib:database.query.update')
+            $query = $this->getObject('lib:database.query.update', ['driver' => $table->getDriver()])
                 ->table($table->getBase());
 
             //Build the where query
@@ -129,7 +129,7 @@ class DatabaseBehaviorOrderable extends DatabaseBehaviorAbstract
         $db     = $table->getDriver();
         $db->execute('SET @order = '.$base);
 
-        $query = $this->getObject('lib:database.query.update')
+        $query = $this->getObject('lib:database.query.update', ['driver' => $db])
             ->table($table->getBase())
             ->values('ordering = (@order := @order + 1)')
             ->order('ordering', 'ASC');
@@ -156,7 +156,7 @@ class DatabaseBehaviorOrderable extends DatabaseBehaviorAbstract
         $table  = $this->getTable();
         $db     = $table->getDriver();
 
-        $query = $this->getObject('lib:database.query.select')
+        $query = $this->getObject('lib:database.query.select', ['driver' => $db])
             ->columns('MAX(ordering)')
             ->table($table->getName());
 

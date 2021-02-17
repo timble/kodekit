@@ -200,7 +200,7 @@ class ModelDatabase extends ModelAbstract
     public function getContext(ModelContextInterface $context = null)
     {
         $context = new ModelContextDatabase(parent::getContext());
-        $context->setQuery($this->getObject('lib:database.query.select'));
+        $context->setQuery($this->getObject('lib:database.query.select', ['driver' => $this->getTable()->getDriver()]));
         return $context;
     }
 

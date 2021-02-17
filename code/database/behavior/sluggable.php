@@ -270,7 +270,7 @@ class DatabaseBehaviorSluggable extends DatabaseBehaviorAbstract
         $table = $this->getTable();
 
         //If the slug needs to be unique and it already exists, make it unique
-        $query = $this->getObject('lib:database.query.select');
+        $query = $this->getObject('lib:database.query.select', ['driver' => $table->getDriver()]);
         $query->where('slug = :slug')->bind(array('slug' => $this->slug));
 
         if (!$this->isNew())
@@ -288,7 +288,7 @@ class DatabaseBehaviorSluggable extends DatabaseBehaviorAbstract
                 $this->slug = substr($this->slug, 0, $length-4);
             }
 
-            $query = $this->getObject('lib:database.query.select')
+            $query = $this->getObject('lib:database.query.select', ['driver' => $table->getDriver()])
                 ->columns('slug')
                 ->where('slug LIKE :slug')
                 ->bind(array('slug' => $this->slug . '-%'));

@@ -539,7 +539,7 @@ abstract class DatabaseTableAbstract extends ObjectAbstract implements DatabaseT
         if (is_numeric($query) || is_string($query) || (is_array($query) && is_numeric(key($query))))
         {
             $key = $this->getIdentityColumn();
-            $query = $this->getObject('lib:database.query.select')
+            $query = $this->getObject('lib:database.query.select', ['driver' => $this->getDriver()])
                 ->where('tbl.'.$key . ' IN :' . $key)
                 ->bind(array($key => (array)$query));
         }
@@ -547,7 +547,7 @@ abstract class DatabaseTableAbstract extends ObjectAbstract implements DatabaseT
         if (is_array($query) && !is_numeric(key($query)))
         {
             $columns = $this->mapColumns($query);
-            $query = $this->getObject('lib:database.query.select');
+            $query = $this->getObject('lib:database.query.select', ['driver' => $this->getDriver()]);
 
             foreach ($columns as $column => $value)
             {
@@ -657,7 +657,7 @@ abstract class DatabaseTableAbstract extends ObjectAbstract implements DatabaseT
         if (is_array($query) && !is_numeric(key($query)))
         {
             $columns = $this->mapColumns($query);
-            $query = $this->getObject('lib:database.query.select');
+            $query = $this->getObject('lib:database.query.select', ['driver' => $this->getDriver()]);
 
             foreach ($columns as $column => $value)
             {
@@ -690,7 +690,7 @@ abstract class DatabaseTableAbstract extends ObjectAbstract implements DatabaseT
     public function insert(DatabaseRowInterface $row)
     {
         // Create query object.
-        $query = $this->getObject('lib:database.query.insert')
+        $query = $this->getObject('lib:database.query.insert', ['driver' => $this->getDriver()])
             ->table($this->getBase());
 
         //Create commandchain context
@@ -738,7 +738,7 @@ abstract class DatabaseTableAbstract extends ObjectAbstract implements DatabaseT
     public function update(DatabaseRowInterface $row)
     {
         // Create query object.
-        $query = $this->getObject('lib:database.query.update')
+        $query = $this->getObject('lib:database.query.update', ['driver' => $this->getDriver()])
             ->table($this->getBase());
 
         // Create commandchain context.
@@ -791,7 +791,7 @@ abstract class DatabaseTableAbstract extends ObjectAbstract implements DatabaseT
     public function delete(DatabaseRowInterface $row)
     {
         // Create query object.
-        $query = $this->getObject('lib:database.query.delete')
+        $query = $this->getObject('lib:database.query.delete', ['driver' => $this->getDriver()])
             ->table($this->getBase());
 
         //Create commandchain context

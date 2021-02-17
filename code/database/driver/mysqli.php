@@ -202,7 +202,7 @@ class DatabaseDriverMysqli extends DatabaseDriverAbstract
     {
         if(!isset($this->_database))
         {
-            $query = $this->getObject('lib:database.query.select')
+            $query = $this->getObject('lib:database.query.select', ['driver' => $this])
                 ->columns('DATABASE()');
 
             $this->_database = $this->select($query, Database::FETCH_FIELD);
@@ -468,7 +468,7 @@ class DatabaseDriverMysqli extends DatabaseDriverAbstract
     protected function _fetchTableInfo($table)
     {
         $return = null;
-        $query  = $this->getObject('lib:database.query.show')
+        $query  = $this->getObject('lib:database.query.show', ['driver' => $this])
             ->show('TABLE STATUS')
             ->like(':like')
             ->bind(array('like' => $table));
@@ -489,7 +489,7 @@ class DatabaseDriverMysqli extends DatabaseDriverAbstract
     protected function _fetchTableColumns($table)
     {
         $return = array();
-        $query  = $this->getObject('lib:database.query.show')
+        $query  = $this->getObject('lib:database.query.show', ['driver' => $this])
             ->show('FULL COLUMNS')
             ->from($table);
 
@@ -517,7 +517,7 @@ class DatabaseDriverMysqli extends DatabaseDriverAbstract
     protected function _fetchTableIndexes($table)
     {
         $return = array();
-        $query  = $this->getObject('lib:database.query.show')
+        $query  = $this->getObject('lib:database.query.show', ['driver' => $this])
             ->show('INDEX')
             ->from($table);
 
