@@ -313,6 +313,11 @@ class UserSessionAbstract extends ObjectAbstract implements UserSessionInterface
                 $identifier = $this->getIdentifier()->toArray();
                 $identifier['path'] = array('session', 'handler');
                 $identifier['name'] = $handler;
+
+                if (!isset($identifier['package']) || $identifier['package'] !== 'user') {
+                    array_unshift($identifier['path'], 'user');
+                }
+
                 // reset the handler
                 $handler = $identifier;
             }
@@ -383,6 +388,10 @@ class UserSessionAbstract extends ObjectAbstract implements UserSessionInterface
                 $identifier = $this->getIdentifier()->toArray();
                 $identifier['path'] = array('session', 'container');
                 $identifier['name'] = $name;
+
+                if (!isset($identifier['package']) || $identifier['package'] !== 'user') {
+                    array_unshift($identifier['path'], 'user');
+                }
 
                 $identifier = $this->getIdentifier($identifier);
             }
