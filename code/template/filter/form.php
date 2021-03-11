@@ -24,51 +24,6 @@ namespace Kodekit\Library;
 class TemplateFilterForm extends TemplateFilterAbstract
 {
     /**
-     * The form token value
-     *
-     * @var string
-     */
-    protected $_token_value;
-
-    /**
-     * The form token name
-     *
-     * @var string
-     */
-    protected $_token_name;
-
-    /**
-     * Constructor.
-     *
-     * @param   ObjectConfig $config Configuration options
-     */
-    public function __construct( ObjectConfig $config = null)
-    {
-        parent::__construct($config);
-
-        $this->_token_value = $this->getObject('user')->getSession()->getToken();
-        $this->_token_name  = $config->token_name;
-    }
-
-    /**
-     * Initializes the options for the object
-     *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param   ObjectConfig $config Configuration options
-     * @return  void
-     */
-    protected function _initialize(ObjectConfig $config)
-    {
-        $config->append(array(
-            'token_value'   => '',
-            'token_name'    => 'csrf_token',
-        ));
-
-        parent::_initialize($config);
-    }
-
-    /**
      * Handle form replacements
      *
      * @param string $text  The text to parse
@@ -77,29 +32,8 @@ class TemplateFilterForm extends TemplateFilterAbstract
      */
     public function filter(&$text, TemplateInterface $template)
     {
-        $this->_addMetatag($text);
         $this->_addAction($text, $template);
-        $this->_addToken($text);
         $this->_addQueryParameters($text);
-    }
-
-    /**
-     * Adds the CSRF token to a meta tag to be used in JavaScript
-     *
-     * @param string $text Template text
-     * @return $this
-     */
-    protected function _addMetatag(&$text)
-    {
-        if (!empty($this->_token_value))
-        {
-            $string = $this->buildElement('meta', ['content' => $this->_token_value, 'name' => 'csrf-token']);
-            if (stripos($text, $string) === false) {
-                $text = $string.$text;
-            }
-        }
-
-        return $this;
     }
 
     /**
@@ -119,32 +53,6 @@ class TemplateFilterForm extends TemplateFilterAbstract
                 $str  = str_replace('action=""', 'action="' . $template->route() . '"', $match[0]);
                 $text = str_replace($match[0], $str, $text);
             }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add the token to the form
-     *
-     * @param string $text Template text
-     * @return $this
-     */
-    protected function _addToken(&$text)
-    {
-        if (!empty($this->_token_value))
-        {
-            // POST: Add token
-            $text    = preg_replace('#(<\s*form[^>]+method="post"[^>]*>)#si',
-                '\1'.PHP_EOL.$this->buildElement('input', ['type' => 'hidden', 'name' => $this->_token_name, 'value' => $this->_token_value]),
-                $text
-            );
-
-            // GET: Add token to .k-js-grid-controller forms
-            $text    = preg_replace('#(<\s*form[^>]+class=(?:\'|")[^\'"]*?k-js-grid-controller.*?(?:\'|")[^>]*)>#si',
-                '\1 data-token-name="'.$this->_token_name.'" data-token-value="'.$this->_token_value.'">',
-                $text
-            );
         }
 
         return $this;

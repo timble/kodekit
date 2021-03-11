@@ -133,10 +133,17 @@ interface DispatcherRequestInterface extends ControllerRequestInterface
     /**
      * Returns the HTTP origin header.
      *
-     * @param   boolean  $isInternal Only allow internal URLs
+     * @param   boolean  $isTrusted Only allow trusted origins
      * @return  HttpUrl|null  A HttpUrl object or NULL if no origin header could be found
      */
-    public function getOrigin($isInternal = true);
+    public function getOrigin($isTrusted = true);
+
+    /**
+     * Gets the list of trusted origins.
+     *
+     * @return array An array of trusted origins.
+     */
+    public function getOrigins();
 
     /**
      * Returns the client information doing the request

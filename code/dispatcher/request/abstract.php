@@ -81,6 +81,13 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
     protected $_proxies;
 
     /**
+     * A list of trusted origins
+     *
+     * @var array
+     */
+    protected $_origins;
+
+    /**
      * The requested ranges
      *
      * @var array
@@ -160,6 +167,12 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
         if (isset($_SERVER['REQUEST_TIME_FLOAT'])) {
             $this->setTime($_SERVER['REQUEST_TIME_FLOAT']);
         }
+
+        //Add the trusted origins
+        $origins = ObjectConfig::unbox($config->origins) + array($this->getHost());
+        foreach($origins as $origin) {
+            $this->addOrigin($origin);
+        }
     }
 
     /**
@@ -183,6 +196,7 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
             'cookies' => $_COOKIE,
             'files'   => $_FILES,
             'proxies' => array(),
+            'origins' => array(),
         ));
 
         parent::_initialize($config);
@@ -567,12 +581,13 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
      *
      * If a base64 encoded _referrer property exists in the request payload, it is used instead of the referrer.
      * 'referer' a commonly used misspelling word for 'referrer'
+     *
      * @link http://en.wikipedia.org/wiki/HTTP_referrer
      *
-     * @param   boolean  $isInternal Only allow internal url's
+     * @param   boolean $isTrusted Only allow trusted origins
      * @return  HttpUrl|null  A HttpUrl object or NULL if no referrer could be found
      */
-    public function getReferrer($isInternal = true)
+    public function getReferrer($isTrusted = true)
     {
         if(!isset($this->_referrer) && ($this->_headers->has('Referer') || $this->data->has('_referrer')))
         {
@@ -585,32 +600,57 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
             $this->setReferrer($this->getObject('lib:filter.url')->sanitize($referrer));
         }
 
+        $referrer = $this->_referrer;
 
-        if(isset($this->_referrer) && $isInternal)
+        if(isset($referrer) && $isTrusted)
         {
-            $target_origin = $this->getUrl()->getHost();
-            $source_origin = $this->_referrer->getHost();
+            $trusted = false;
+            $source  = $this->_referrer->getHost();
 
-            // Check if the source matches the target
-            if($target_origin !== $source_origin)
+            foreach($this->getOrigins() as $target)
             {
-                // Special case: check if the source is a subdomain of the target origin
-                if ('.'.$target_origin !== substr($source_origin, -1 * (strlen($target_origin)+1))) {
-                    return null;
+                // Check if the source matches the target
+                if($target == $source || '.'.$target === substr($source, -1 * (strlen($target)+1))) {
+                    $trusted = true; break;
                 }
+            }
+
+            if(!$trusted) {
+                $referrer = null;
             }
         }
 
-        return $this->_referrer;
+        return $referrer;
+    }
+
+    /**
+     * Add a trusted origin
+     *
+     * You should only add an origins that you trust
+     *
+     * @param string $origin A trusted origin
+     * @return DispatcherRequestInterface
+     */
+    public function addOrigin($origin)
+    {
+        if (strpos($origin, '://') !== false) {
+            $origin = $this->getObject('lib:http.url', array('url' => $origin))->getHost();
+        }
+
+        if(!in_array($origin, (array) $this->_origins)) {
+            $this->_origins[] = $origin;
+        }
+
+        return $this;
     }
 
     /**
      * Returns the HTTP origin header.
      *
-     * @param   boolean  $isInternal Only allow internal URLs
+     * @param   boolean $isTrusted Only allow internal URLs
      * @return  HttpUrl|null  A HttpUrl object or NULL if no origin header could be found
      */
-    public function getOrigin($isInternal = true)
+    public function getOrigin($isTrusted = true)
     {
         $origin = null;
 
@@ -621,7 +661,7 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
                     'url' => $this->getObject('lib:filter.url')->sanitize($this->_headers->get('Origin'))
                 ]);
 
-                if($isInternal)
+                if($isTrusted)
                 {
                     $target_origin = $this->getUrl()->getHost();
                     $source_origin = $origin->getHost();
@@ -640,6 +680,16 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
         }
 
         return $origin;
+    }
+
+    /**
+     * Gets the list of trusted origins.
+     *
+     * @return array An array of trusted origins.
+     */
+    public function getOrigins()
+    {
+        return $this->_origins;
     }
 
     /**

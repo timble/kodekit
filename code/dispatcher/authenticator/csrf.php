@@ -12,20 +12,11 @@ namespace Kodekit\Library;
 /**
  * Csrf Dispatcher Authenticator
  *
- * @link http://www.adambarth.com/papers/2008/barth-jackson-mitchell-b.pdf
- *
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Dispatcher\Authenticator
  */
 class DispatcherAuthenticatorCsrf extends DispatcherAuthenticatorAbstract
 {
-    /**
-     * The CSRF token
-     *
-     * @var string
-     */
-    private $__token;
-
     /**
      * Initializes the default configuration for the object
      *
@@ -44,99 +35,64 @@ class DispatcherAuthenticatorCsrf extends DispatcherAuthenticatorAbstract
     }
 
     /**
-     * Return the CSRF request token
-     *
-     * @return  string  The CSRF token or NULL if no token could be found
-     */
-    public function getToken()
-    {
-        if(!isset($this->__token))
-        {
-            $token   = false;
-            $request = $this->getObject('request');
-
-            if($request->headers->has('X-XSRF-Token')) {
-                $token = $request->headers->get('X-XSRF-Token');
-            }
-
-            if($request->headers->has('X-CSRF-Token')) {
-                $token = $request->headers->get('X-CSRF-Token');
-            }
-
-            if($request->data->has('csrf_token')) {
-                $token = $request->data->get('csrf_token', 'sha1');
-            }
-
-            $this->__token = $token;
-        }
-
-        return $this->__token;
-    }
-
-    /**
      * Verify the request to prevent CSRF exploits
      *
-     * Method will always perform a referrer check and a cookie token check if the user is not authentic and
-     * additionally a session token check if the user is authentic.
+     * We first check if X-Requested-With header is present or not. If it is, the request is coming from an identified
+     * origin as it's a non-safe CORS header and a form submit from a third party website wouldn't include the header.
+     * If the browser cleared the request to hit our end after passing the CORS preflight request we deem the request
+     * safe.
+     *
+     * See: https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#use-of-custom-request-headers
+     *
+     * If the header is not present (any other POST request like a normal form submit we check for `Origin` header with
+     * a fallback to `Referer` header. If the origin (or referer) header is present and on our list of allowed origins
+     * we deem the request safe.
+     *
+     * See: https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#verifying-origin-with-standard-headers
      *
      * @param DispatcherContext $context	A dispatcher context object
      * @throws ControllerExceptionRequestInvalid      If the request referrer is not valid
      * @throws ControllerExceptionRequestForbidden    If the cookie token is not valid
      * @throws ControllerExceptionRequestNotAuthenticated If the session token is not valid
-     * @return boolean Returns FALSE if the check failed. Otherwise TRUE.
+     * @return void
      */
     public function authenticateRequest(DispatcherContext $context)
     {
-        if($context->request->isPost())
+        $request = $context->getRequest();
+
+        if($request->isPost())
         {
-            $request = $context->request;
-            $user    = $context->user;
-
-            //Check referrer or origin
-            if (!$request->getReferrer() && !$request->getOrigin()) {
-                throw new ControllerExceptionRequestInvalid('Request referrer or origin not found');
-            }
-
-            //Check csrf token
-            if(!$this->getToken()) {
-                throw new ControllerExceptionRequestNotAuthenticated('Token Not Found');
-            }
-
-            //Check cookie token
-            if($this->getToken() !== $request->cookies->get('csrf_token', 'sha1')) {
-                throw new ControllerExceptionRequestNotAuthenticated('Invalid Cookie Token');
-            }
-
-            if($user->isAuthentic() && $user->getSession()->isActive())
+            // Mere presence of the X-Requested-With header is a sign that the request is coming from an identified origin:
+            if (!$request->headers->has('X-Requested-With'))
             {
-                //Check session token
-                if( $this->getToken() !== $user->getSession()->getToken()) {
-                    throw new ControllerExceptionRequestForbidden('Invalid Session Token');
+                $origin = $request->headers->get('Origin');
+
+                //No Origin, fallback to Referer
+                if(!$origin) {
+                    $origin = $request->headers->get('Referer');
                 }
+
+                //Don't not allow origin to be empty or null (possible in some cases)
+                if(!empty($origin))
+                {
+                    $match  = false;
+                    $origin = $this->getObject('lib:filter.url')->sanitize($origin);
+                    $source = HttpUrl::fromString($origin)->getHost();
+
+                    foreach($request->getOrigins() as $target)
+                    {
+                        // Check if the source matches the target
+                        if($target == $source || '.'.$target === substr($source, -1 * (strlen($target)+1))) {
+                            $match = true; break;
+                        }
+                    }
+
+                    if(!$match) {
+                        throw new ControllerExceptionRequestInvalid('Origin or referer not valid');
+                    }
+                }
+                else throw new ControllerExceptionRequestInvalid('Origin or referer required');
             }
         }
-    }
-
-    /**
-     * Sign the response with a session token
-     *
-     * @param DispatcherContext $context   A dispatcher context object
-     */
-    public function challengeResponse(DispatcherContext $context)
-    {
-        if($context->request->isGet())
-        {
-            $token = $context->user->getSession()->getToken();
-
-            $context->response->headers->addCookie($this->getObject('lib:http.cookie', array(
-                'name'   => 'csrf_token',
-                'value'  => $token,
-                'path'   => $context->request->getBaseUrl()->getPath(),
-            )));
-
-            $context->response->headers->set('X-CSRF-Token', $token);
-        }
-
-        parent::challengeResponse($context);
     }
 }

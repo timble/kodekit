@@ -57,14 +57,6 @@ interface UserSessionInterface
     public function getNamespace();
 
     /**
-     * Get the session token, if a token isn't set yet one will be generated.
-     *
-     * @param   boolean $refresh If true, a new token to be created
-     * @return  string  The session token
-     */
-    public function getToken($refresh = false);
-
-    /**
      * Get the session id
      *
      * @return string The session id
