@@ -69,25 +69,6 @@ class UserSessionContainerMetadata extends UserSessionContainerAbstract
     }
 
     /**
-     * Get a session token, if a token isn't set yet one will be generated.
-     *
-     * @param   boolean $refresh If true, force a new token to be created
-     * @return  string  The session token
-     */
-    public function getToken($refresh = false)
-    {
-        if ($this->token === null || $refresh)
-        {
-            $salt = $this->_createSalt(12);
-            $name = session_name();
-
-            $this->token = sha1($salt.$name);
-        }
-
-        return $this->token;
-    }
-
-    /**
      * Get a session secret, a secret should never be exposed publicly
      *
      * @return  string  The session token

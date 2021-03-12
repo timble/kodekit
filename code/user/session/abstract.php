@@ -197,17 +197,6 @@ class UserSessionAbstract extends ObjectAbstract implements UserSessionInterface
     }
 
     /**
-     * Get a session token, if a token isn't set yet one will be generated.
-     *
-     * @param   boolean $refresh If true, force a new token to be created
-     * @return  string  The session token
-     */
-    public function getToken($refresh = false)
-    {
-        return $this->getContainer('metadata')->getToken($refresh);
-    }
-
-    /**
      * Get the session name
      *
      * @return string The session name

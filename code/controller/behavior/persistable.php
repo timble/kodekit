@@ -65,7 +65,7 @@ class ControllerBehaviorPersistable extends ControllerBehaviorAbstract
     {
         $query = $context->getRequest()->query;
 
-        $query->add((array) $context->user->get($this->_getStateKey($context)));
+        $query->add((array) $context->user->getSession()->get($this->_getStateKey($context)));
 
         $this->getModel()->getState()->setValues($query->toArray());
     }
@@ -88,6 +88,6 @@ class ControllerBehaviorPersistable extends ControllerBehaviorAbstract
             }
         }
 
-        $context->user->set($this->_getStateKey($context), $vars);
+        $context->user->getSession()->set($this->_getStateKey($context), $vars);
     }
 }
