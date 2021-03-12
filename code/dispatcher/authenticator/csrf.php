@@ -60,7 +60,7 @@ class DispatcherAuthenticatorCsrf extends DispatcherAuthenticatorAbstract
     {
         $request = $context->getRequest();
 
-        if($request->isPost())
+        if($this->isPost())
         {
             // Mere presence of the X-Requested-With header is a sign that the request is coming from an identified origin:
             if (!$request->headers->has('X-Requested-With'))
@@ -94,5 +94,15 @@ class DispatcherAuthenticatorCsrf extends DispatcherAuthenticatorAbstract
                 else throw new ControllerExceptionRequestInvalid('Origin or referer required');
             }
         }
+    }
+
+    /**
+     * Is this a POST method request?
+     *
+     * @return bool
+     */
+    public function isPost()
+    {
+        return isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST';
     }
 }
