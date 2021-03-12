@@ -80,6 +80,14 @@ class HttpCookie extends ObjectAbstract implements HttpCookieInterface
     public $http_only;
 
     /**
+     * Allows servers to assert that a cookie ought not to be sent along with cross-site requests, which provides some
+     * protection against cross-site request forgery attacks (CSRF).
+     *
+     * @var string[Strict, Lax, None]
+     */
+    public $same_site;
+
+    /**
      * Constructor
      *
      * @param ObjectConfig|null $config  An optional ObjectConfig object with configuration options
@@ -113,6 +121,7 @@ class HttpCookie extends ObjectAbstract implements HttpCookieInterface
             'path'      => '/',
             'secure'    => false,
             'http_only' => true,
+            'same_site' => null,
         ));
 
         parent::_initialize($config);
@@ -248,6 +257,10 @@ class HttpCookie extends ObjectAbstract implements HttpCookieInterface
 
         if ($this->isHttpOnly() === true) {
             $str .= '; httponly';
+        }
+
+        if ($this->same_site !== null) {
+            $str .= '; samesite='.$this->same_site;
         }
 
         return $str;
