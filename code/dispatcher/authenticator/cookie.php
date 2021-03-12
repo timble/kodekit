@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <http://github.com/johanjanssens>
  * @package Kodekit\Library\Dispatcher\Authenticator
  */
-class DispatcherAuthenticatorCookie extends DispatcherAuthenticatorCsrf
+class DispatcherAuthenticatorCookie extends DispatcherAuthenticatorOrigin
 {
     /**
      * Constructor.

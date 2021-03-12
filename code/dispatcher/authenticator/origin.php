@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Dispatcher\Authenticator
  */
-class DispatcherAuthenticatorCsrf extends DispatcherAuthenticatorAbstract
+class DispatcherAuthenticatorOrigin extends DispatcherAuthenticatorAbstract
 {
     /**
      * Initializes the default configuration for the object

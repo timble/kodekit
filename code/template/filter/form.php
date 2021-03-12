@@ -14,7 +14,7 @@ namespace Kodekit\Library;
  *
  * Filter to handle form html elements
  *
- * For forms that use a post method this filter adds a token to prevent CSRF. For forms that use a get method this
+ * For forms that use a get method this
  * filter adds the action url query params as hidden fields to comply with the html form standard.
  *
  * @author  Johan Janssens <https://github.com/johanjanssens>

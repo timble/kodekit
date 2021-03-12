@@ -50,7 +50,7 @@ class Dispatcher extends DispatcherAbstract implements ObjectInstantiable, Objec
         $config->append(array(
             'methods'        => array('get', 'head', 'post', 'put', 'patch', 'delete', 'options'),
             'behaviors'      => array('routable', 'limitable', 'resettable', 'localizable'),
-            'authenticators' => array('csrf')
+            'authenticators' => array('origin')
          ));
 
         parent::_initialize($config);
