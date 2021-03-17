@@ -289,9 +289,9 @@ abstract class DispatcherResponseAbstract extends ControllerResponse implements 
     {
         $request = $this->getRequest();
 
-        $isPDF        = (bool) $this->getContentType() == 'application/pdf';
-        $isInline     = (bool) !$request->isDownload();
-        $isSeekable   = (bool) $this->getStream()->isSeekable();
+        $isPDF        = $this->getContentType() == 'application/pdf';
+        $isInline     = !$request->isDownload();
+        $isSeekable   = $this->getStream()->isSeekable();
 
         if(!($isPDF && $isInline) && $isSeekable)
         {
