@@ -58,9 +58,6 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
 
         //Resolve the request
         $this->addCommandCallback('before.dispatch', '_resolveRequest');
-
-        //Register the default exception handler
-        $this->getObject('exception.handler')->addExceptionCallback(array($this, 'fail'));
     }
 
     /**
@@ -332,47 +329,6 @@ abstract class DispatcherAbstract extends ControllerAbstract implements Dispatch
         }
 
         $context->response->setRedirect($context->param);
-
-        //Send the response
-        return $this->send($context);
-    }
-
-    /**
-     * Handle errors and exceptions
-     *
-     * @throws \InvalidArgumentException If the action parameter is not an instance of Exception or ExceptionError
-     * @param DispatcherContext $context   A dispatcher context object
-     */
-    protected function _actionFail(DispatcherContext $context)
-    {
-        //Check an exception was passed
-        if(!isset($context->param) && !$context->param instanceof \Exception)
-        {
-            throw new \InvalidArgumentException(
-                "Action parameter 'exception' [Exception] is required"
-            );
-        }
-
-        //Get the exception object
-        $exception = $context->param;
-
-        //If the error code does not correspond to a status message, use 500
-        $code = $exception->getCode();
-        if(!isset(HttpResponse::$status_messages[$code])) {
-            $code = '500';
-        }
-
-        //Get the error message
-        $message = $exception->getMessage();
-        if(empty($message)) {
-            $message = HttpResponse::$status_messages[$code];
-        }
-
-        //Store the exception in the context
-        $context->exception = $exception;
-
-        //Set the response status
-        $context->response->setStatus($code , $message);
 
         //Send the response
         return $this->send($context);

@@ -15,4 +15,32 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Event\Publisher
  */
-class EventPublisher extends EventPublisherAbstract implements ObjectSingleton {}
+class EventPublisher extends EventPublisherAbstract implements ObjectSingleton
+{
+    /**
+     * Constructor.
+     *
+     * @param ObjectConfig $config  An optional ObjectConfig object with configuration options
+     */
+    public function __construct(ObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        $this->getObject('exception.handler')->addExceptionCallback(array($this, 'publishException'));
+    }
+
+    /**
+     * Publish an event by calling all listeners that have registered to receive it.
+     *
+     * Function will avoid a recursive loop when an exception is thrown during even publishing and output a generic
+     * exception instead.
+     *
+     * @param  \Exception           $exception  The exception to be published.
+     * @return  null|EventInterface
+     */
+    public function publishException(\Exception $exception)
+    {
+        return parent::publishEvent('onException', ['exception' => $exception]);
+    }
+
+}

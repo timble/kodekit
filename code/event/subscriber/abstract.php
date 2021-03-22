@@ -62,6 +62,7 @@ abstract class EventSubscriberAbstract extends ObjectAbstract implements EventSu
     {
         $config->append(array(
             'priority'   => self::PRIORITY_NORMAL,
+            'enabled'    => true,
         ));
 
         parent::_initialize($config);
@@ -80,7 +81,7 @@ abstract class EventSubscriberAbstract extends ObjectAbstract implements EventSu
         $handle    = $publisher->getHandle();
         $listeners = [];
 
-        if(!$this->isSubscribed($publisher))
+        if($this->isEnabled() && !$this->isSubscribed($publisher))
         {
             $listeners = $this->getEventListeners();
 
@@ -134,6 +135,16 @@ abstract class EventSubscriberAbstract extends ObjectAbstract implements EventSu
     {
         $handle = $publisher->getHandle();
         return isset($this->__publishers[$handle]);
+    }
+
+    /**
+     * Check if the subscriber is enabled
+     *
+     * @return boolean TRUE if the subscriber is enabled. FALSE otherwise.
+     */
+    public function isEnabled()
+    {
+        return $this->getConfig()->enabled;
     }
 
     /**
