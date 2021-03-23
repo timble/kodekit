@@ -771,7 +771,12 @@ class TemplateHelperBehavior extends TemplateHelperAbstract
             $date = new \DateTime($value, new \DateTimeZone('UTC'));
 
             if ($offset) {
-                $date = $date->add(new \DateInterval('PT'.$offset.'S'));
+                if ($offset > 0) {
+                    $date = $date->add(new \DateInterval('PT'.$offset.'S'));
+                } else {
+                    $offset = -1*$offset;
+                    $date = $date->sub(new \DateInterval('PT'.$offset.'S'));
+                }
             }
 
             $value = $date->format('Y-m-d H:i:s');
