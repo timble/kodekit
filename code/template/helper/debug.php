@@ -599,7 +599,7 @@ class TemplateHelperDebug extends TemplateHelperBehavior
                     foreach ($fields as $key => $value)
                     {
                         $vis = '';
-                        if ($key[0] === "\x00")
+                        if (is_string($key) && $key[0] === "\x00")
                         {
                             $vis = ' <span class="k-debug-dump-visibility">' . ($key[1] === '*' ? 'protected' : 'private') . '</span>';
                             $key = substr($key, strrpos($key, "\x00") + 1);

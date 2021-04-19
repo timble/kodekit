@@ -15,7 +15,7 @@ namespace Kodekit\Library;
  * @author  Johan Janssens <https://github.com/johanjanssens>
  * @package Kodekit\Library\Database\Driver
  */
-abstract class DatabaseDriverAbstract extends ObjectAbstract implements DatabaseDriverInterface, ObjectMultiton
+abstract class DatabaseDriverAbstract extends ObjectAbstract implements DatabaseDriverInterface
 {
     /**
      * Active state of the connection
@@ -477,6 +477,27 @@ abstract class DatabaseDriverAbstract extends ObjectAbstract implements Database
     {
         $context = new DatabaseContextDriver();
         return $context;
+    }
+
+    /**
+     * Returns a query object with the current adapter set
+     *
+     * @param string|ObjectIdentifier $identifier Query type (e.g. `select`, `insert`) or a full identifier
+     * @return DatabaseQueryInterface
+     */
+    public function getQuery($identifier)
+    {
+        if (is_string($identifier) && !str_contains($identifier, '.')) {
+            $name               = $identifier;
+            $identifier         = $this->getIdentifier()->toArray();
+            $identifier['path'] = isset($identifier['package']) && $identifier['package'] === 'database' ? ['query'] : ['database', 'query'];
+            $identifier['name'] = $name;
+
+            $identifier = $this->getIdentifier($identifier);
+        }
+        else $identifier = $this->getIdentifier($identifier);
+
+        return $this->getObject($identifier, ['driver' => $this]);
     }
 
     /**

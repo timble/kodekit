@@ -201,4 +201,12 @@ interface DatabaseDriverInterface
      * @return string|array The quoted identifier name (or array of names).
      */
     public function quoteIdentifier($spec);
+
+    /**
+     * Returns a query object with the current adapter set
+     *
+     * @param string|ObjectIdentifier $identifier Query type (e.g. `select`, `insert`) or a full identifier
+     * @return DatabaseQueryInterface
+     */
+    public function getQuery($identifier);
 }

@@ -156,7 +156,7 @@ class DatabaseBehaviorOrderable extends DatabaseBehaviorAbstract
         $table  = $this->getTable();
         $db     = $table->getDriver();
 
-        $query = $this->getObject('lib:database.query.select', ['driver' => $db])
+        $query = $db->getQuery('select')
             ->columns('MAX(ordering)')
             ->table($table->getName());
 

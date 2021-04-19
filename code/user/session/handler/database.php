@@ -151,7 +151,7 @@ class UserSessionHandlerDatabase extends UserSessionHandlerAbstract
 
         if ($this->getTable()->isConnected())
         {
-            $query = $this->getObject('lib:database.query.select', ['driver' => $this->getTable()->getDriver()])
+            $query = $this->getTable()->getDriver()->getQuery('select')
                 ->where('time < :time')
                 ->bind(array('time' => (int)(time() - $maxlifetime)));
 

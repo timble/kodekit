@@ -80,7 +80,7 @@ abstract class DatabaseTableAbstract extends ObjectAbstract implements DatabaseT
 
         $this->_name = $config->name;
         $this->_base = $config->base;
-        $this->__driver = $config->driver;
+        $this->__driver = $config->driver ?? $this->getObject('database');
 
         //Check if the table exists
         if (!$info = $this->getSchema()) {
@@ -140,7 +140,7 @@ abstract class DatabaseTableAbstract extends ObjectAbstract implements DatabaseT
         $name = $this->getIdentifier()->name;
 
         $config->append(array(
-            'driver'            => 'lib:database.driver.mysqli',
+            'driver'            => null,
             'name'              => empty($package) ? $name : $package . '_' . $name,
             'column_map'        => null,
             'filters'           => array(),
@@ -539,7 +539,7 @@ abstract class DatabaseTableAbstract extends ObjectAbstract implements DatabaseT
         if (is_numeric($query) || is_string($query) || (is_array($query) && is_numeric(key($query))))
         {
             $key = $this->getIdentityColumn();
-            $query = $this->getObject('lib:database.query.select', ['driver' => $this->getDriver()])
+            $query = $this->getDriver()->getQuery('select')
                 ->where('tbl.'.$key . ' IN :' . $key)
                 ->bind(array($key => (array)$query));
         }
@@ -547,7 +547,7 @@ abstract class DatabaseTableAbstract extends ObjectAbstract implements DatabaseT
         if (is_array($query) && !is_numeric(key($query)))
         {
             $columns = $this->mapColumns($query);
-            $query = $this->getObject('lib:database.query.select', ['driver' => $this->getDriver()]);
+            $query = $this->getDriver()->getQuery('select');
 
             foreach ($columns as $column => $value)
             {
@@ -657,7 +657,7 @@ abstract class DatabaseTableAbstract extends ObjectAbstract implements DatabaseT
         if (is_array($query) && !is_numeric(key($query)))
         {
             $columns = $this->mapColumns($query);
-            $query = $this->getObject('lib:database.query.select', ['driver' => $this->getDriver()]);
+            $query = $this->getDriver()->getQuery('select');
 
             foreach ($columns as $column => $value)
             {
@@ -690,7 +690,7 @@ abstract class DatabaseTableAbstract extends ObjectAbstract implements DatabaseT
     public function insert(DatabaseRowInterface $row)
     {
         // Create query object.
-        $query = $this->getObject('lib:database.query.insert', ['driver' => $this->getDriver()])
+        $query = $this->getDriver()->getQuery('insert')
             ->table($this->getBase());
 
         //Create commandchain context
@@ -738,7 +738,7 @@ abstract class DatabaseTableAbstract extends ObjectAbstract implements DatabaseT
     public function update(DatabaseRowInterface $row)
     {
         // Create query object.
-        $query = $this->getObject('lib:database.query.update', ['driver' => $this->getDriver()])
+        $query = $this->getDriver()->getQuery('update')
             ->table($this->getBase());
 
         // Create commandchain context.
