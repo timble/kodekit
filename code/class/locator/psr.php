@@ -53,7 +53,7 @@ class ClassLocatorPsr extends ClassLocatorAbstract
                 {
                     $result = $basepath . '/' .$path;
                     if (is_file($result)) {
-                        break;
+                        return $result;
                     }
                 }
             }
