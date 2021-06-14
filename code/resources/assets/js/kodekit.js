@@ -1354,7 +1354,7 @@ Koowa.Controller = Koowa.Class.extend({
             this.options.url = this.form.attr('action');
         }
 
-        this.toolbar = $(this.options.toolbar);
+        this.toolbar = this.form.parents('.k-ui-namespace').find(this.options.toolbar);
         this.form.data('controller', this);
 
         this.on('execute', function(){
