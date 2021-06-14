@@ -869,11 +869,6 @@ SCRIPT;
                 'src' => 'assets://js/alpine'.($config->debug ? '' : '.min').'.js',
                 'type' => 'module'
             ]);
-            $html .= $this->buildElement('ktml:script', [
-                'src' => 'assets://js/alpine.ie11'.($config->debug ? '' : '.min').'.js',
-                'nomodule' => true,
-                'defer' => true
-            ]);
 
             static::setLoaded('folikit.alpine');
         }
