@@ -32,10 +32,22 @@
   var effect;
   var release;
   var raw;
+  var shouldSchedule = true;
+  function disableEffectScheduling(callback) {
+    shouldSchedule = false;
+    callback();
+    shouldSchedule = true;
+  }
   function setReactivityEngine(engine) {
     reactive = engine.reactive;
     release = engine.release;
-    effect = (callback) => engine.effect(callback, {scheduler});
+    effect = (callback) => engine.effect(callback, {scheduler: (task) => {
+      if (shouldSchedule) {
+        scheduler(task);
+      } else {
+        task();
+      }
+    }});
     raw = engine.raw;
   }
   function overrideEffect(override) {
@@ -54,6 +66,8 @@
       }
       el._x_effects.add(effectReference);
       cleanup2 = () => {
+        if (effectReference === void 0)
+          return;
         el._x_effects.delete(effectReference);
         release(effectReference);
       };
@@ -253,60 +267,59 @@
     let recurse = (obj, basePath = "") => {
       Object.entries(obj).forEach(([key, value]) => {
         let path = basePath === "" ? key : `${basePath}.${key}`;
-        if (typeof value === "function" && value.interceptor) {
-          let result = value(key, path);
-          Object.defineProperty(obj, key, result[0]);
-        }
-        if (isObject2(value)) {
-          recurse(value, path);
+        if (typeof value === "object" && value !== null && value._x_interceptor) {
+          obj[key] = value.initialize(data2, path, key);
+        } else {
+          if (isObject2(value) && value !== obj && !(value instanceof Element)) {
+            recurse(value, path);
+          }
         }
       });
     };
     return recurse(data2);
   }
-  function interceptor(callback, mutateFunc = () => {
+  function interceptor(callback, mutateObj = () => {
   }) {
-    return (initialValue) => {
-      function func(key, path) {
-        let parentFunc = func.parent ? func.parent : (key2, path2) => [{}, {initer() {
-          }, setter() {
-          }}];
-        let [parentNoop, {initer: parentIniter, setter: parentSetter, initialValue: parentInitialValue}] = parentFunc(key, path);
-        let store2 = parentInitialValue === void 0 ? initialValue : parentInitialValue;
-        let {init: initer, set: setter} = callback(key, path);
-        let inited = false;
-        let setValue = (i) => store2 = i;
-        let reactiveSetValue = function(i) {
-          this[key] = i;
-        };
-        let setup = (context) => {
-          if (inited)
-            return;
-          parentIniter.bind(context)(store2, setValue, reactiveSetValue.bind(context));
-          initer.bind(context)(store2, setValue, reactiveSetValue.bind(context));
-          inited = true;
-        };
-        return [{
-          get() {
-            setup(this);
-            return store2;
-          },
-          set(value) {
-            setup(this);
-            parentSetter.bind(this)(value, setValue, reactiveSetValue.bind(this));
-            setter.bind(this)(value, setValue, reactiveSetValue.bind(this));
-          },
-          enumerable: true,
-          configurable: true
-        }, {initer, setter, initialValue}];
+    let obj = {
+      initialValue: void 0,
+      _x_interceptor: true,
+      initialize(data2, path, key) {
+        return callback(this.initialValue, () => get(data2, path), (value) => set(data2, path, value), path, key);
       }
-      func.interceptor = true;
-      mutateFunc(func);
-      if (typeof initialValue === "function" && initialValue.interceptor) {
-        func.parent = initialValue;
-      }
-      return func;
     };
+    mutateObj(obj);
+    return (initialValue) => {
+      if (typeof initialValue === "object" && initialValue !== null && initialValue._x_interceptor) {
+        let initialize = obj.initialize.bind(obj);
+        obj.initialize = (data2, path, key) => {
+          let innerValue = initialValue.initialize(data2, path, key);
+          obj.initialValue = innerValue;
+          return initialize(data2, path, key);
+        };
+      } else {
+        obj.initialValue = initialValue;
+      }
+      return obj;
+    };
+  }
+  function get(obj, path) {
+    return path.split(".").reduce((carry, segment) => carry[segment], obj);
+  }
+  function set(obj, path, value) {
+    if (typeof path === "string")
+      path = path.split(".");
+    if (path.length === 1)
+      obj[path[0]] = value;
+    else if (path.length === 0)
+      throw error;
+    else {
+      if (obj[path[0]])
+        return set(obj[path[0]], path.slice(1), value);
+      else {
+        obj[path[0]] = {};
+        return set(obj[path[0]], path.slice(1), value);
+      }
+    }
   }
 
   // packages/alpinejs/src/magics.js
@@ -320,7 +333,7 @@
         get() {
           return callback(el, {Alpine: alpine_default, interceptor});
         },
-        enumerable: true
+        enumerable: false
       });
     });
     return obj;
@@ -462,7 +475,7 @@ Expression: "${expression}"
     let doCleanup = () => cleanups.forEach((i) => i());
     onAttributeRemoved(el, directive2.original, doCleanup);
     let fullHandler = () => {
-      if (el._x_ignore || el._x_ignore_self)
+      if (el._x_ignore || el._x_ignoreSelf)
         return;
       handler3.inline && handler3.inline(el, directive2, utilities);
       handler3 = handler3.bind(handler3, el, directive2, utilities);
@@ -689,6 +702,8 @@ Expression: "${expression}"
     overrideEffect((callback2, el) => {
       let storedEffect = cache(callback2);
       release(storedEffect);
+      return () => {
+      };
     });
     callback();
     overrideEffect(cache);
@@ -717,7 +732,8 @@ Expression: "${expression}"
     get raw() {
       return raw;
     },
-    version: "3.0.1",
+    version: "3.0.6",
+    disableEffectScheduling,
     setReactivityEngine,
     addRootSelector,
     mapAttributes,
@@ -984,7 +1000,7 @@ Expression: "${expression}"
   }
   var isNonTrackableKeys = /* @__PURE__ */ makeMap(`__proto__,__v_isRef,__isVue`);
   var builtInSymbols = new Set(Object.getOwnPropertyNames(Symbol).map((key) => Symbol[key]).filter(isSymbol));
-  var get = /* @__PURE__ */ createGetter();
+  var get2 = /* @__PURE__ */ createGetter();
   var shallowGet = /* @__PURE__ */ createGetter(false, true);
   var readonlyGet = /* @__PURE__ */ createGetter(true);
   var shallowReadonlyGet = /* @__PURE__ */ createGetter(true, true);
@@ -1014,7 +1030,7 @@ Expression: "${expression}"
     };
   });
   function createGetter(isReadonly = false, shallow = false) {
-    return function get2(target, key, receiver) {
+    return function get3(target, key, receiver) {
       if (key === "__v_isReactive") {
         return !isReadonly;
       } else if (key === "__v_isReadonly") {
@@ -1046,10 +1062,10 @@ Expression: "${expression}"
       return res;
     };
   }
-  var set = /* @__PURE__ */ createSetter();
+  var set2 = /* @__PURE__ */ createSetter();
   var shallowSet = /* @__PURE__ */ createSetter(true);
   function createSetter(shallow = false) {
-    return function set2(target, key, value, receiver) {
+    return function set3(target, key, value, receiver) {
       let oldValue = target[key];
       if (!shallow) {
         value = toRaw(value);
@@ -1092,8 +1108,8 @@ Expression: "${expression}"
     return Reflect.ownKeys(target);
   }
   var mutableHandlers = {
-    get,
-    set,
+    get: get2,
+    set: set2,
     deleteProperty,
     has,
     ownKeys
@@ -1169,7 +1185,7 @@ Expression: "${expression}"
   function set$1(key, value) {
     value = toRaw(value);
     const target = toRaw(this);
-    const {has: has2, get: get2} = getProto(target);
+    const {has: has2, get: get3} = getProto(target);
     let hadKey = has2.call(target, key);
     if (!hadKey) {
       key = toRaw(key);
@@ -1177,7 +1193,7 @@ Expression: "${expression}"
     } else if (true) {
       checkIdentityKeys(target, has2, key);
     }
-    const oldValue = get2.call(target, key);
+    const oldValue = get3.call(target, key);
     target.set(key, value);
     if (!hadKey) {
       trigger(target, "add", key, value);
@@ -1188,7 +1204,7 @@ Expression: "${expression}"
   }
   function deleteEntry(key) {
     const target = toRaw(this);
-    const {has: has2, get: get2} = getProto(target);
+    const {has: has2, get: get3} = getProto(target);
     let hadKey = has2.call(target, key);
     if (!hadKey) {
       key = toRaw(key);
@@ -1196,7 +1212,7 @@ Expression: "${expression}"
     } else if (true) {
       checkIdentityKeys(target, has2, key);
     }
-    const oldValue = get2 ? get2.call(target, key) : void 0;
+    const oldValue = get3 ? get3.call(target, key) : void 0;
     const result = target.delete(key);
     if (hadKey) {
       trigger(target, "delete", key, void 0, oldValue);
@@ -1657,7 +1673,7 @@ Expression: "${expression}"
       el._x_transition ? el._x_transition.in(show) : clickAwayCompatibleShow();
       return;
     }
-    el._x_hide_promise = el._x_transition ? new Promise((resolve, reject) => {
+    el._x_hidePromise = el._x_transition ? new Promise((resolve, reject) => {
       el._x_transition.out(() => {
       }, () => resolve(hide));
       el._x_transitioning.beforeCancel(() => reject({isFromCancelledTransition: true}));
@@ -1665,18 +1681,18 @@ Expression: "${expression}"
     queueMicrotask(() => {
       let closest = closestHide(el);
       if (closest) {
-        if (!closest._x_hide_children)
-          closest._x_hide_children = [];
-        closest._x_hide_children.push(el);
+        if (!closest._x_hideChildren)
+          closest._x_hideChildren = [];
+        closest._x_hideChildren.push(el);
       } else {
         queueMicrotask(() => {
           let hideAfterChildren = (el2) => {
             let carry = Promise.all([
-              el2._x_hide_promise,
-              ...(el2._x_hide_children || []).map(hideAfterChildren)
+              el2._x_hidePromise,
+              ...(el2._x_hideChildren || []).map(hideAfterChildren)
             ]).then(([i]) => i());
-            delete el2._x_hide_promise;
-            delete el2._x_hide_children;
+            delete el2._x_hidePromise;
+            delete el2._x_hideChildren;
             return carry;
           };
           hideAfterChildren(el).catch((e) => {
@@ -1691,7 +1707,7 @@ Expression: "${expression}"
     let parent = el.parentNode;
     if (!parent)
       return;
-    return parent._x_hide_promise ? parent : closestHide(parent);
+    return parent._x_hidePromise ? parent : closestHide(parent);
   }
   function transition(el, setFunction, {during, start: start2, end, entering} = {}, before = () => {
   }, after = () => {
@@ -1805,9 +1821,9 @@ Expression: "${expression}"
   var handler = () => {
   };
   handler.inline = (el, {modifiers}, {cleanup: cleanup2}) => {
-    modifiers.includes("self") ? el._x_ignore_self = true : el._x_ignore = true;
+    modifiers.includes("self") ? el._x_ignoreSelf = true : el._x_ignore = true;
     cleanup2(() => {
-      modifiers.includes("self") ? delete el._x_ignore_self : delete el._x_ignore;
+      modifiers.includes("self") ? delete el._x_ignoreSelf : delete el._x_ignore;
     });
   };
   directive("ignore", handler);
@@ -2088,9 +2104,9 @@ Expression: "${expression}"
     let removeListener = on(el, event, modifiers, (e) => {
       evaluateAssignment(() => {
       }, {scope: {
-          $event: e,
-          rightSideOfExpression: assigmentFunction
-        }});
+        $event: e,
+        rightSideOfExpression: assigmentFunction
+      }});
     });
     cleanup2(() => removeListener());
     el._x_forceModelUpdate = () => {
@@ -2159,7 +2175,7 @@ Expression: "${expression}"
   directive("init", skipDuringClone((el, {expression}) => evaluate(el, expression, {}, false)));
 
   // packages/alpinejs/src/directives/x-text.js
-  directive("text", (el, {expression}, {effect: effect3, cleanup: cleanup2}) => {
+  directive("text", (el, {expression}, {effect: effect3}) => {
     let evaluate2 = evaluateLater(el, expression);
     effect3(() => {
       evaluate2((value) => {
@@ -2198,7 +2214,7 @@ Expression: "${expression}"
     });
   }
   function storeKeyForXFor(el, expression) {
-    el._x_key_expression = expression;
+    el._x_keyExpression = expression;
   }
 
   // packages/alpinejs/src/directives/x-data.js
@@ -2213,9 +2229,9 @@ Expression: "${expression}"
     } else {
       data2 = evaluate(el, expression);
     }
-    initInterceptors(data2);
     injectMagics(data2, el);
     let reactiveData = reactive(data2);
+    initInterceptors(reactiveData);
     let undo = addScopeToNode(el, reactiveData);
     if (reactiveData["init"])
       reactiveData["init"]();
@@ -2230,7 +2246,7 @@ Expression: "${expression}"
     let evaluate2 = evaluateLater(el, expression);
     let hide = () => mutateDom(() => {
       el.style.display = "none";
-      el._x_is_shown = false;
+      el._x_isShown = false;
     });
     let show = () => mutateDom(() => {
       if (el.style.length === 1 && el.style.display === "none") {
@@ -2238,7 +2254,7 @@ Expression: "${expression}"
       } else {
         el.style.removeProperty("display");
       }
-      el._x_is_shown = true;
+      el._x_isShown = true;
     });
     let clickAwayCompatibleShow = () => setTimeout(show);
     let toggle = once((value) => value ? show() : hide(), (value) => {
@@ -2248,10 +2264,16 @@ Expression: "${expression}"
         value ? clickAwayCompatibleShow() : hide();
       }
     });
+    let oldValue;
+    let firstTime = true;
     effect3(() => evaluate2((value) => {
+      if (!firstTime && value === oldValue)
+        return;
       if (modifiers.includes("immediate"))
         value ? clickAwayCompatibleShow() : hide();
       toggle(value);
+      oldValue = value;
+      firstTime = false;
     }));
   });
 
@@ -2259,13 +2281,13 @@ Expression: "${expression}"
   directive("for", (el, {expression}, {effect: effect3, cleanup: cleanup2}) => {
     let iteratorNames = parseForExpression(expression);
     let evaluateItems = evaluateLater(el, iteratorNames.items);
-    let evaluateKey = evaluateLater(el, el._x_key_expression || "index");
-    el._x_prev_keys = [];
+    let evaluateKey = evaluateLater(el, el._x_keyExpression || "index");
+    el._x_prevKeys = [];
     el._x_lookup = {};
     effect3(() => loop(el, iteratorNames, evaluateItems, evaluateKey));
     cleanup2(() => {
       Object.values(el._x_lookup).forEach((el2) => el2.remove());
-      delete el._x_prev_keys;
+      delete el._x_prevKeys;
       delete el._x_lookup;
     });
   });
@@ -2277,7 +2299,7 @@ Expression: "${expression}"
         items = Array.from(Array(items).keys(), (i) => i + 1);
       }
       let lookup = el._x_lookup;
-      let prevKeys = el._x_prev_keys;
+      let prevKeys = el._x_prevKeys;
       let scopes = [];
       let keys = [];
       if (isObject2(items)) {
@@ -2356,7 +2378,7 @@ Expression: "${expression}"
       for (let i = 0; i < sames.length; i++) {
         refreshScope(lookup[sames[i]], scopes[keys.indexOf(sames[i])]);
       }
-      templateEl._x_prev_keys = keys;
+      templateEl._x_prevKeys = keys;
     });
   }
   function parseForExpression(expression) {
