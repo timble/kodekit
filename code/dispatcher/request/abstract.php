@@ -157,12 +157,6 @@ abstract class DispatcherRequestAbstract extends ControllerRequest implements Di
         //Receive the request
         $this->receive();
 
-        // Set timezone to user's settings
-        date_default_timezone_set($this->getTimezone());
-
-        // Set language to user's settings
-        locale_set_default($this->getLanguage());
-
         //Set the request time
         if (isset($_SERVER['REQUEST_TIME_FLOAT'])) {
             $this->setTime($_SERVER['REQUEST_TIME_FLOAT']);
