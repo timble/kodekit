@@ -875,8 +875,10 @@ SCRIPT;
                     window.addEventListener("DOMContentLoaded", function()
                     {
                         let el = document.body.querySelector("section[x-data]");
-                       
-                        window.kAlpine = (el._x_dataStack.length > 1) ? el._x_dataStack : el._x_dataStack[0];
+
+                        if (el) {
+                            window.kAlpine = (el._x_dataStack.length > 1) ? el._x_dataStack : el._x_dataStack[0];
+                        }
                     });
                 </script>';
             }
