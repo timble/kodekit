@@ -874,10 +874,19 @@ SCRIPT;
                 <script>
                     window.addEventListener("DOMContentLoaded", function()
                     {
-                        let el = document.body.querySelector("section[x-data]");
+                        let components = document.body.querySelectorAll("[x-data]");
 
-                        if (el) {
-                            window.kAlpine = (el._x_dataStack.length > 1) ? el._x_dataStack : el._x_dataStack[0];
+                        if (components.length)
+                        {
+                            let kAlpine = [];
+                            
+                            for (const component of components) {
+                                kAlpine.push((component._x_dataStack.length > 1) ? component._x_dataStack : component._x_dataStack[0]);
+                            }
+                            
+                            if (kAlpine.length === 1) kAlpine =kAlpine[0];
+                        
+                            window.kAlpine = kAlpine;
                         }
                     });
                 </script>';
