@@ -92,7 +92,7 @@ class Kodekit
         if(isset($config['debug'])) {
             self::$_debug = $config['debug'];
         } else {
-            self::$_debug = false;
+            self::$_debug = (getenv('KODEKIT_DEBUG') !== false ? filter_var( getenv('KODEKIT_DEBUG') , FILTER_VALIDATE_BOOLEAN) : false);
         }
 
         if(isset($config['cache'])) {

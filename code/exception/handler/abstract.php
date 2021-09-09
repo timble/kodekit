@@ -412,13 +412,16 @@ class ExceptionHandlerAbstract extends ObjectAbstract implements ExceptionHandle
 
         if($this->isEnabled(self::TYPE_ERROR))
         {
+            $is_suppressed_error = error_reporting() === 0 || (error_reporting() < ($this->getErrorReporting() < 0 ? E_ALL : $this->getErrorReporting()));
+
             /*
              * Do not handle suppressed errors.
              *
-             * error_reporting returns 0 if the statement causing the error was prepended by the @ error-control operator.
-             * @see : http://www.php.net/manual/en/language.operators.errorcontrol.php
+             * error_reporting returns 0 (or something lower than 4437 on PHP8) if the statement causing the error was prepended by the @ error-control operator.
+             * @see https://www.php.net/manual/en/language.operators.errorcontrol.php
+             * @see https://www.php.net/manual/en/language.operators.errorcontrol.php#125938
              */
-            if (!($this->_error_operator && error_reporting() === 0))
+            if (!($this->_error_operator && $is_suppressed_error))
             {
                 if ($this->getErrorReporting() & $level)
                 {
