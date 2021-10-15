@@ -9,8 +9,6 @@
 
 namespace Kodekit\Library;
 
-use Composer\Installer\LibraryInstaller;
-
 /**
  * Behavior Template Helper
  *
@@ -869,6 +867,31 @@ SCRIPT;
                 'src' => 'assets://js/alpine'.($config->debug ? '' : '.min').'.js',
                 'type' => 'module'
             ]);
+
+            if (\Kodekit::getInstance()->isDebug())
+            {
+                $html .= '
+                <script>
+                    window.addEventListener("DOMContentLoaded", function()
+                    {
+                        let components = document.body.querySelectorAll("[x-data]");
+
+                        if (components.length)
+                        {
+                            let kAlpine = [];
+                            
+                            for (const component of components) {
+                                kAlpine.push((component._x_dataStack.length > 1) ? component._x_dataStack : component._x_dataStack[0]);
+                            }
+                            
+                            if (kAlpine.length === 1) kAlpine =kAlpine[0];
+                        
+                            window.kAlpine = kAlpine;
+                        }
+                    });
+                </script>';
+            }
+
 
             static::setLoaded('folikit.alpine');
         }
