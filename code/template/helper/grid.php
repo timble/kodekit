@@ -241,11 +241,13 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
 
         //Set the query in the route
         if(!$config->url instanceof HttpUrlInterface) {
-            $config->url = HttpUrl::fromString($config->url);
+            $url = HttpUrl::fromString($config->url);
+        } else {
+            $url = clone $config->url;
         }
 
-        $config->url->query['sort']      = $config->column;
-        $config->url->query['direction'] = $direction;
+        $url->query['sort']      = $config->column;
+        $url->query['direction'] = $direction;
 
         $link = $translator->translate($config->title);
 
@@ -257,7 +259,7 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
         }
 
         $html = $this->buildElement('a', [
-            'href' => $config->url,
+            'href' => $url,
             'data-k-tooltip' => htmlentities('{"container":".k-ui-container","delay":{"show":500,"hide":50}}'),
             'data-original-title' => $translator->translate('Click to sort by this column')
         ], $link);
