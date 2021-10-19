@@ -37,7 +37,7 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
             $html .= $this->buildElement('span', [
                 'class' => 'k-icon-lock-locked',
                 'data-k-tooltip' => true,
-                'title' => $this->creaateHelper('grid')->lock_message(array('entity' => $config->entity))
+                'title' => $this->createHelper('grid')->lock_message(array('entity' => $config->entity))
             ]);
         }
         else
@@ -78,7 +78,7 @@ class TemplateHelperGrid extends TemplateHelperAbstract implements TemplateHelpe
             $html .= $this->buildElement('span', [
                 'class' => 'k-icon-lock-locked',
                 'data-k-tooltip' => true,
-                'title' => $this->creaateHelper('grid')->lock_message(array('entity' => $config->entity))
+                'title' => $this->createHelper('grid')->lock_message(array('entity' => $config->entity))
             ]);
         }
         else
