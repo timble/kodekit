@@ -124,8 +124,16 @@ abstract class ControllerModel extends ControllerView implements ControllerModel
                 );
             }
 
-            //Inject the request into the model state
-            $this->_model->setState($this->getRequest()->query->toArray());
+            if ($query = $this->getRequest()->getQuery()->toArray())
+            {
+                // Filter the current query against internal states
+                foreach ($this->_model->getState() as $state) {
+                    if ($state->internal && isset($query[$state->name])) unset($query[$state->name]);
+                }
+
+                //Inject the request into the model state
+                $this->_model->setState($query);
+            }
         }
 
         return $this->_model;
